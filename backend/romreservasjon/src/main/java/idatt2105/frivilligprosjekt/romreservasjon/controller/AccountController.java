@@ -32,7 +32,7 @@ public class AccountController {
      * PostMapping for saving a new Account to the database
      *
      * @param account requesting the body of the Account to save
-     * @return true or false whether the user was created successfully or not
+     * @return true or false whether the Account was created successfully or not
      */
     @PostMapping("accounts/register")
     public boolean saveAccount(@RequestBody Account account) {
