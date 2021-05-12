@@ -38,7 +38,7 @@
     </v-app-bar>
 
     <v-main>
-      <HelloWorld/>
+      <button @click="testButtonClicked">Test button</button>
     </v-main>
   </v-app>
 </template>
@@ -47,11 +47,17 @@
 export default {
   name: "App",
   components: {},
-};
-</script>
+  methods: {
+    async testButtonClicked(){
+      let authenticationRequest = {
+        username: "admin@admin.no",
+        password: "admin123"
+      }
 
-  data: () => ({
-    //
-  }),
+      await this.$store.dispatch("login", authenticationRequest);
+
+      console.log(this.$store.getters.getLoggedInAccount);
+    }
+  }
 };
 </script>

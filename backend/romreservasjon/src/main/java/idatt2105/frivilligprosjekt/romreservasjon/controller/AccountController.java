@@ -28,6 +28,12 @@ public class AccountController {
         return accountService.findAll();
     }
 
+    @GetMapping("accounts/{email}")
+    public Account findAccountByEmail(@PathVariable String email){
+        return accountService.findByEmail(email);
+    }
+
+
     /**
      * PostMapping for saving a new Account to the database
      *

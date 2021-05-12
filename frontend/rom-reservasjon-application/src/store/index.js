@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import VueJwtDecode from 'vue-jwt-decode'
 
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
     state:{
         jwtToken: "",
+        loggedInAccount: {},
         isBusy: false,
         error: "",
         apiURL: "http://localhost:8080/"
@@ -17,6 +19,12 @@ const store = new Vuex.Store({
         clearJwtToken: (state) => {
             state.jwtToken = "";
         },
+        setLoggedInAccount: (state, account) => {
+            state.loggedInAccount = account;
+        },
+        clearLoggedInAccount: (state) => {
+            state.loggedInAccount = {}
+        },
         setBusy: (state) => state.isBusy = true,
         clearBusy: (state) => state.isBusy = false,
         setError: (state, error) => state.error = error,
@@ -24,10 +32,11 @@ const store = new Vuex.Store({
     },
     getters:{
         isAuthenticated: (state) => state.jwtToken.length > 0,
-        getToken: (state) => state.token
+        getToken: (state) => state.token,
+        getLoggedInAccount: (state) => state.loggedInAccount
     },
     actions:{
-        login: async({ commit }, authRequest) => {
+        login: async({ commit, state }, authRequest) => {
             try{
                 commit("setBusy");
                 commit("clearError");
@@ -49,6 +58,11 @@ const store = new Vuex.Store({
                         console.log("Error when logging in: ");
                         console.log(error);
                     })
+                
+                let account = await getAccount(state.jwtToken);
+                
+                commit("setLoggedInAccount", account);
+                
             }catch(error){
                 console.log("CATCHED ERROR");
                 console.log(error);
@@ -59,5 +73,32 @@ const store = new Vuex.Store({
         }
     }
 })
+
+
+async function getAccount(jwtToken){
+    
+    const accountEmail = VueJwtDecode.decode(jwtToken.jwt).sub;
+    console.log(accountEmail);
+
+    let url = `http://localhost:8080/accounts/${accountEmail}`;
+
+    const requestOptions = {
+        methods: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${jwtToken.jwt}`
+        }
+    }
+
+    return await fetch(url, requestOptions)
+        .then(response => response.json())
+        .then(data => {
+            return data;
+        })
+        .catch(error => {
+            console.log("Error getting account info");
+            console.log(error);
+        })
+}
 
 export default store;
