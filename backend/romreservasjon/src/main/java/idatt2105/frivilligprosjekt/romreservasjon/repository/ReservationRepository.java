@@ -1,4 +1,9 @@
 package idatt2105.frivilligprosjekt.romreservasjon.repository;
 
-public class ReservationRepository {
+import idatt2105.frivilligprosjekt.romreservasjon.model.Reservation;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ReservationRepository extends CrudRepository<Reservation, Integer> {
 }
