@@ -1,18 +1,21 @@
 <template>
-  <div id="app">
-    <p style="color: black">asdasdasd</p>
+  <div>
+    <FrontPage />
   </div>
 </template>
 
 <script>
 
+import FrontPage from './routes/FrontPage'
+
 export default {
   name: 'App',
   components: {
+    FrontPage
   },
   data(){
     return {
-      welcomeText: this.$store.state.welcomeText
+      
     }
   }
 }
