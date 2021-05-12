@@ -5,17 +5,10 @@
 </template>
 
 <script>
-
 export default {
-  name: 'App',
-  components: {
-  },
-  data(){
-    return {
-      welcomeText: this.$store.state.welcomeText
-    }
-  }
-}
+  name: "App",
+  components: {},
+};
 </script>
 
 <style>

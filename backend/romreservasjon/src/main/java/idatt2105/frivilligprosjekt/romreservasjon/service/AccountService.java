@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -35,6 +36,21 @@ public class AccountService {
         itAccounts.forEach(accounts::add);
 
         return accounts;
+    }
+
+    /**
+     * Method for finding an account by email
+     *
+     * @param email
+     * @return
+     */
+    public Account findByEmail(String email){
+        Optional<Account> account = accountRepository.findByEmail(email);
+        if(account.isPresent()){
+            return account.get();
+        }else{
+            return null;
+        }
     }
 
     /**

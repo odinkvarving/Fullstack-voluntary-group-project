@@ -1,5 +1,7 @@
 package idatt2105.frivilligprosjekt.romreservasjon.service;
 
+import idatt2105.frivilligprosjekt.romreservasjon.model.Account;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,9 +13,16 @@ import java.util.ArrayList;
 
 @Service
 public class MyUserDetailsService implements UserDetailsService {
+
+    @Autowired
+    private AccountService accountService;
+
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        //TODO: finne bruker fra databasen utifra username og bruke denne under her
-        return new User("admin", "admin123", new ArrayList<>());
+        Account account = accountService.findByEmail(userName);
+        if(account == null){
+            return null;
+        }
+        return new User(account.getEmail(), account.getPassword(), new ArrayList<>());
     }
 }

@@ -48,21 +48,21 @@ public class AccountController {
      * PutMapping for updating a specific Account
      *
      * @param newAccount requesting the body of a new Account (updated version)
-     * @param id the PathVariable of the id for the Account
+     * @param account_id the PathVariable of the id for the Account
      * @return the Account that was updated
      */
-    @PutMapping("accounts/{id}")
-    public Account updateAccount(@RequestBody Account newAccount, @PathVariable("id") int id) {
-        return accountService.updateAccount(id, newAccount);
+    @PutMapping("accounts/{account_id}")
+    public Account updateAccount(@RequestBody Account newAccount, @PathVariable("account_id") int account_id) {
+        return accountService.updateAccount(account_id, newAccount);
     }
 
     /**
      * DeleteMapping for deleting an Account
      *
-     * @param id the PathVariable for the id of the Account
+     * @param account_id the PathVariable for the id of the Account
      */
-    @DeleteMapping("accounts/{id}")
-    public void deleteAccount(@PathVariable("id") int id) {
-        accountService.deleteAccount(id);
+    @DeleteMapping("accounts/{account_id}")
+    public void deleteAccount(@PathVariable("account_id") int account_id) {
+        accountService.deleteAccount(account_id);
     }
 }
