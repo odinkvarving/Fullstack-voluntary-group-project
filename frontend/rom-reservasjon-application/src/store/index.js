@@ -41,7 +41,7 @@ const store = new Vuex.Store({
                 commit("setBusy");
                 commit("clearError");
                 
-                const url = "http://localhost:8080/authenticate";
+                const url = `http://localhost:8080/authenticate`;
                 
                 const requestOptions = {
                     method: 'POST',
@@ -75,7 +75,7 @@ const store = new Vuex.Store({
 })
 
 
-async function getAccount(jwtToken){
+function getAccount(jwtToken){
     
     const accountEmail = VueJwtDecode.decode(jwtToken.jwt).sub;
     console.log(accountEmail);
@@ -90,15 +90,13 @@ async function getAccount(jwtToken){
         }
     }
 
-    return await fetch(url, requestOptions)
+    return fetch(url, requestOptions)
         .then(response => response.json())
-        .then(data => {
-            return data;
-        })
         .catch(error => {
             console.log("Error getting account info");
             console.log(error);
         })
+    
 }
 
 export default store;
