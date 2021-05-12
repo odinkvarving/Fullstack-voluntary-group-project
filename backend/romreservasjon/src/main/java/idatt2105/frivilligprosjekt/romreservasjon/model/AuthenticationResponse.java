@@ -1,0 +1,14 @@
+package idatt2105.frivilligprosjekt.romreservasjon.model;
+
+public class AuthenticationResponse {
+
+    private final String jwt;
+
+    public AuthenticationResponse(String jwt) {
+        this.jwt = jwt;
+    }
+
+    public String getJwt() {
+        return jwt;
+    }
+}
