@@ -40,9 +40,9 @@ public class AccountController {
      * @param account requesting the body of the Account to save
      * @return true or false whether the Account was created successfully or not
      */
-    @PostMapping("accounts/register")
+    @PostMapping("accounts/")
     public boolean saveAccount(@RequestBody Account account) {
-        logger.info("Trying to save user:\n" + account.toString());
+        logger.info("Trying to save account:\n" + account.toString());
         boolean success = accountService.saveAccount(account);
         if (success) {
             logger.info("Success!");

@@ -23,9 +23,11 @@ public class Reservation {
     public Reservation() {
     }
 
-    public Reservation(LocalDateTime from_date, LocalDateTime to_date) {
+    public Reservation(LocalDateTime from_date, LocalDateTime to_date, Section section, Account account) {
         this.from_date = from_date;
         this.to_date = to_date;
+        this.section = section;
+        this.account = account;
     }
 
     public int getId() {
@@ -66,5 +68,16 @@ public class Reservation {
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "id=" + id +
+                ", from_date=" + from_date +
+                ", to_date=" + to_date +
+                ", section=" + section.getName() +
+                ", account=" + account.getName() +
+                '}';
     }
 }
