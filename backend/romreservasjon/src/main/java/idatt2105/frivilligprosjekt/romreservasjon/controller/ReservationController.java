@@ -74,8 +74,8 @@ public class ReservationController {
      * @param reservation_id the PathVariable of the ID for the Reservation
      */
     @DeleteMapping("reservations/{reservation_id}")
-    public void deleteReservation(@PathVariable int reservation_id) {
-        reservationService.deleteReservation(reservation_id);
+    public boolean deleteReservation(@PathVariable int reservation_id) {
+        return reservationService.deleteReservation(reservation_id);
     }
 
 }

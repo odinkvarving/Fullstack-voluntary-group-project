@@ -11,7 +11,7 @@ import java.util.Set;
 public class Room {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String name;

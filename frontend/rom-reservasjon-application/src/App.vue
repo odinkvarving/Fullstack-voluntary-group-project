@@ -68,8 +68,39 @@ export default {
       let reservations = await reservationService.getReservations();
       console.log(reservations);
 
-      let sectionReservations = await reservationService.getSectionsReservations(5, 7);
+      let sectionReservations = await reservationService.getSectionsReservations(1, 1);
       console.log(sectionReservations);
+/*
+      
+      let reservation = {
+        from_date: new Date(),
+        to_date: new Date(),
+        section: {
+          id: 2
+        },
+        account: {
+          id: 1
+        }
+      }
+      let newReservation = await reservationService.addReservation(reservation);
+      console.log(newReservation); 
+/*
+      let deleteResult = await reservationService.deleteReservation(36);
+      console.log(deleteResult);*/
+
+
+      let newReservation = {
+        from_date: new Date(),
+        to_date: new Date(),
+        section: {
+          id: 4
+        },
+        account: {
+          id: 1
+        }
+      }
+      let updateResult = await reservationService.updateReservation(2, newReservation);
+      console.log(updateResult);
     }
   }
 };

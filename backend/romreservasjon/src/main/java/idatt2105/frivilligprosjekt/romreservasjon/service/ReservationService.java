@@ -92,12 +92,15 @@ public class ReservationService {
      *
      * @param id the ID of the Reservation to be deleted
      */
-    public void deleteReservation(int id) {
+    public boolean deleteReservation(int id) {
         try {
             reservationRepository.deleteById(id);
+            return true;
         }catch (DataAccessException e) {
             e.printStackTrace();
             logger.info("Could not delete this reservation. ID does not exist");
         }
+
+        return false;
     }
 }

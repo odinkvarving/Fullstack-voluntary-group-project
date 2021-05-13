@@ -5,7 +5,7 @@ export const reservationService = {
     getSectionsReservations,
     addReservation,
     deleteReservation,
-    editReservation
+    updateReservation
 }
 
 function getReservations(){
@@ -37,10 +37,11 @@ async function getSectionsReservations(roomId, sectionId){
         .catch(error => console.log(error));
 }
 
-async function addReservation(roomId, sectionId, reservation){
-    let url = `http://localhost:8080/rooms/${roomId}/sections/${sectionId}/reservations`;
+async function addReservation(reservation){
+    let url = `http://localhost:8080/reservations`;
 
     const requestOptions = {
+        method: "POST",
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${store.getters.getJwtToken}`
@@ -53,8 +54,35 @@ async function addReservation(roomId, sectionId, reservation){
         .catch(error => console.log(error));
 }
 
-async function deleteReservation(){
+async function deleteReservation(reservationId){
+    let url = `http://localhost:8080/reservations/${reservationId}`;
 
+    const requestOptions = {
+        method: "DELETE",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${store.getters.getJwtToken}`
+        },
+    }
+
+    return fetch(url, requestOptions)
+        .then(response => response.json())
+        .catch(error => console.log(error));
 }
 
-async function editReservation(){}
+async function updateReservation(reservationId, reservation){
+    let url = `http://localhost:8080/reservations/${reservationId}`;
+
+    const requestOptions = {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${store.getters.getJwtToken}`
+        },
+        body: JSON.stringify(reservation)
+    }
+
+    return fetch(url, requestOptions)
+        .then(response => response.json())
+        .catch(error => console.log(error));
+}
