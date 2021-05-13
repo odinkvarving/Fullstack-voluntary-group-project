@@ -21,6 +21,7 @@ public class Section {
     private int max_persons;
 
     @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "section-reservation")
     private Set<Reservation> inReservations = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
