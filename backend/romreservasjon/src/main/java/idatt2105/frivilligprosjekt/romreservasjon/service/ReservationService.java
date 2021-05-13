@@ -26,10 +26,10 @@ public class ReservationService {
      * @return a collection of all Accounts registered in the database
      */
     public List<Reservation> findAll() {
-        Iterable<Reservation> itAccounts = reservationRepository.findAll();
+        Iterable<Reservation> itReservations = reservationRepository.findAll();
         List<Reservation> reservations = new ArrayList<>();
 
-        itAccounts.forEach(reservations::add);
+        itReservations.forEach(reservations::add);
 
         return reservations;
     }
@@ -49,8 +49,8 @@ public class ReservationService {
        }catch (DataAccessException e) {
            e.printStackTrace();
            logger.info("Could not fetch either the Account or Section for this reservation.");
-           return false;
        }
+       return false;
     }
 
     /**
@@ -87,6 +87,11 @@ public class ReservationService {
         return null;
     }
 
+    /**
+     * Method for deleting a specific Reservation
+     *
+     * @param id the ID of the Reservation to be deleted
+     */
     public void deleteReservation(int id) {
         try {
             reservationRepository.deleteById(id);
