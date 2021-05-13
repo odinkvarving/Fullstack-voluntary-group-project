@@ -67,6 +67,9 @@ export default {
 
       let reservations = await reservationService.getReservations();
       console.log(reservations);
+
+      let sectionReservations = await reservationService.getSectionsReservations(5, 7);
+      console.log(sectionReservations);
     }
   }
 };
