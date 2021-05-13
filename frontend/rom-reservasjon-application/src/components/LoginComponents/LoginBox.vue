@@ -21,7 +21,6 @@
     </div>
 </template>
 <script>
-    import accountService from "../../services/AccountService.js";
     import SuccessPopUp from "./SuccessPopUp.vue";
     import ErrorPopUp from "./ErrorPopUp.vue";
 
@@ -64,10 +63,14 @@
             },
 
             async login() {
-                let loginResponse = await accountService.login(this.emailValue, this.passwordValue);
+                const authRequest = {
+                    username: this.emailInput,
+                    password: this.passwordInput
+                }
+                let loginResponse = this.$store.dispatch("login", authRequest);
 
                 if (loginResponse.jwtToken) {
-                    this.$router.push("/dashboard");
+                    this.$router.push("/frontpage");
                 } else {
                     this.isErrorVisible = true;
                 }
