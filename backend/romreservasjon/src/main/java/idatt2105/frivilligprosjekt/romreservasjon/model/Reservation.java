@@ -1,5 +1,8 @@
 package idatt2105.frivilligprosjekt.romreservasjon.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -9,15 +12,17 @@ public class Reservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int reservation_id;
+    private int id;
 
     private LocalDateTime from_date;
     private LocalDateTime to_date;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonManagedReference
     private Section section;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonManagedReference
     private Account account;
 
     public Reservation() {
@@ -28,12 +33,12 @@ public class Reservation {
         this.to_date = to_date;
     }
 
-    public int getReservation_id() {
-        return reservation_id;
+    public int getId() {
+        return id;
     }
 
-    public void setReservation_id(int id) {
-        this.reservation_id = id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public LocalDateTime getFrom_date() {

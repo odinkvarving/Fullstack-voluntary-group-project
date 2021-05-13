@@ -1,6 +1,9 @@
 package idatt2105.frivilligprosjekt.romreservasjon.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,16 +14,18 @@ public class Section {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int section_id;
+    private int id;
 
     private String name;
     private double size;
     private int max_persons;
 
     @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private Set<Reservation> inReservations = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     private Room room;
 
     public Section() {
@@ -32,12 +37,12 @@ public class Section {
         this.max_persons = max_persons;
     }
 
-    public int getSection_id() {
-        return section_id;
+    public int getId() {
+        return id;
     }
 
-    public void setSection_id(int section_id) {
-        this.section_id = section_id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

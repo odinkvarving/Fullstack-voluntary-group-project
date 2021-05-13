@@ -1,5 +1,7 @@
 package idatt2105.frivilligprosjekt.romreservasjon.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,13 +12,14 @@ public class Room {
 
     @Id
     @GeneratedValue
-    private int room_id;
+    private int id;
 
     private String name;
     private double size;
     private int max_persons;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Set<Section> sections = new HashSet<>();
 
     public Room() {
@@ -28,12 +31,12 @@ public class Room {
         this.max_persons = max_persons;
     }
 
-    public int getRoom_id() {
-        return room_id;
+    public int getId() {
+        return id;
     }
 
-    public void setRoom_id(int room_id) {
-        this.room_id = room_id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

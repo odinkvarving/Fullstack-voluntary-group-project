@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -38,6 +39,17 @@ public class AccountService {
     }
 
     /**
+     * Method for finding an account by email
+     *
+     * @param email
+     * @return
+     */
+    public Account findByEmail(String email){
+        Optional<Account> account = accountRepository.findByEmail(email);
+        return account.orElse(null);
+    }
+
+    /**
      * Registers a new account. The account must have a unique email
      * address, i.e. one which is not associated with an already registered account
      *
@@ -45,7 +57,7 @@ public class AccountService {
      * @return true if the Account was registered, false if an Account with the given email already exists
      */
     public boolean saveAccount(Account account) {
-        Optional<Account> acc = accountRepository.findById(account.getAccount_id());
+        Optional<Account> acc = accountRepository.findById(account.getId());
         if (acc.isPresent()) {
             logger.info("Error! Could not create account, ID already exists");
             return false;
