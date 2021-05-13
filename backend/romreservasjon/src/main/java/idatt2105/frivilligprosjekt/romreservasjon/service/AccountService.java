@@ -46,11 +46,7 @@ public class AccountService {
      */
     public Account findByEmail(String email){
         Optional<Account> account = accountRepository.findByEmail(email);
-        if(account.isPresent()){
-            return account.get();
-        }else{
-            return null;
-        }
+        return account.orElse(null);
     }
 
     /**

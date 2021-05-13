@@ -30,8 +30,8 @@ public class RoomService {
     }
 
     public Room saveRoom(Room room){
-        Room result = roomRepository.save(room);
+        room.getSections().forEach(section -> section.setRoom(room));
 
-        return result;
+        return roomRepository.save(room);
     }
 }

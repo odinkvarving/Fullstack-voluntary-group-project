@@ -1,5 +1,8 @@
 package idatt2105.frivilligprosjekt.romreservasjon.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -15,9 +18,11 @@ public class Reservation {
     private LocalDateTime to_date;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonManagedReference
     private Section section;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonManagedReference
     private Account account;
 
     public Reservation() {

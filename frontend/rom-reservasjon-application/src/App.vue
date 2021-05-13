@@ -44,6 +44,8 @@
 </template>
 
 <script>
+import { roomService } from "./services/RoomService"
+
 export default {
   name: "App",
   components: {},
@@ -57,6 +59,10 @@ export default {
       await this.$store.dispatch("login", authenticationRequest);
 
       console.log(this.$store.getters.getLoggedInAccount);
+      console.log(this.$store.getters.getJwtToken);
+
+        let rooms = await roomService.getRooms();
+        console.log(rooms);
     }
   }
 };

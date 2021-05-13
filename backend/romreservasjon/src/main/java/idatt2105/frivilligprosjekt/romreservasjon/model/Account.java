@@ -1,5 +1,8 @@
 package idatt2105.frivilligprosjekt.romreservasjon.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -21,6 +24,7 @@ public class Account {
     private LocalDateTime expiration_date;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private Set<Reservation> reservations = new HashSet<>();
 
     public Account(String name, String email, String password, String phone, boolean is_admin, LocalDateTime expiration_date) {
