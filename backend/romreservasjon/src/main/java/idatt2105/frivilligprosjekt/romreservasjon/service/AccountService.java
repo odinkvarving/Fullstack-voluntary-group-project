@@ -109,6 +109,7 @@ public class AccountService {
      */
     public Set<Reservation> findAccountReservations(int id) {
         try {
+            logger.info("Successfully found all reservations");
             return accountRepository.findById(id).orElseThrow(NoSuchElementException::new).getReservations();
         }catch (DataAccessException e) {
             e.printStackTrace();

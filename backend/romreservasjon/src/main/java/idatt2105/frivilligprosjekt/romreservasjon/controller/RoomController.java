@@ -3,7 +3,6 @@ package idatt2105.frivilligprosjekt.romreservasjon.controller;
 
 import idatt2105.frivilligprosjekt.romreservasjon.model.Reservation;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Room;
-import idatt2105.frivilligprosjekt.romreservasjon.model.Section;
 import idatt2105.frivilligprosjekt.romreservasjon.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
