@@ -32,7 +32,7 @@ const store = new Vuex.Store({
     },
     getters:{
         isAuthenticated: (state) => state.jwtToken.length > 0,
-        getToken: (state) => state.token,
+        getJwtToken: (state) => state.jwtToken,
         getLoggedInAccount: (state) => state.loggedInAccount
     },
     actions:{
@@ -52,7 +52,8 @@ const store = new Vuex.Store({
                 await fetch(url, requestOptions)
                     .then(response => response.json())
                     .then(data => {
-                        commit("setJwtToken", data);
+                        console.log(data.jwt);
+                        commit("setJwtToken", data.jwt);
                     })
                     .catch(error => {
                         console.log("Error when logging in: ");
@@ -77,7 +78,7 @@ const store = new Vuex.Store({
 
 function getAccount(jwtToken){
     
-    const accountEmail = VueJwtDecode.decode(jwtToken.jwt).sub;
+    const accountEmail = VueJwtDecode.decode(jwtToken).sub;
     console.log(accountEmail);
 
     let url = `http://localhost:8080/accounts/${accountEmail}`;
@@ -86,7 +87,7 @@ function getAccount(jwtToken){
         methods: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${jwtToken.jwt}`
+            'Authorization': `Bearer ${jwtToken}`
         }
     }
 

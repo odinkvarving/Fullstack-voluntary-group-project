@@ -1,6 +1,9 @@
 package idatt2105.frivilligprosjekt.romreservasjon.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,9 +21,11 @@ public class Section {
     private int max_persons;
 
     @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private Set<Reservation> inReservations = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     private Room room;
 
     public Section() {

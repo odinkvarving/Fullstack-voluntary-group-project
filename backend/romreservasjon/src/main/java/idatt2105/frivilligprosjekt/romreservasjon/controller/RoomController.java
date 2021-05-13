@@ -27,7 +27,7 @@ public class RoomController {
     }
 
     @PostMapping("/rooms")
-    public Room saveRoom(@RequestBody Room room){
+    public Room saveRoom(@RequestBody Room room) {
         return roomService.saveRoom(room);
     }
 }
