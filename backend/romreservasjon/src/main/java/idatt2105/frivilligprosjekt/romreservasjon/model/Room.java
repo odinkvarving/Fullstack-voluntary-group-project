@@ -19,7 +19,6 @@ public class Room {
     private int max_persons;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
     private Set<Section> sections = new HashSet<>();
 
     public Room() {

@@ -18,7 +18,7 @@ public class Reservation {
     private LocalDateTime to_date;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
+    @JsonBackReference(value = "section-reservation")
     private Section section;
 
     @ManyToOne(fetch = FetchType.LAZY)
