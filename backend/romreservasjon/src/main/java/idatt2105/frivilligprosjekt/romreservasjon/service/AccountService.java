@@ -1,8 +1,11 @@
 package idatt2105.frivilligprosjekt.romreservasjon.service;
 
 import idatt2105.frivilligprosjekt.romreservasjon.model.Account;
+import idatt2105.frivilligprosjekt.romreservasjon.model.PasswordReset;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Reservation;
 import idatt2105.frivilligprosjekt.romreservasjon.repository.AccountRepository;
+import idatt2105.frivilligprosjekt.romreservasjon.repository.PasswordResetRepository;
+import jdk.jshell.spi.ExecutionControlProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class AccountService {
@@ -28,6 +29,9 @@ public class AccountService {
 
     @Autowired
     private MailService mailService;
+
+    @Autowired
+    private PasswordResetRepository passwordResetRepository;
 
     /**
      * Method for finding all Accounts registered in the database
@@ -145,6 +149,18 @@ public class AccountService {
         return false;
     }
 
+    public Account findAccountByResetSuffix(String suffix) {
+        try {
+            PasswordReset reset = this.passwordResetRepository.findBySuffix(suffix).orElseThrow(Exception::new);
+            logger.info("accountId: " + reset.getAccountId());
+            logger.info("suffix: " + reset.getSuffix());
+            return accountRepository.findById(reset.getAccountId()).orElse(null);
+        } catch(Exception error) {
+            logger.error(error.toString());
+            return null;
+        }
+    }
+
     /**
      * Sends a password reset link to the provided mail address if it exists in the database.
      *
@@ -152,20 +168,22 @@ public class AccountService {
      */
     public void generatePasswordReset(String mailToReset) {
         try {
-            Account foundAccount = accountRepository.findByEmail(mailToReset).orElseThrow(NoSuchElementException::new);
+            Account account = accountRepository.findByEmail(mailToReset).orElseThrow(NoSuchElementException::new);
+            logger.info("Found account with email: " + account.getEmail());
 
-            String randomUrlSuffix = "";
-            //boolean newSuffix = false;
-            //while (!newSuffix) {
-                randomUrlSuffix = generateRandomAlphanumericString(75);
-                //if (!this.passwordResetRepository.findByResetUrlSuffix(randomUrlSuffix).isPresent()) {
-                    //newSuffix = true;
-                //}
-            //}
+            String suffix = "";
+            boolean newSuffix = false;
+            while (!newSuffix) {
+                suffix = generateRandomAlphanumericString(75);
+                if (!this.passwordResetRepository.findBySuffix(suffix).isPresent()) {
+                    newSuffix = true;
+                }
+            }
 
-            //PasswordReset passwordReset = new PasswordReset(foundAccount.getId(), randomUrlSuffix, LocalDateTime.now());
-            //passwordResetRepository.save(passwordReset);
-            mailService.sendPasswordResetMail(mailToReset, randomUrlSuffix);
+            PasswordReset passwordReset = new PasswordReset(account.getId(), suffix);
+            logger.info("AccountId: " + passwordReset.getAccountId() + " - Suffix: " + passwordReset.getSuffix());
+            passwordResetRepository.save(passwordReset);
+            mailService.sendMail(mailToReset, "Glemt passord", suffix);
             logger.info("Generated password reset entity/mail for email: " + mailToReset);
         } catch (NoSuchElementException nee) {
             logger.info("A password reset was requested for a user that does not exist in the database: " + mailToReset);
@@ -183,6 +201,18 @@ public class AccountService {
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();
     }
+
+    /*private String generateRandomAlphanumericString(int length) {
+        int leftLimit = 48; // numeral '0'
+        int rightLimit = 122; // letter 'z'
+        Random random = new Random();
+
+        return random.ints(leftLimit, rightLimit + 1)
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(length)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+    }*/
 
     /**
      * Goes trough the repo and deletes the entities that is past expiration time.

@@ -105,6 +105,11 @@ public class AccountController {
         return success;
     }
 
+    @GetMapping("/reset/{suffix}")
+    public Account getAccountByResetSuffix(@PathVariable("suffix") String suffix) {
+        return this.accountService.findAccountByResetSuffix(suffix);
+    }
+
     @PostMapping("/reset/{mail}")
     public void requestPasswordReset(@PathVariable("mail") String mail) {
         this.accountService.generatePasswordReset(mail);
