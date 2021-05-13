@@ -1,6 +1,5 @@
 package idatt2105.frivilligprosjekt.romreservasjon.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
