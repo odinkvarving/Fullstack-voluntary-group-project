@@ -1,6 +1,7 @@
 package idatt2105.frivilligprosjekt.romreservasjon.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -17,10 +18,12 @@ public class Reservation {
     private LocalDateTime from_date;
     private LocalDateTime to_date;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonManagedReference
     private Section section;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonManagedReference
     private Account account;

@@ -23,7 +23,7 @@ public class ReservationController {
      *
      * @return a list of all registered Reservations
      */
-    @GetMapping("reservations/")
+    @GetMapping("reservations")
     public List<Reservation> getAllReservations() {
         return reservationService.findAll();
     }
@@ -34,7 +34,7 @@ public class ReservationController {
      * @param reservation requesting the body of the Reservation to save
      * @return true or false whether the Reservation was created successfully or not
      */
-    @PostMapping("reservations/")
+    @PostMapping("reservations")
     public boolean saveReservation(@RequestBody Reservation reservation) {
         logger.info("Trying to save reservation:\n" + reservation.toString());
         boolean success = reservationService.saveReservation(reservation);
