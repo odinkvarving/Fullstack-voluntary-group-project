@@ -1,30 +1,29 @@
 <template>
-  <div id="app">
-    <p style="color: black">asdasdasd</p>
+  <div>
+    <router-view />
   </div>
 </template>
 
 <script>
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
   },
-  data(){
+  /*data(){
     return {
       welcomeText: this.$store.state.welcomeText
     }
-  }
+  }*/
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  @import url("https://fonts.googleapis.com/css2?family=Inter"); /* :wght@300;400&display=swap */
+
+  body {
+    background-color: #192138;
+    font-family: "Inter";
+    color: white;
+  }
 </style>
