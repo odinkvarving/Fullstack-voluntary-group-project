@@ -117,26 +117,4 @@ public class AccountService {
         }
         return null;
     }
-
-    /**
-     * Method for registering a new Reservation for a specific Account
-     *
-     * @param reservation the Reservation to be registered to the Account
-     * @param id the ID of the Account
-     * @return true or false
-     */
-    public boolean createAccountReservation(Reservation reservation, int id) {
-        try {
-            Account account = accountRepository.findById(id).orElseThrow(NoSuchElementException::new);
-            reservation.setAccount(account);
-            account.getReservations().add(reservation);
-            reservation.setSection(reservation.getSection());
-            accountRepository.save(account);
-            return true;
-        }catch (DataAccessException e) {
-            e.printStackTrace();
-            logger.info("Could not add reservation to account");
-        }
-        return false;
-    }
 }
