@@ -23,7 +23,7 @@ public class ReservationController {
      *
      * @return a list of all registered Reservations
      */
-    @GetMapping("reservations/")
+    @GetMapping("reservations")
     public List<Reservation> getAllReservations() {
         return reservationService.findAll();
     }
@@ -34,7 +34,7 @@ public class ReservationController {
      * @param reservation requesting the body of the Reservation to save
      * @return true or false whether the Reservation was created successfully or not
      */
-    @PostMapping("reservations/")
+    @PostMapping("reservations")
     public boolean saveReservation(@RequestBody Reservation reservation) {
         logger.info("Trying to save reservation:\n" + reservation.toString());
         boolean success = reservationService.saveReservation(reservation);
@@ -57,9 +57,25 @@ public class ReservationController {
         return reservationService.updateReservation(reservation_id, newReservation);
     }
 
+    /**
+     * GetMapping for finding a specific Reservation
+     *
+     * @param reservation_id the PathVariable of the ID for the Reservation
+     * @return the Reservation that was found
+     */
     @GetMapping("reservations/{reservation_id}")
     public Reservation findReservationById(@PathVariable int reservation_id) {
         return reservationService.findReservationById(reservation_id);
+    }
+
+    /**
+     * DeleteMapping for deleting a specific Reservation
+     *
+     * @param reservation_id the PathVariable of the ID for the Reservation
+     */
+    @DeleteMapping("reservations/{reservation_id}")
+    public void deleteReservation(@PathVariable int reservation_id) {
+        reservationService.deleteReservation(reservation_id);
     }
 
 }

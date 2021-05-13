@@ -1,9 +1,7 @@
 package idatt2105.frivilligprosjekt.romreservasjon.service;
 
 import idatt2105.frivilligprosjekt.romreservasjon.model.Reservation;
-import idatt2105.frivilligprosjekt.romreservasjon.repository.AccountRepository;
 import idatt2105.frivilligprosjekt.romreservasjon.repository.ReservationRepository;
-import idatt2105.frivilligprosjekt.romreservasjon.repository.SectionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +71,12 @@ public class ReservationService {
         return null;
     }
 
+    /**
+     * Method for finding a Reservation with a specific ID
+     *
+     * @param id the id of the Reservation
+     * @return the Reservation that was found
+     */
     public Reservation findReservationById(int id) {
         try {
             return reservationRepository.findById(id).orElseThrow(NoSuchElementException::new);
@@ -81,5 +85,14 @@ public class ReservationService {
             logger.info("Could not find a reservation with this ID");
         }
         return null;
+    }
+
+    public void deleteReservation(int id) {
+        try {
+            reservationRepository.deleteById(id);
+        }catch (DataAccessException e) {
+            e.printStackTrace();
+            logger.info("Could not delete this reservation. ID does not exist");
+        }
     }
 }

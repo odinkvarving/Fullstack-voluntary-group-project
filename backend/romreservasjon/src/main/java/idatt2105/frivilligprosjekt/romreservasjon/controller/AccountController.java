@@ -23,7 +23,7 @@ public class AccountController {
      *
      * @return a list of all registered Accounts
      */
-    @GetMapping("accounts/")
+    @GetMapping("accounts")
     public List<Account> getAllAccounts() {
         return accountService.findAll();
     }
@@ -40,7 +40,7 @@ public class AccountController {
      * @param account requesting the body of the Account to save
      * @return true or false whether the Account was created successfully or not
      */
-    @PostMapping("accounts/")
+    @PostMapping("accounts")
     public boolean saveAccount(@RequestBody Account account) {
         logger.info("Trying to save account:\n" + account.toString());
         boolean success = accountService.saveAccount(account);
