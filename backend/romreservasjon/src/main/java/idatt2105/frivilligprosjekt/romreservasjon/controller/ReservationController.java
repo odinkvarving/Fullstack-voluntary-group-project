@@ -56,7 +56,7 @@ public class ReservationController {
         logger.info("Trying to update reservation to: \n" + newReservation.toString());
         return reservationService.updateReservation(reservation_id, newReservation);
     }
-
+    
     @GetMapping("reservations/{reservation_id}")
     public Reservation findReservationById(@PathVariable int reservation_id) {
         return reservationService.findReservationById(reservation_id);
