@@ -85,21 +85,4 @@ public class AccountController {
        logger.info("Finding reservations for Account with ID: " + account_id);
         return accountService.findAccountReservations(account_id);
     }
-
-    /**
-     * PostMapping for registering a new Reservation for a specific Account
-     *
-     * @param reservation requesting the Body of a new Reservation
-     * @param account_id the ID of the Account
-     * @return true or false
-     */
-    @PostMapping("accounts/{account_id}/reservations")
-    public boolean createAccountReservation(@RequestBody Reservation reservation, @PathVariable int account_id) {
-        logger.info("Trying to create reservation: \n" + reservation.toString());
-        boolean success = accountService.createAccountReservation(reservation, account_id);
-        if(success) {
-            logger.info("The reservation was successfully registered");
-        }
-        return success;
-    }
 }
