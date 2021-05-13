@@ -130,6 +130,7 @@ public class AccountService {
             Account account = accountRepository.findById(id).orElseThrow(NoSuchElementException::new);
             reservation.setAccount(account);
             account.getReservations().add(reservation);
+            reservation.setSection(reservation.getSection());
             accountRepository.save(account);
             return true;
         }catch (DataAccessException e) {
