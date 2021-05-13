@@ -3,13 +3,19 @@
         <div class="error-popup-content">
             <p id="close-btn" @click="closePopUp">X</p>
             <h3>Et problem oppsto!</h3>
-            <p>Email eller passord er feil</p>
+            <p>{{ message }}</p>
         </div>
     </div>
 </template>
 <script>
     export default {
         name: "ErrorPopUp",
+
+        props: {
+            message: {
+                Object: String
+            }
+        },
 
         methods: {
             closePopUp() {

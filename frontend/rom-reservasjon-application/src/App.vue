@@ -1,7 +1,7 @@
 <template>
   <div>
     <router-view />
-    <v-app>
+    <!-- <v-app>
     <v-app-bar
       app
       color="primary"
@@ -42,7 +42,7 @@
     <v-main>
       <button @click="testButtonClicked">Test button</button>
     </v-main>
-  </v-app>
+  </v-app> -->
   </div>
 </template>
 

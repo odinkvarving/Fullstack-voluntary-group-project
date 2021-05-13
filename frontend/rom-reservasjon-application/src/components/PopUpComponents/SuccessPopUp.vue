@@ -1,11 +1,20 @@
 <template>
     <div class="success-popup">
         <div class="success-popup-content">
-            <h3>Bruker logges inn</h3>
-            <p>Velkommen tilbake!</p>
+            <h3>Operasjonen var vellykket!</h3>
+            <p>{{ message }}</p>
         </div>
     </div>
 </template>
+<script>
+    export default {
+        props: {
+            message: {
+                Object: String
+            }
+        }
+    }
+</script>
 <style scoped>
     .success-popup {
         height: 150px;

@@ -9,9 +9,9 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 @Service
 public class AccountService {
@@ -23,6 +23,9 @@ public class AccountService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private MailService mailService;
 
     /**
      * Method for finding all Accounts registered in the database
@@ -98,4 +101,59 @@ public class AccountService {
             logger.error("null was passed as an argument while trying to delete account");
         }
     }
+
+    /**
+     * Sends a password reset link to the provided mail address if it exists in the database.
+     *
+     * @param mailToReset the mail to reset the password to.
+     */
+    public void generatePasswordReset(String mailToReset) {
+        try {
+            Account foundAccount = accountRepository.findByEmail(mailToReset).orElseThrow(NoSuchElementException::new);
+
+            String randomUrlSuffix = "";
+            //boolean newSuffix = false;
+            //while (!newSuffix) {
+                randomUrlSuffix = generateRandomAlphanumericString(75);
+                //if (!this.passwordResetRepository.findByResetUrlSuffix(randomUrlSuffix).isPresent()) {
+                    //newSuffix = true;
+                //}
+            //}
+
+            //PasswordReset passwordReset = new PasswordReset(foundAccount.getId(), randomUrlSuffix, LocalDateTime.now());
+            //passwordResetRepository.save(passwordReset);
+            mailService.sendPasswordResetMail(mailToReset, randomUrlSuffix);
+            logger.info("Generated password reset entity/mail for email: " + mailToReset);
+        } catch (NoSuchElementException nee) {
+            logger.info("A password reset was requested for a user that does not exist in the database: " + mailToReset);
+        }
+    }
+
+    private String generateRandomAlphanumericString(int length) {
+        int leftLimit = 48; // numeral '0'
+        int rightLimit = 122; // letter 'z'
+        Random random = new Random();
+
+        return random.ints(leftLimit, rightLimit + 1)
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(length)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+    }
+
+    /**
+     * Goes trough the repo and deletes the entities that is past expiration time.
+     */
+    /*private void updatePasswordResetRepo() {
+        logger.info("refreshing passwordreset repo");
+        final int TIME_LIMIT = 30;
+        Set<PasswordReset> resetsToDelete = new HashSet<>();
+        LocalDateTime now = LocalDateTime.now();
+        this.passwordResetRepository.findAll().forEach(passwordReset -> {
+            if (ChronoUnit.MINUTES.between(passwordReset.getTimeProduced(), now) > TIME_LIMIT) {
+                resetsToDelete.add(passwordReset);
+            }
+        });
+        this.passwordResetRepository.deleteAll(resetsToDelete);
+    }*/
 }

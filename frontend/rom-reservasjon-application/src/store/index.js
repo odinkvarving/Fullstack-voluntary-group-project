@@ -63,11 +63,15 @@ const store = new Vuex.Store({
                 let account = await getAccount(state.jwtToken);
                 
                 commit("setLoggedInAccount", account);
+
+                return true;
                 
             }catch(error){
                 console.log("CATCHED ERROR");
                 console.log(error);
                 commit("setError", "Failed to login, error occured");
+
+                return false;
             }finally{
                 commit("clearBusy");
             }

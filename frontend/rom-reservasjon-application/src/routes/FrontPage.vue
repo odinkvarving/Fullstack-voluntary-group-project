@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-      
+      Frontpage
   </div>
 </template>
 
@@ -10,9 +10,9 @@ export default {
     components: {
         
     },
-    data() {
+    /*data() {
 
-    }
+    }*/
 }
 </script>
 

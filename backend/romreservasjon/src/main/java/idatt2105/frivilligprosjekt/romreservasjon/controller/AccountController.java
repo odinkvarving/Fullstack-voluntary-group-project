@@ -5,8 +5,10 @@ import idatt2105.frivilligprosjekt.romreservasjon.service.AccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.*;
 import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -42,6 +44,7 @@ public class AccountController {
      */
     @PostMapping("accounts/register")
     public boolean saveAccount(@RequestBody Account account) {
+        logger.info("TESTTEST");
         logger.info("Trying to save user:\n" + account.toString());
         boolean success = accountService.saveAccount(account);
         if (success) {
@@ -70,5 +73,10 @@ public class AccountController {
     @DeleteMapping("accounts/{account_id}")
     public void deleteAccount(@PathVariable("account_id") int account_id) {
         accountService.deleteAccount(account_id);
+    }
+
+    @PostMapping("/reset/{mail}")
+    public void requestPasswordReset(@PathVariable("mail") String mail) {
+        this.accountService.generatePasswordReset(mail);
     }
 }
