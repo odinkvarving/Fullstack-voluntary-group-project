@@ -3,7 +3,7 @@
     <v-container>
       <v-row align="center" justify="center">
         <v-col cols="12" sm="6">
-          <h1 class="white--text text-justify">
+          <h1 class="white--text">
             Finn et keegt rom for<br />deg og dine
             <span style="color: #01AB55">behov</span>
           </h1>
@@ -11,6 +11,11 @@
             Følelsen når du rygger over kompisen din med tanksen og du må putte
             han i en jar fordi han er helt potetmos.
           </p>
+          <v-row>
+            <v-col cols="6">
+              <v-btn color="#01AB55"><span>Se alle rom</span></v-btn>
+            </v-col>
+          </v-row>
         </v-col>
         <v-col cols="12" sm="6">
           <v-img :src="require('../assets/minimalist-room.png')"> </v-img>
@@ -60,7 +65,7 @@
               outlined
             ></v-text-field>
           </v-col>
-          <v-col cols="4" sm="2">
+          <v-col cols="4" sm="2" order-xs="first">
             <v-btn color="#01AB55"><span>Søk</span></v-btn>
           </v-col>
         </v-row>
@@ -124,12 +129,16 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .frontpage {
   background-color: #192138;
 }
 
 .selection-field {
   background-color: #222b45;
+}
+
+h1 {
+  font-size: 3em;
 }
 </style>
