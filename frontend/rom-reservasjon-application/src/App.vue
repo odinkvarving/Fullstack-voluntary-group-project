@@ -2,53 +2,56 @@
   <v-app>
     <v-app-bar
       app
-      color="primary"
+      color="#222B45"
       dark
+      hide-on-scroll
     >
       <div class="d-flex align-center">
         <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
           contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
+          src="./assets/Logo.png"
           width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
         />
       </div>
 
       <v-spacer></v-spacer>
 
       <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
+        href="#"
         text
       >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
+        <span>Hjem</span>
+      </v-btn>
+      <v-btn
+        href="#"
+        text
+      >
+        <span>Partytime</span>
+      </v-btn>
+      <v-btn
+        href="#"
+        color="#01AB55"
+      >
+        <span>Logg inn</span>
       </v-btn>
     </v-app-bar>
 
     <v-main>
       <HelloWorld/>
+      <div style="height: 1000px"></div>
     </v-main>
   </v-app>
 </template>
 
 <script>
+import HelloWorld from './components/HelloWorld';
+
 export default {
-  name: "App",
-  components: {},
-};
-</script>
+  name: 'App',
+
+  components: {
+    HelloWorld,
+  },
 
   data: () => ({
     //
