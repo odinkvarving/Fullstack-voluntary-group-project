@@ -2,7 +2,8 @@ import store from "../store/index"
 
 export const reservationService = {
     getReservations,
-    getSectionsReservations
+    getSectionsReservations,
+    addReservation,
 }
 
 function getReservations(){
@@ -32,4 +33,8 @@ async function getSectionsReservations(roomId, sectionId){
     return fetch(url, requestOptions)
         .then(response => response.json())
         .catch(error => console.log(error));
+}
+
+async function addReservation(){
+    
 }
