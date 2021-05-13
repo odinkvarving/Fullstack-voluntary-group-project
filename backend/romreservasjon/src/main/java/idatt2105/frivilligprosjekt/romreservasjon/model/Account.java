@@ -11,7 +11,7 @@ public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int account_id;
+    private int id;
 
     private String name;
     private String email;
@@ -36,12 +36,12 @@ public class Account {
 
     }
 
-    public int getAccount_id() {
-        return account_id;
+    public int getId() {
+        return id;
     }
 
-    public void setAccount_id(int id) {
-        this.account_id = id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -106,7 +106,7 @@ public class Account {
     @Override
     public String toString() {
         return "Account{" +
-                "id=" + account_id +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +

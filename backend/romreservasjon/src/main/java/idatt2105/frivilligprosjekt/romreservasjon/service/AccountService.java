@@ -61,7 +61,7 @@ public class AccountService {
      * @return true if the Account was registered, false if an Account with the given email already exists
      */
     public boolean saveAccount(Account account) {
-        Optional<Account> acc = accountRepository.findById(account.getAccount_id());
+        Optional<Account> acc = accountRepository.findById(account.getId());
         if (acc.isPresent()) {
             logger.info("Error! Could not create account, ID already exists");
             return false;

@@ -11,7 +11,7 @@ public class Section {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int section_id;
+    private int id;
 
     private String name;
     private double size;
@@ -32,12 +32,12 @@ public class Section {
         this.max_persons = max_persons;
     }
 
-    public int getSection_id() {
-        return section_id;
+    public int getId() {
+        return id;
     }
 
-    public void setSection_id(int section_id) {
-        this.section_id = section_id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

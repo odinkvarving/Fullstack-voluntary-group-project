@@ -1,6 +1,7 @@
 package idatt2105.frivilligprosjekt.romreservasjon.service;
 
 import idatt2105.frivilligprosjekt.romreservasjon.model.Room;
+import idatt2105.frivilligprosjekt.romreservasjon.model.Section;
 import idatt2105.frivilligprosjekt.romreservasjon.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,5 +23,15 @@ public class RoomService {
         roomsIt.forEach(rooms::add);
 
         return rooms;
+    }
+
+    public Room findById(int id){
+        return roomRepository.findById(id).orElse(null);
+    }
+
+    public Room saveRoom(Room room){
+        Room result = roomRepository.save(room);
+
+        return result;
     }
 }

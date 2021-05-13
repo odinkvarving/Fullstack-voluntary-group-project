@@ -9,7 +9,7 @@ public class Reservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int reservation_id;
+    private int id;
 
     private LocalDateTime from_date;
     private LocalDateTime to_date;
@@ -28,12 +28,12 @@ public class Reservation {
         this.to_date = to_date;
     }
 
-    public int getReservation_id() {
-        return reservation_id;
+    public int getId() {
+        return id;
     }
 
-    public void setReservation_id(int id) {
-        this.reservation_id = id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public LocalDateTime getFrom_date() {
