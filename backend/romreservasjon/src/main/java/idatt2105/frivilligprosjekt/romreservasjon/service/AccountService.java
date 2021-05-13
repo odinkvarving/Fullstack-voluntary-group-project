@@ -1,6 +1,7 @@
 package idatt2105.frivilligprosjekt.romreservasjon.service;
 
 import idatt2105.frivilligprosjekt.romreservasjon.model.Account;
+import idatt2105.frivilligprosjekt.romreservasjon.model.Reservation;
 import idatt2105.frivilligprosjekt.romreservasjon.repository.AccountRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class AccountService {
@@ -42,10 +44,10 @@ public class AccountService {
     }
 
     /**
-     * Method for finding an account by email
+     * Method for finding an Account with a specific email
      *
-     * @param email
-     * @return
+     * @param email the email of the Account
+     * @return the Account that was found with this email
      */
     public Account findByEmail(String email){
         Optional<Account> account = accountRepository.findByEmail(email);
@@ -80,6 +82,8 @@ public class AccountService {
      */
     public Account updateAccount(int id, Account account) {
         try {
+            logger.info("Account updated!");
+            account.setId(id);
             return accountRepository.save(account);
         } catch (DataAccessException e) {
             logger.info("Could not update account");
@@ -100,6 +104,45 @@ public class AccountService {
             e.printStackTrace();
             logger.error("null was passed as an argument while trying to delete account");
         }
+    }
+
+    /**
+     * Method for finding all Reservations for a specific Account
+     *
+     * @param id the ID of the Account
+     * @return a Set containing the Reservations for the Account
+     */
+    public Set<Reservation> findAccountReservations(int id) {
+        try {
+            logger.info("Successfully found all reservations");
+            return accountRepository.findById(id).orElseThrow(NoSuchElementException::new).getReservations();
+        }catch (DataAccessException e) {
+            e.printStackTrace();
+            logger.info("Could not find any reservations for this account");
+        }
+        return null;
+    }
+
+    /**
+     * Method for registering a new Reservation for a specific Account
+     *
+     * @param reservation the Reservation to be registered to the Account
+     * @param id the ID of the Account
+     * @return true or false
+     */
+    public boolean createAccountReservation(Reservation reservation, int id) {
+        try {
+            Account account = accountRepository.findById(id).orElseThrow(NoSuchElementException::new);
+            reservation.setAccount(account);
+            account.getReservations().add(reservation);
+            reservation.setSection(reservation.getSection());
+            accountRepository.save(account);
+            return true;
+        }catch (DataAccessException e) {
+            e.printStackTrace();
+            logger.info("Could not add reservation to account");
+        }
+        return false;
     }
 
     /**

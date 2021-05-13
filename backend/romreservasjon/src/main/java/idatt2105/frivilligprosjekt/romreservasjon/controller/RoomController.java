@@ -1,6 +1,7 @@
 package idatt2105.frivilligprosjekt.romreservasjon.controller;
 
 
+import idatt2105.frivilligprosjekt.romreservasjon.model.Reservation;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Room;
 import idatt2105.frivilligprosjekt.romreservasjon.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +30,10 @@ public class RoomController {
     @PostMapping("/rooms")
     public Room saveRoom(@RequestBody Room room) {
         return roomService.saveRoom(room);
+    }
+
+    @GetMapping("/rooms/{roomId}/sections/{sectionId}")
+    public List<Reservation> findReservationsByRoomIdAndSectionId(@PathVariable int roomId, @PathVariable int sectionId){
+        return roomService.findReservationsByRoomIdAndSectionId(roomId, sectionId);
     }
 }

@@ -23,8 +23,8 @@ public class ReservationController {
      *
      * @return a list of all registered Reservations
      */
-    @GetMapping("reservations/")
-    public List<Reservation> getAllAccounts() {
+    @GetMapping("reservations")
+    public List<Reservation> getAllReservations() {
         return reservationService.findAll();
     }
 
@@ -34,13 +34,48 @@ public class ReservationController {
      * @param reservation requesting the body of the Reservation to save
      * @return true or false whether the Reservation was created successfully or not
      */
-    @PostMapping("reservations/register")
-    public boolean saveAccount(@RequestBody Reservation reservation) {
+    @PostMapping("reservations")
+    public boolean saveReservation(@RequestBody Reservation reservation) {
         logger.info("Trying to save reservation:\n" + reservation.toString());
         boolean success = reservationService.saveReservation(reservation);
         if (success) {
-            logger.info("Success!");
+            logger.info("Reservation has been registered.");
         }
         return success;
     }
+
+    /**
+     * PutMapping for updating a specific Account
+     *
+     * @param newReservation requesting the body of a new Reservation (updated version)
+     * @param reservation_id the PathVariable of the id for the Reservation
+     * @return the Account that was updated
+     */
+    @PutMapping("reservations/{reservation_id}")
+    public Reservation updateReservation(@RequestBody Reservation newReservation, @PathVariable("reservation_id") int reservation_id) {
+        logger.info("Trying to update reservation to: \n" + newReservation.toString());
+        return reservationService.updateReservation(reservation_id, newReservation);
+    }
+
+    /**
+     * GetMapping for finding a specific Reservation
+     *
+     * @param reservation_id the PathVariable of the ID for the Reservation
+     * @return the Reservation that was found
+     */
+    @GetMapping("reservations/{reservation_id}")
+    public Reservation findReservationById(@PathVariable int reservation_id) {
+        return reservationService.findReservationById(reservation_id);
+    }
+
+    /**
+     * DeleteMapping for deleting a specific Reservation
+     *
+     * @param reservation_id the PathVariable of the ID for the Reservation
+     */
+    @DeleteMapping("reservations/{reservation_id}")
+    public void deleteReservation(@PathVariable int reservation_id) {
+        reservationService.deleteReservation(reservation_id);
+    }
+
 }
