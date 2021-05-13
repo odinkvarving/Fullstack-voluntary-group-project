@@ -45,6 +45,7 @@
 
 <script>
 import { roomService } from "./services/RoomService"
+import { reservationService } from "./services/ReservationService"
 
 export default {
   name: "App",
@@ -61,8 +62,11 @@ export default {
       console.log(this.$store.getters.getLoggedInAccount);
       console.log(this.$store.getters.getJwtToken);
 
-        let rooms = await roomService.getRooms();
-        console.log(rooms);
+      let rooms = await roomService.getRooms();
+      console.log(rooms);
+
+      let reservations = await reservationService.getReservations();
+      console.log(reservations);
     }
   }
 };
