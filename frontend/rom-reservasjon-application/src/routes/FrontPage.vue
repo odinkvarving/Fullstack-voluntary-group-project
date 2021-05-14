@@ -1,7 +1,7 @@
 <template>
   <div class="frontpage">
     <v-container>
-      <v-row align="center" justify="center">
+      <v-row align="center" justify="center" class="pt-10">
         <v-col cols="12" sm="6">
           <h1 class="white--text">
             Finn et keegt rom for<br />deg og dine
@@ -14,7 +14,7 @@
           <v-row>
             <router-link class="link" to="/roomfeed">
               <v-col cols="6">
-                <v-btn color="#01AB55"><span>Se alle rom</span></v-btn>
+                <v-btn color="green"><span>Se alle rom</span></v-btn>
               </v-col>
             </router-link>
           </v-row>
@@ -33,7 +33,7 @@
               dense
               hide-details
               label="Start"
-              color="#01AB55"
+              color="green"
               outlined
             ></v-text-field>
           </v-col>
@@ -42,7 +42,7 @@
               dense
               hide-details
               label="Slutt"
-              color="#01AB55"
+              color="green"
               outlined
             ></v-text-field>
           </v-col>
@@ -51,7 +51,7 @@
               dense
               hide-details
               label="Dato"
-              color="#01AB55"
+              color="green"
               outlined
             ></v-text-field>
           </v-col>
@@ -63,12 +63,12 @@
               dense
               hide-details
               label="Søk"
-              color="#01AB55"
+              color="green"
               outlined
             ></v-text-field>
           </v-col>
           <v-col cols="8" xs="8" sm="2" order="first" order-sm="0">
-            <v-btn color="#01AB55"><span>Søk</span></v-btn>
+            <v-btn color="green"><span>Søk</span></v-btn>
           </v-col>
         </v-row>
         <v-row align="center">
@@ -77,7 +77,7 @@
               dense
               hide-details
               label="Område"
-              color="#01AB55"
+              color="green"
               outlined
             ></v-text-field>
           </v-col>
@@ -86,7 +86,7 @@
               dense
               hide-details
               label="Bygning"
-              color="#01AB55"
+              color="green"
               outlined
             ></v-text-field>
           </v-col>
@@ -95,7 +95,7 @@
               dense
               hide-details
               label="Romtype"
-              color="#01AB55"
+              color="green"
               outlined
             ></v-text-field>
           </v-col>
@@ -106,14 +106,14 @@
               dense
               hide-details
               label="Utstyr"
-              color="#01AB55"
+              color="green"
               outlined
             ></v-text-field>
           </v-col>
         </v-row>
         <v-row align="center">
           <v-col cols="4" xs="4" sm="2">
-            <v-btn color="#01AB55"><span>Finn rom</span></v-btn>
+            <v-btn color="green"><span>Finn rom</span></v-btn>
           </v-col>
         </v-row>
       </v-container>
@@ -132,7 +132,7 @@ export default {
   },
   computed() {
     this.isLoggedIn = this.$store.getters.isLoggedIn;
-  }
+  },
 };
 </script>
 

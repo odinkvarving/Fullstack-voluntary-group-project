@@ -13,11 +13,13 @@
         }
     }
 </script>
-<style>
-    .login {
-        position: fixed;
-        top: 40%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
+
+<style scoped>
+.login {
+    background-color: #192138;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 </style>
