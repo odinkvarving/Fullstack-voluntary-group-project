@@ -26,7 +26,7 @@
     <div class="selection-field">
       <v-container pt-10 pb-10>
         <v-row align="center">
-          <v-col cols="4" sm="2">
+          <v-col cols="4" xs="4" sm="2">
             <v-text-field
               dense
               hide-details
@@ -35,7 +35,7 @@
               outlined
             ></v-text-field>
           </v-col>
-          <v-col cols="4" sm="2">
+          <v-col cols="4" xs="4" sm="2">
             <v-text-field
               dense
               hide-details
@@ -44,7 +44,7 @@
               outlined
             ></v-text-field>
           </v-col>
-          <v-col cols="4" sm="2">
+          <v-col cols="4" xs="4" sm="2">
             <v-text-field
               dense
               hide-details
@@ -56,7 +56,7 @@
 
           <v-spacer></v-spacer>
 
-          <v-col cols="4" sm="2" order-xs="first">
+          <v-col cols="4" xs="4" sm="2" order="first">
             <v-text-field
               dense
               hide-details
@@ -65,12 +65,12 @@
               outlined
             ></v-text-field>
           </v-col>
-          <v-col cols="4" sm="2" order-xs="first">
+          <v-col cols="4" xs="4" sm="2" order-xs="first">
             <v-btn color="#01AB55"><span>Søk</span></v-btn>
           </v-col>
         </v-row>
         <v-row align="center">
-          <v-col cols="4" sm="2">
+          <v-col cols="4" xs="4" sm="2">
             <v-text-field
               dense
               hide-details
@@ -79,7 +79,7 @@
               outlined
             ></v-text-field>
           </v-col>
-          <v-col cols="4" sm="2">
+          <v-col cols="4" xs="4" sm="2">
             <v-text-field
               dense
               hide-details
@@ -88,7 +88,7 @@
               outlined
             ></v-text-field>
           </v-col>
-          <v-col cols="4" sm="2">
+          <v-col cols="4" xs="4" sm="2">
             <v-text-field
               dense
               hide-details
@@ -99,7 +99,7 @@
           </v-col>
         </v-row>
         <v-row align="center">
-          <v-col cols="4" sm="2">
+          <v-col cols="4" xs="4" sm="2">
             <v-text-field
               dense
               hide-details
@@ -110,7 +110,7 @@
           </v-col>
         </v-row>
         <v-row align="center">
-          <v-col cols="4" sm="2">
+          <v-col cols="4" xs="4" sm="2">
             <v-btn color="#01AB55"><span>Finn rom</span></v-btn>
           </v-col>
         </v-row>
