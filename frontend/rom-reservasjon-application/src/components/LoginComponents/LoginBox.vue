@@ -1,9 +1,9 @@
 <template>
   <div>
-    <SuccessPopUp class="popup" v-show="isPopUpVisible" :message="message" />
+    <SuccessPopUp class="popup" v-show="false" :message="message" />
     <ErrorPopUp
       class="popup"
-      v-show="isErrorVisible"
+      v-show="false"
       v-on:close-popup="closePopUp"
       :message="message"
     />
@@ -13,6 +13,20 @@
           <v-col cols="12">
             <h1>Velkommen tilbake</h1>
             <p class="white--text text--secondary">Logg på kontoen din</p>
+            <v-alert
+              type="error"
+              :value="isErrorVisible"
+              transition="scale-transition"
+            >
+              {{ message }}
+            </v-alert>
+            <v-alert
+              :value="isPopUpVisible"
+              type="success"
+              transition="scale-transition"
+            >
+              {{ message }}
+            </v-alert>
           </v-col>
           <v-col cols="12">
             <p class="text">Skriv inn e-post</p>
@@ -90,7 +104,6 @@ export default {
         return;
       }
       if (!this.validateEmail()) {
-        document.getElementById("login-page").style.filter = "blur(5px)";
         this.message = "E-post eller passord er ugyldig";
         this.isEmailValid = false;
         this.isErrorVisible = true;
@@ -107,14 +120,14 @@ export default {
         this.eMailErrorMessage = "Dette feltet kan ikke stå tomt";
         isValid = false;
       } else {
-          this.eMailErrorMessage = "";
+        this.eMailErrorMessage = "";
       }
       if (this.passwordInput === "") {
         this.isPasswordValid = false;
         this.passwordErrorMessage = "Dette feltet kan ikke stå tomt";
         isValid = false;
       } else {
-          this.passwordErrorMessage = "";
+        this.passwordErrorMessage = "";
       }
       return isValid;
     },
@@ -133,12 +146,10 @@ export default {
       console.log("Authenticated: " + state);
 
       if (state) {
-        document.getElementById("login-page").style.filter = "blur(5px)";
         this.message = "Bruker logges inn";
         this.isPopUpVisible = true;
         setTimeout(() => this.$router.push("/frontpage"), 1000);
       } else {
-        document.getElementById("login-page").style.filter = "blur(5px)";
         this.message = "E-post eller passord er ugyldig";
         this.isErrorVisible = true;
       }
@@ -164,11 +175,4 @@ export default {
   max-width: 600px;
 }
 
-.popup {
-  position: absolute;
-  background-color: #222b45;
-  z-index: 2;
-  top: 30%;
-  left: 40%;
-}
 </style>
