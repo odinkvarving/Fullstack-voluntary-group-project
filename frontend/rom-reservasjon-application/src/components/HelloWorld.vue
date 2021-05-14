@@ -39,7 +39,6 @@
             :key="i"
             :href="next.href"
             class="subheading mx-3"
-            target="_blank"
           >
             {{ next.text }}
           </a>
@@ -60,7 +59,6 @@
             :key="i"
             :href="link.href"
             class="subheading mx-3"
-            target="_blank"
           >
             {{ link.text }}
           </a>
