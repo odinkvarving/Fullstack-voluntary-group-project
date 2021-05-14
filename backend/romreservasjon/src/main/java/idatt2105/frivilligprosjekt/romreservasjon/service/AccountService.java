@@ -5,7 +5,6 @@ import idatt2105.frivilligprosjekt.romreservasjon.model.PasswordReset;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Reservation;
 import idatt2105.frivilligprosjekt.romreservasjon.repository.AccountRepository;
 import idatt2105.frivilligprosjekt.romreservasjon.repository.PasswordResetRepository;
-import jdk.jshell.spi.ExecutionControlProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

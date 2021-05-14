@@ -1,8 +1,6 @@
 package idatt2105.frivilligprosjekt.romreservasjon.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -16,6 +14,7 @@ public class Reservation {
 
     private LocalDateTime from_date;
     private LocalDateTime to_date;
+    private int number_of_people;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference(value = "section-reservation")
@@ -28,9 +27,10 @@ public class Reservation {
     public Reservation() {
     }
 
-    public Reservation(LocalDateTime from_date, LocalDateTime to_date, Section section, Account account) {
+    public Reservation(LocalDateTime from_date, LocalDateTime to_date, int number_of_people, Section section, Account account) {
         this.from_date = from_date;
         this.to_date = to_date;
+        this.number_of_people = number_of_people;
         this.section = section;
         this.account = account;
     }
@@ -57,6 +57,14 @@ public class Reservation {
 
     public void setTo_date(LocalDateTime to_date) {
         this.to_date = to_date;
+    }
+
+    public int getNumber_of_people() {
+        return number_of_people;
+    }
+
+    public void setNumber_of_people(int number_of_people) {
+        this.number_of_people = number_of_people;
     }
 
     public Section getSection() {
