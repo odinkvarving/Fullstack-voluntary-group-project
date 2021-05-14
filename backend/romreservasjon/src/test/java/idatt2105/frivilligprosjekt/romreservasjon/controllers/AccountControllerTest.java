@@ -1,5 +1,6 @@
 package idatt2105.frivilligprosjekt.romreservasjon.controllers;
 
+import idatt2105.frivilligprosjekt.romreservasjon.controller.AccountController;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Account;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Reservation;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Room;
@@ -13,28 +14,34 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.*;
 
-
+//WebMvcTest needed?
 @RunWith(SpringRunner.class)
+@WebMvcTest(AccountController.class)
 @ContextConfiguration
 @WebAppConfiguration
 @SpringBootTest
@@ -109,6 +116,45 @@ public class AccountControllerTest {
                 .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(1))))
                 .andExpect(jsonPath("$[0].name", is("testName1")))
                 .andExpect(jsonPath("$.length()", is(2)));
+    }
+
+    @Test
+    public void testFindingAccountByEmail() throws Exception {
+        this.mockMvc.perform(get("/accounts/email=testEmail1")
+                .with(SecurityMockMvcRequestPostProcessor.admin())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.*", hasSize(greaterThanOrEqualTo(1))))
+                .andExpect(content().string(containsString("testEmail1")));
+    }
+
+    @Test
+    public void testFindingAccountById() throws Exception {
+        this.mockMvc.perform(get("/accounts/email=testEmail1")
+                .with(SecurityMockMvcRequestPostProcessor.admin())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", isA(LinkedHashMap.class)))
+                .andExpect(jsonPath("$.id", is(1)));
+    }
+
+    @Test
+    public void testSavingAccount() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/accounts")
+                .with(SecurityMockMvcRequestPostProcessor.admin())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("NAME"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("EMAIL"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.password").value("PASSWORD"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.phone").value("1234567"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.is_admin").value(true))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.expiration_date").value(LocalDateTime.of(2022, 5, 4, 12, 15)));
+   //https://stackoverflow.com/questions/51346781/how-to-test-post-method-in-spring-boot-using-mockito-and-junit
     }
 
     public static class SecurityMockMvcRequestPostProcessor {
