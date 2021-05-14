@@ -18,6 +18,7 @@ public class Section {
     private int id;
 
     private String name;
+    private String description;
     private double size;
     private int max_persons;
 
@@ -32,8 +33,9 @@ public class Section {
     public Section() {
     }
 
-    public Section(String name, double size, int max_persons) {
+    public Section(String name, String description, double size, int max_persons) {
         this.name = name;
+        this.description = description;
         this.size = size;
         this.max_persons = max_persons;
     }
@@ -52,6 +54,14 @@ public class Section {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public double getSize() {
