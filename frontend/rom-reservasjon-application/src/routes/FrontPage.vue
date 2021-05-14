@@ -56,7 +56,7 @@
 
           <v-spacer></v-spacer>
 
-          <v-col cols="4" xs="4" sm="2" order="first">
+          <v-col cols="4" xs="4" sm="2" order="first" order-sm="0">
             <v-text-field
               dense
               hide-details
@@ -65,7 +65,7 @@
               outlined
             ></v-text-field>
           </v-col>
-          <v-col cols="4" xs="4" sm="2" order-xs="first">
+          <v-col cols="8" xs="8" sm="2" order="first" order-sm="0">
             <v-btn color="#01AB55"><span>Søk</span></v-btn>
           </v-col>
         </v-row>
