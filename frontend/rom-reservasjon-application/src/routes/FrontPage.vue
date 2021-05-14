@@ -12,9 +12,11 @@
             han i en jar fordi han er helt potetmos.
           </p>
           <v-row>
-            <v-col cols="6">
-              <v-btn color="#01AB55"><span>Se alle rom</span></v-btn>
-            </v-col>
+            <router-link class="link" to="/roomfeed">
+              <v-col cols="6">
+                <v-btn color="#01AB55"><span>Se alle rom</span></v-btn>
+              </v-col>
+            </router-link>
           </v-row>
         </v-col>
         <v-col cols="12" sm="6">
@@ -124,8 +126,13 @@ export default {
   name: "FrontPage",
   components: {},
   data() {
-    return {};
+    return {
+      isLoggedIn: false,
+    };
   },
+  computed() {
+    this.isLoggedIn = this.$store.getters.isLoggedIn;
+  }
 };
 </script>
 
