@@ -8,9 +8,9 @@ const store = new Vuex.Store({
     state:{
         jwtToken: "",
         loggedInAccount: {},
+        rooms: [],
         isBusy: false,
         error: "",
-        apiURL: "http://localhost:8080/"
     },
     mutations:{
         setJwtToken: (state, jwtToken) => {
@@ -25,6 +25,12 @@ const store = new Vuex.Store({
         clearLoggedInAccount: (state) => {
             state.loggedInAccount = {}
         },
+        setRooms: (state, rooms) => {
+            state.rooms = rooms;
+        },
+        clearRooms: (state) => {
+            state.rooms = [];
+        },
         setBusy: (state) => state.isBusy = true,
         clearBusy: (state) => state.isBusy = false,
         setError: (state, error) => state.error = error,
@@ -33,7 +39,8 @@ const store = new Vuex.Store({
     getters:{
         isAuthenticated: (state) => state.jwtToken.length > 0,
         getJwtToken: (state) => state.jwtToken,
-        getLoggedInAccount: (state) => state.loggedInAccount
+        getLoggedInAccount: (state) => state.loggedInAccount,
+        getRooms: (state) => state.rooms
     },
     actions:{
         login: async({ commit, state }, authRequest) => {
@@ -74,6 +81,32 @@ const store = new Vuex.Store({
                 return false;
             }finally{
                 commit("clearBusy");
+            }
+        },
+        loadRooms: async({ commit }) => {
+            try {
+                commit("setBusy");
+                commit("clearError");
+
+                const url = "http://localhost:8080/rooms";
+
+                await fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Loading in rooms...");
+                        console.log(data);
+                        commit("setRooms", data);
+                    })
+                    .catch(error => {
+                        console.log("Error when loading rooms:");
+                        console.log(error);
+                    });
+            }catch(error){
+                console.log("CATCHED ERROR");
+                console.log(error);
+            }finally{
+                commit("clearBusy");
+                console.log("Rooms loaded in sucessfully!");
             }
         }
     }
