@@ -63,11 +63,15 @@ const store = new Vuex.Store({
                 let account = await getAccount(state.jwtToken);
                 
                 commit("setLoggedInAccount", account);
+
+                return true;
                 
             }catch(error){
                 console.log("CATCHED ERROR");
                 console.log(error);
                 commit("setError", "Failed to login, error occured");
+
+                return false;
             }finally{
                 commit("clearBusy");
             }
@@ -81,7 +85,7 @@ function getAccount(jwtToken){
     const accountEmail = VueJwtDecode.decode(jwtToken).sub;
     console.log(accountEmail);
 
-    let url = `http://localhost:8080/accounts/${accountEmail}`;
+    let url = `http://localhost:8080/accounts/email=${accountEmail}`;
 
     const requestOptions = {
         methods: 'GET',

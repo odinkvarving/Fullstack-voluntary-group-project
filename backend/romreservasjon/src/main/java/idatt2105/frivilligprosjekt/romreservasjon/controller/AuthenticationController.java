@@ -17,6 +17,13 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationService authenticationService;
 
+    /**
+     * Authenticates a user that tries to login and returns a token if it is valid
+     *
+     * @param authenticationRequest
+     * @return
+     * @throws Exception
+     */
     @PostMapping("/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception{
         return authenticationService.createAuthenticationToken(authenticationRequest);

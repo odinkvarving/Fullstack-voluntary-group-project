@@ -17,23 +17,35 @@ public class RoomController {
     @Autowired
     private RoomService roomService;
 
+    /**
+     * Retrieve all rooms
+     *
+     * @return rooms
+     */
     @GetMapping("/rooms")
     public List<Room> findAll(){
         return roomService.findAll();
     }
 
+    /**
+     * Find room by id
+     *
+     * @param id
+     * @return room
+     */
     @GetMapping("/rooms/{id}")
     public Room findById(@PathVariable int id){
         return roomService.findById(id);
     }
 
+    /**
+     * Save a room
+     *
+     * @param room
+     * @return room that is saved
+     */
     @PostMapping("/rooms")
     public Room saveRoom(@RequestBody Room room) {
         return roomService.saveRoom(room);
-    }
-
-    @GetMapping("/rooms/{roomId}/sections/{sectionId}")
-    public List<Reservation> findReservationsByRoomIdAndSectionId(@PathVariable int roomId, @PathVariable int sectionId){
-        return roomService.findReservationsByRoomIdAndSectionId(roomId, sectionId);
     }
 }

@@ -17,6 +17,11 @@ public class RoomService {
     @Autowired
     private RoomRepository roomRepository;
 
+    /**
+     * Retrieve all rooms
+     *
+     * @return rooms
+     */
     public List<Room> findAll(){
         Iterable<Room> roomsIt = roomRepository.findAll();
         List<Room> rooms = new ArrayList<>();
@@ -26,27 +31,26 @@ public class RoomService {
         return rooms;
     }
 
+    /**
+     * Find room by id
+     *
+     * @param id
+     * @return room
+     */
     public Room findById(int id){
         return roomRepository.findById(id).orElse(null);
     }
 
+
+    /**
+     * Create new room
+     *
+     * @param room
+     * @return room that was created
+     */
     public Room saveRoom(Room room){
         room.getSections().forEach(section -> section.setRoom(room));
 
         return roomRepository.save(room);
-    }
-
-    public List<Reservation> findReservationsByRoomIdAndSectionId(int roomId, int sectionId){
-        Room room = roomRepository.findById(roomId).orElse(null);
-        if(room != null){
-            Section section = room.getSections().stream().filter(s -> s.getId() == sectionId).findFirst().orElse(null);
-            if(section == null){
-                return null;
-            }else {
-                return new ArrayList<>(section.getInReservations());
-            }
-        }else{
-            return null;
-        }
     }
 }
