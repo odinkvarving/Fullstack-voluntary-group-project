@@ -15,6 +15,8 @@ public class Room {
     private int id;
 
     private String name;
+    private String address;
+    private String description;
     private double size;
     private int max_persons;
 
@@ -24,8 +26,10 @@ public class Room {
     public Room() {
     }
 
-    public Room(String name, double size, int max_persons) {
+    public Room(String name, String address, String description, double size, int max_persons) {
         this.name = name;
+        this.address = address;
+        this.description = description;
         this.size = size;
         this.max_persons = max_persons;
     }
@@ -44,6 +48,22 @@ public class Room {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public double getSize() {
