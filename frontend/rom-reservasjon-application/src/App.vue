@@ -75,6 +75,9 @@ export default {
       let account = await accountService.getAccount(2);
       console.log(account);
     }
+  },
+  mounted(){
+    this.$store.dispatch("loadRooms");
   }
 }
 </script>

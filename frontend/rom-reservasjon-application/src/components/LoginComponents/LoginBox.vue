@@ -81,7 +81,7 @@
                     document.getElementById("login-box").style.filter = "blur(5px)";
                     this.message = "Bruker logges inn";
                     this.isPopUpVisible = true;
-                    setTimeout(() => this.$router.push("/frontpage"), 1000);
+                    setTimeout(() => this.$router.push("/"), 1000);
                 } else {
                     document.getElementById("login-box").style.filter = "blur(5px)";
                     this.message = "E-post eller passord er ugyldig";
