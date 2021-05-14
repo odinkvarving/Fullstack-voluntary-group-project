@@ -125,13 +125,10 @@
 export default {
   name: "FrontPage",
   components: {},
-  data() {
-    return {
-      isLoggedIn: false,
-    };
-  },
-  computed() {
-    this.isLoggedIn = this.$store.getters.isLoggedIn;
+  computed: {
+    isLoggedIn(){
+      return this.$store.getters.isAuthenticated;
+    }
   }
 };
 </script>
