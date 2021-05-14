@@ -2,7 +2,7 @@
   <div class="room-feed">
       <v-container class="vue-container">
           <v-row align="center" justify="center">
-              <v-col cols="4" class="filter-column">
+              <v-col cols="3" class="filter-column">
                   <div>
                     <p>Søk etter rom</p>
                     <v-text-field
@@ -11,6 +11,7 @@
                         label="Søk"
                         color="#01AB55"
                         outlined
+                        v-model="searchValue"
                     ></v-text-field>
                    </div>
                     <div>
@@ -73,8 +74,9 @@
                         outlined
                     ></v-text-field>
                 </div>
+                    <v-btn color="#01AB55" block @click="searchButtonClicked"><span>Søk</span></v-btn>
               </v-col>
-              <v-col cols="8" class="room-list-column">
+              <v-col cols="6" class="room-list-column" >
                   <div v-for="(room) in rooms" :key="room.id" >
                     <v-row align="center" justify="center">
                         <v-col>
@@ -96,10 +98,7 @@
 </template>
 
 <script>
-// Main JS (in UMD format)
 import VueTimepicker from 'vue2-timepicker'
-
-// CSS
 import 'vue2-timepicker/dist/VueTimepicker.css'
 
 export default {
@@ -107,14 +106,37 @@ export default {
     components: {
         VueTimepicker
     },
+    data(){
+        return {
+            searchValue: "",
+            placeValue: "",
+            startTimeValue: "",
+            endTimeValue: "",
+            dateValue: "",
+            equipmentValue: "",
+            isNoFilters: true,
+            filteredList: []
+        }
+    },
     computed: {
         rooms(){
-            return this.$store.getters.getRooms;
-        }
+            if(this.isNoFilters){
+                return this.$store.getters.getRooms;
+            }else{
+                return this.filteredList;
+            }
+        },
     },
     methods: {
         goToRoomButtonClicked(roomId){
             this.$router.push(`/rooms/${roomId}`);
+        },
+        searchButtonClicked(){
+            this.filteredList = this.$store.getters.getRooms.filter((room) => {
+                return room.name.includes(this.searchValue);
+            });
+            this.isNoFilters = false;
+            console.log(this.filteredList);
         }
     }
 }
@@ -125,6 +147,10 @@ export default {
     height: 100vh;
     width: 100%;
     background-color: #192138;
+}
+
+.vue-container{
+    max-width: 100vw;
 }
 
 .filter-column {
