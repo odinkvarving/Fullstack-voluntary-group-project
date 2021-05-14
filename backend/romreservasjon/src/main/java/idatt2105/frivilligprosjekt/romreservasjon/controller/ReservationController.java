@@ -23,7 +23,7 @@ public class ReservationController {
      *
      * @return a list of all registered Reservations
      */
-    @GetMapping("reservations")
+    @GetMapping("/reservations")
     public List<Reservation> getAllReservations() {
         return reservationService.findAll();
     }
@@ -34,7 +34,7 @@ public class ReservationController {
      * @param reservation requesting the body of the Reservation to save
      * @return true or false whether the Reservation was created successfully or not
      */
-    @PostMapping("reservations")
+    @PostMapping("/reservations")
     public boolean saveReservation(@RequestBody Reservation reservation) {
         logger.info("Trying to save reservation...");
         boolean success = reservationService.saveReservation(reservation);
@@ -51,8 +51,8 @@ public class ReservationController {
      * @param reservation_id the PathVariable of the id for the Reservation
      * @return the Account that was updated
      */
-    @PutMapping("reservations/{reservation_id}")
-    public Reservation updateReservation(@RequestBody Reservation newReservation, @PathVariable("reservation_id") int reservation_id) {
+    @PutMapping("/reservations/{reservation_id}")
+    public Reservation updateReservation(@PathVariable("reservation_id") int reservation_id, @RequestBody Reservation newReservation) {
         logger.info("Trying to update reservation to: \n" + newReservation.toString());
         return reservationService.updateReservation(reservation_id, newReservation);
     }
@@ -63,7 +63,7 @@ public class ReservationController {
      * @param reservation_id the PathVariable of the ID for the Reservation
      * @return the Reservation that was found
      */
-    @GetMapping("reservations/{reservation_id}")
+    @GetMapping("/reservations/{reservation_id}")
     public Reservation findReservationById(@PathVariable int reservation_id) {
         return reservationService.findReservationById(reservation_id);
     }
@@ -73,7 +73,7 @@ public class ReservationController {
      *
      * @param reservation_id the PathVariable of the ID for the Reservation
      */
-    @DeleteMapping("reservations/{reservation_id}")
+    @DeleteMapping("/reservations/{reservation_id}")
     public boolean deleteReservation(@PathVariable int reservation_id) {
         return reservationService.deleteReservation(reservation_id);
     }

@@ -50,6 +50,17 @@ public class AccountService {
     }
 
     /**
+     * Method for finding by id
+     *
+     * @param id
+     * @return
+     */
+    public Account findById(int id){
+        Optional<Account> account = accountRepository.findById(id);
+        return account.orElse(null);
+    }
+
+    /**
      * Registers a new account. The account must have a unique email
      * address, i.e. one which is not associated with an already registered account
      *

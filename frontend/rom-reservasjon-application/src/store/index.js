@@ -81,7 +81,7 @@ function getAccount(jwtToken){
     const accountEmail = VueJwtDecode.decode(jwtToken).sub;
     console.log(accountEmail);
 
-    let url = `http://localhost:8080/accounts/${accountEmail}`;
+    let url = `http://localhost:8080/accounts/email=${accountEmail}`;
 
     const requestOptions = {
         methods: 'GET',

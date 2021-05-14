@@ -46,6 +46,7 @@
 <script>
 import { roomService } from "./services/RoomService"
 import { reservationService } from "./services/ReservationService"
+import { accountService } from "./services/AccountService"
 
 export default {
   name: "App",
@@ -93,7 +94,7 @@ export default {
         from_date: new Date(),
         to_date: new Date(),
         section: {
-          id: 4
+          id: 1
         },
         account: {
           id: 1
@@ -101,6 +102,10 @@ export default {
       }
       let updateResult = await reservationService.updateReservation(2, newReservation);
       console.log(updateResult);
+
+
+      let account = await accountService.getAccount(2);
+      console.log(account);
     }
   }
 };

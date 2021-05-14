@@ -30,11 +30,28 @@ public class AccountController {
         return accountService.findAll();
     }
 
-    @GetMapping("accounts/{email}")
+    /**
+     * Find account by email
+     *
+     * @param email
+     * @return
+     */
+    @GetMapping("accounts/email={email}")
     public Account findAccountByEmail(@PathVariable String email){
         return accountService.findByEmail(email);
     }
 
+
+    /**
+     * Find account by ID
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("accounts/{id}")
+    public Account findById(@PathVariable int id){
+        return accountService.findById(id);
+    }
 
     /**
      * PostMapping for saving a new Account to the database
@@ -60,7 +77,7 @@ public class AccountController {
      * @return the Account that was updated
      */
     @PutMapping("accounts/{account_id}")
-    public Account updateAccount(@RequestBody Account newAccount, @PathVariable("account_id") int account_id) {
+    public Account updateAccount(@PathVariable("account_id") int account_id, @RequestBody Account newAccount) {
         return accountService.updateAccount(account_id, newAccount);
     }
 
