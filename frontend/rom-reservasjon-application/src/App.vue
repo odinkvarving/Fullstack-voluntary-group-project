@@ -2,7 +2,7 @@
   <v-app>
     <Navbar />
     <v-main>
-      <FrontPage />
+      <router-view />
     </v-main>
   </v-app>
 </template>
@@ -12,14 +12,12 @@ import { roomService } from "./services/RoomService"
 import { reservationService } from "./services/ReservationService"
 import { accountService } from "./services/AccountService"
 
-import FrontPage from './routes/FrontPage';
 import Navbar from './components/Navbar/Navbar'
 
 export default {
   name: 'App',
 
   components: {
-    FrontPage,
     Navbar,
   },
   methods: {
