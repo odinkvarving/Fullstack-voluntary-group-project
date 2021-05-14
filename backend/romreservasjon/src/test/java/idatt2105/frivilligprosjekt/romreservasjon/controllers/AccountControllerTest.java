@@ -2,6 +2,7 @@ package idatt2105.frivilligprosjekt.romreservasjon.controllers;
 
 import idatt2105.frivilligprosjekt.romreservasjon.model.Account;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Reservation;
+import idatt2105.frivilligprosjekt.romreservasjon.model.Room;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Section;
 import idatt2105.frivilligprosjekt.romreservasjon.repository.AccountRepository;
 import idatt2105.frivilligprosjekt.romreservasjon.repository.ReservationRepository;
@@ -23,6 +24,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.*;
@@ -60,6 +62,8 @@ public class AccountControllerTest {
     private Account account1;
     private Account account2;
 
+    private Room room;
+
     private Reservation reservation1;
     private  Reservation reservation2;
 
@@ -75,8 +79,15 @@ public class AccountControllerTest {
         accountRepository.save(account1);
         accountRepository.save(account2);
 
-        section1 = new Section("testSection1", 2.0, 5);
-        section2 = new Section("testSection2", 5.0, 3);
+        Set<Section> sections = new HashSet<>();
+        section1 = new Section("testSection1", "testDescription1", 2.0, 5);
+        section2 = new Section("testSection2", "testDescription2", 5.0, 3);
+        sections.add(section1);
+        sections.add(section2);
+
+        room = new Room("testRoom", "testAddress", "testDescription", 8.0, 8);
+        room.setSections(sections);
+        roomRepository.save(room);
 
         reservation1 = new Reservation(null, null, 5, section1, account1);
         reservation2 = new Reservation(null, null, 3, section2, account2);
@@ -96,7 +107,7 @@ public class AccountControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(1))))
-                .andExpect(jsonPath("$[0].name", is("admin")))
+                .andExpect(jsonPath("$[0].name", is("testName1")))
                 .andExpect(jsonPath("$.length()", is(2)));
     }
 
