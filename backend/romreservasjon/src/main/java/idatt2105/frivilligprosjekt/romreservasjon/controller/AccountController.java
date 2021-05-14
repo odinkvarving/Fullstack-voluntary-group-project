@@ -6,8 +6,10 @@ import idatt2105.frivilligprosjekt.romreservasjon.service.AccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Set;
 
@@ -101,5 +103,32 @@ public class AccountController {
     public Set<Reservation> findAccountReservations(@PathVariable int account_id) {
        logger.info("Finding reservations for Account with ID: " + account_id);
         return accountService.findAccountReservations(account_id);
+    }
+
+    /**
+     * PostMapping for registering a new Reservation for a specific Account
+     *
+     * @param reservation requesting the Body of a new Reservation
+     * @param account_id the ID of the Account
+     * @return true or false
+     */
+    @PostMapping("accounts/{account_id}/reservations")
+    public boolean createAccountReservation(@RequestBody Reservation reservation, @PathVariable int account_id) {
+        logger.info("Trying to create reservation: \n" + reservation.toString());
+        boolean success = accountService.createAccountReservation(reservation, account_id);
+        if(success) {
+            logger.info("The reservation was successfully registered");
+        }
+        return success;
+    }
+
+    @GetMapping("/reset/{suffix}")
+    public Account getAccountByResetSuffix(@PathVariable("suffix") String suffix) {
+        return this.accountService.findAccountByResetSuffix(suffix);
+    }
+
+    @PostMapping("/reset/{mail}")
+    public void requestPasswordReset(@PathVariable("mail") String mail) {
+        this.accountService.generatePasswordReset(mail);
     }
 }
