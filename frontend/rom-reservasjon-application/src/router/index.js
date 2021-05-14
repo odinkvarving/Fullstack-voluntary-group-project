@@ -1,16 +1,16 @@
-import Login from "./Login.vue";
-import FrontPage from "./FrontPage.vue";
-import ForgotPassword from "./ForgotPassword.vue";
-import ResetPassword from "./ResetPassword.vue";
+import Login from "../routes/Login.vue";
+import FrontPage from "../routes/FrontPage.vue";
+import ForgotPassword from "../routes/ForgotPassword.vue";
+import ResetPassword from "../routes/ResetPassword.vue";
 
 const routes = [
     {
-        path: "/",
+        path: "/login",
         name: "Login",
         component: Login
     },
     {
-        path: "/frontpage",
+        path: "/",
         name: "FrontPage",
         component: FrontPage
     },
