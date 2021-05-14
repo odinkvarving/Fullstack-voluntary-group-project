@@ -13,17 +13,15 @@
         <span>Hjem</span>
       </v-btn>
     </router-link>
-    <router-link class="link" to="/roomfeed">
+    <router-link v-if="isLoggedIn" class="link" to="/roomfeed">
       <v-btn text>
         <span>Se alle rom</span>
       </v-btn>
     </router-link>
-
-    <router-link v-if="isLoggedIn" class="link" to="/roomfeed">
-      <v-btn color="#01AB55">
-        <span>Se alle rom</span>
-      </v-btn>
-    </router-link>
+    
+    <v-btn v-if="isLoggedIn" color="#01AB55" @click="logout">
+      <span>Logg ut</span>
+    </v-btn>
     <router-link v-else class="link" to="/login">
       <v-btn color="#01AB55">
         <span>Logg inn</span>
@@ -44,6 +42,12 @@ export default {
       return this.$store.getters.isAuthenticated;
     }
   },
+  methods: {
+    logout(){
+      this.$store.dispatch("logout");
+      this.$router.push("/");
+    }
+  }
 };
 </script>
 

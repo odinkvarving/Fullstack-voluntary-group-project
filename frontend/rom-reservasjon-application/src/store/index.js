@@ -6,7 +6,7 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
     state:{
-        jwtToken: "",
+        jwtToken: localStorage.getItem("jwt") || "",
         loggedInAccount: {},
         rooms: [],
         isBusy: false,
@@ -18,6 +18,7 @@ const store = new Vuex.Store({
         },
         clearJwtToken: (state) => {
             state.jwtToken = "";
+            localStorage.removeItem("jwt");
         },
         setLoggedInAccount: (state, account) => {
             state.loggedInAccount = account;
@@ -61,6 +62,7 @@ const store = new Vuex.Store({
                     .then(data => {
                         console.log(data.jwt);
                         commit("setJwtToken", data.jwt);
+                        localStorage.setItem("jwt", data.jwt);
                     })
                     .catch(error => {
                         console.log("Error when logging in: ");
@@ -82,6 +84,10 @@ const store = new Vuex.Store({
             }finally{
                 commit("clearBusy");
             }
+        },
+        logout: ({ commit }) => {
+            commit("clearJwtToken");
+            commit("clearLoggedInUser");
         },
         loadRooms: async({ commit }) => {
             try {
