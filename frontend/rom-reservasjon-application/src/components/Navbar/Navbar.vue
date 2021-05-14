@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar color="#222B45" hide-on-scroll absolute>
+  <v-app-bar color="#222B45" absolute>
     <router-link to="/">
       <div class="d-flex align-center">
         <v-img contain src="../../assets/Logo.png" width="40" />

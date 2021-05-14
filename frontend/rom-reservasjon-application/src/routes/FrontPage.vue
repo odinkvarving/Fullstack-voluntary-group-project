@@ -143,6 +143,7 @@ export default {
 
 .selection-field {
   background-color: #222b45;
+  height: 100vh;
 }
 
 h1 {

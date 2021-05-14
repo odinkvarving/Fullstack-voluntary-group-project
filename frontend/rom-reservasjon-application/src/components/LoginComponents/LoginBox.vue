@@ -1,14 +1,12 @@
 <template>
   <div>
-        <SuccessPopUp
-          v-show="isPopUpVisible"
-          :message="message"
-        />
-        <ErrorPopUp
-          v-show="isErrorVisible"
-          v-on:close-popup="closePopUp"
-          :message="message"
-        />
+    <SuccessPopUp class="popup" v-show="isPopUpVisible" :message="message" />
+    <ErrorPopUp
+      class="popup"
+      v-show="isErrorVisible"
+      v-on:close-popup="closePopUp"
+      :message="message"
+    />
     <div id="login-page">
       <v-container>
         <v-row>
@@ -78,7 +76,7 @@ export default {
       isErrorVisible: false,
       message: "",
       eMailErrorMessage: "",
-      passwordErrorMessage: ""
+      passwordErrorMessage: "",
     };
   },
 
@@ -89,7 +87,7 @@ export default {
       this.isErrorVisible = false;
 
       if (!this.validateInput()) {
-          return;
+        return;
       }
       if (!this.validateEmail()) {
         document.getElementById("login-page").style.filter = "blur(5px)";
@@ -103,18 +101,22 @@ export default {
     },
 
     validateInput() {
-        var isValid = true;
-        if (this.emailInput === "") {
-            this.isEmailValid = false;
-            this.eMailErrorMessage = "Dette feltet kan ikke stå tomt";
-            isValid = false;
-        }
-        if (this.passwordInput === "") {
-            this.isPasswordValid = false;
-            this.passwordErrorMessage = "Dette feltet kan ikke stå tomt";
-            isValid = false;
-        }
-        return isValid;
+      var isValid = true;
+      if (this.emailInput === "") {
+        this.isEmailValid = false;
+        this.eMailErrorMessage = "Dette feltet kan ikke stå tomt";
+        isValid = false;
+      } else {
+          this.eMailErrorMessage = "";
+      }
+      if (this.passwordInput === "") {
+        this.isPasswordValid = false;
+        this.passwordErrorMessage = "Dette feltet kan ikke stå tomt";
+        isValid = false;
+      } else {
+          this.passwordErrorMessage = "";
+      }
+      return isValid;
     },
 
     validateEmail() {
@@ -160,5 +162,13 @@ export default {
 <style scoped>
 .container {
   max-width: 600px;
+}
+
+.popup {
+  position: absolute;
+  background-color: #222b45;
+  z-index: 2;
+  top: 30%;
+  left: 40%;
 }
 </style>
