@@ -1,48 +1,49 @@
 <template>
-  <v-app-bar
-      app
-      color="#222B45"
-      dark
-      hide-on-scroll
-    >
+  <v-app-bar app color="#222B45" dark hide-on-scroll>
+    <router-link to="/">
       <div class="d-flex align-center">
-        <v-img
-          contain
-          src="../../assets/Logo.png"
-          width="40"
-        />
+        <v-img contain src="../../assets/Logo.png" width="40" />
       </div>
+    </router-link>
 
-      <v-spacer></v-spacer>
+    <v-spacer></v-spacer>
 
-      <v-btn
-        href="#"
-        text
-      >
+    <router-link class="link" to="/">
+      <v-btn text>
         <span>Hjem</span>
       </v-btn>
-      <v-btn
-        href="#"
-        text
-      >
-        <span>Partytime</span>
+    </router-link>
+    <router-link class="link" to="/roomfeed">
+      <v-btn text>
+        <span>Se alle rom</span>
       </v-btn>
-      <v-btn
-        href="#"
-        color="#01AB55"
-      >
+    </router-link>
+
+    <router-link v-if="isLoggedIn" class="link" to="/roomfeed">
+      <v-btn color="#01AB55">
+        <span>Se alle rom</span>
+      </v-btn>
+    </router-link>
+    <router-link v-else class="link" to="/login">
+      <v-btn color="#01AB55">
         <span>Logg inn</span>
       </v-btn>
-    </v-app-bar>
+    </router-link>
+  </v-app-bar>
 </template>
 
 <script>
 export default {
-    name: 'Navbar',
-
-}
+  name: "Navbar",
+  data() {
+    return {
+      isLoggedIn: false,
+    };
+  },
+  computed() {
+    this.isLoggedIn = this.$store.getters.isLoggedIn;
+  },
+};
 </script>
 
-<style>
-
-</style>
+<style></style>
