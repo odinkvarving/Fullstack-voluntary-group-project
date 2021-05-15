@@ -74,7 +74,14 @@
                         outlined
                     ></v-text-field>
                 </div>
-                    <v-btn color="#01AB55" block @click="searchButtonClicked"><span>Søk</span></v-btn>
+                <v-row>
+                    <v-col>
+                        <v-btn color="#01AB55" block @click="searchButtonClicked"><span>Søk</span></v-btn>                    
+                    </v-col>
+                    <v-col>
+                        <v-btn class="ma-1" color="error" plain block><span>Reset</span></v-btn>                    
+                    </v-col>
+                </v-row>
               </v-col>
               <v-col cols="6" class="room-list-column" >
                   <div v-for="(room) in rooms" :key="room.id" >
@@ -132,11 +139,14 @@ export default {
             this.$router.push(`/rooms/${roomId}`);
         },
         searchButtonClicked(){
-            this.filteredList = this.$store.getters.getRooms.filter((room) => {
-                return room.name.includes(this.searchValue);
-            });
-            this.isNoFilters = false;
-            console.log(this.filteredList);
+            if(this.searchValue !== "" || this.placeValue !== "" || this.startTimeValue !== ""
+                || this.endTimeValue !== "" || this.dateValue !== "" || this.equipmentValue !== ""){
+                this.filteredList = this.$store.getters.getRooms.filter((room) => {
+                    return room.name.includes(this.searchValue);
+                });
+                this.isNoFilters = false;
+                console.log(this.filteredList);
+            }
         }
     }
 }
