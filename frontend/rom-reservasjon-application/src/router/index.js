@@ -1,9 +1,10 @@
 import FrontPage from "../routes/FrontPage.vue";
 import RoomFeed from "../routes/RoomFeed.vue";
-import Room from "../routes/Room.vue"
+import Room from "../routes/Room.vue";
 import Login from "../routes/Login.vue";
 import ForgotPassword from "../routes/ForgotPassword.vue";
 import ResetPassword from "../routes/ResetPassword.vue";
+import AddAccount from "../routes/AddAccount.vue";
 
 const routes = [
     {
@@ -35,6 +36,11 @@ const routes = [
         path: "/resetpassword/:suffix",
         name: "ResetPassword",
         component: ResetPassword
+    },
+    {
+        path: "/addaccount",
+        name: "AddAccount",
+        component: AddAccount
     }
 ];
 export default routes;
