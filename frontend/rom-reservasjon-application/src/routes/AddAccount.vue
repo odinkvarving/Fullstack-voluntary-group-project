@@ -14,10 +14,13 @@
     }
 </script>
 <style scoped>
+    body {
+        background-color: #192138;
+    }
     .add-account {
         background-color: #192138;
         position: fixed;
-        top: 40%;
+        top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
     }
