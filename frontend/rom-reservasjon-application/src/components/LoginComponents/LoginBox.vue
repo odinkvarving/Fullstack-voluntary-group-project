@@ -1,32 +1,31 @@
 <template>
   <div>
-    <SuccessPopUp class="popup" v-show="false" :message="message" />
-    <ErrorPopUp
-      class="popup"
-      v-show="false"
-      v-on:close-popup="closePopUp"
-      :message="message"
-    />
     <div id="login-page">
       <v-container>
         <v-row>
           <v-col cols="12">
+            <div style="position: relative">
+              <v-alert
+                :value="isErrorVisible"
+                type="error"
+                transition="scale-transition"
+                style="position: absolute; width: 100%; bottom: 0px"
+              >
+                {{ message }}
+              </v-alert>
+              <v-alert
+                :value="isPopUpVisible"
+                type="success"
+                transition="scale-transition"
+                style="position: absolute; width: 100%; bottom: 0px"
+              >
+                {{ message }}
+              </v-alert>
+            </div>
+          </v-col>
+          <v-col cols="12">
             <h1>Velkommen tilbake</h1>
             <p class="white--text text--secondary">Logg på kontoen din</p>
-            <v-alert
-              type="error"
-              :value="isErrorVisible"
-              transition="scale-transition"
-            >
-              {{ message }}
-            </v-alert>
-            <v-alert
-              :value="isPopUpVisible"
-              type="success"
-              transition="scale-transition"
-            >
-              {{ message }}
-            </v-alert>
           </v-col>
           <v-col cols="12">
             <p class="text">Skriv inn e-post</p>
@@ -71,15 +70,9 @@
   </div>
 </template>
 <script>
-import SuccessPopUp from "../PopUpComponents/SuccessPopUp.vue";
-import ErrorPopUp from "../PopUpComponents/ErrorPopUp.vue";
-
 export default {
   name: "LoginBox",
-  components: {
-    SuccessPopUp,
-    ErrorPopUp,
-  },
+  components: {},
   data() {
     return {
       isEmailValid: true,
@@ -174,5 +167,4 @@ export default {
 .container {
   max-width: 600px;
 }
-
 </style>
