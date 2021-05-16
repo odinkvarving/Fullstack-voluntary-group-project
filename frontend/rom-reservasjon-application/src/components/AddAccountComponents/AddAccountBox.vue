@@ -87,7 +87,7 @@
                 </v-col>
                 <v-col cols="6" align="end">
                     <v-btn color="green" @click="addAccount">
-                        <span>Logg inn</span>
+                        <span>Lag ny bruker</span>
                     </v-btn>
                 </v-col>
             </v-row>
@@ -160,19 +160,28 @@
             },
 
             async add() {
+                let authenticationRequest = {
+                    username: "admin@admin.no",
+                    password: "admin123"
+                }
+                await this.$store.dispatch("login", authenticationRequest);
+                console.log(this.$store.getters.getLoggedInAccount);
+                console.log(this.$store.getters.getJwtToken);
+
                 const account = {
                     name: this.nameInput,
                     email: this.emailInput,
                     password: this.passwordInput,
                     phone: this.phoneInput,
                     is_admin: false,
-                    expiration_date: this.expirationDateInput
+                    expiration_date: new Date(this.expirationDateInput)
                 }
+
                 const requestOptions = {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": this.$store.getters.getJwtToken
+                        "Authorization": `Bearer ${this.$store.getters.getJwtToken}`
                     },
                     body: JSON.stringify(account)
                 }
