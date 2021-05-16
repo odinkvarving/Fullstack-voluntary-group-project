@@ -16,6 +16,8 @@ public class Room {
 
     private String name;
     private String address;
+    private String lat;
+    private String lng;
     private String description;
     private double size;
     private int max_persons;
@@ -26,9 +28,11 @@ public class Room {
     public Room() {
     }
 
-    public Room(String name, String address, String description, double size, int max_persons) {
+    public Room(String name, String address, String lat, String lng, String description, double size, int max_persons) {
         this.name = name;
         this.address = address;
+        this.lat = lat;
+        this.lng = lng;
         this.description = description;
         this.size = size;
         this.max_persons = max_persons;
@@ -56,6 +60,22 @@ public class Room {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getLat() {
+        return lat;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getLng() {
+        return lng;
+    }
+
+    public void setLng(String lng) {
+        this.lng = lng;
     }
 
     public String getDescription() {

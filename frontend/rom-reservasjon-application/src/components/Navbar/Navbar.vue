@@ -45,7 +45,9 @@ export default {
   methods: {
     logout(){
       this.$store.dispatch("logout");
-      this.$router.push("/");
+      if(this.$router.currentRoute.path !== "/"){
+        this.$router.push("/");
+      }
     }
   }
 };

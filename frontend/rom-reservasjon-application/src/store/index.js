@@ -87,7 +87,7 @@ const store = new Vuex.Store({
         },
         logout: ({ commit }) => {
             commit("clearJwtToken");
-            commit("clearLoggedInUser");
+            commit("clearLoggedInAccount");
         },
         loadRooms: async({ commit }) => {
             try {

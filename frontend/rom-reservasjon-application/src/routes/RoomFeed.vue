@@ -1,8 +1,7 @@
 <template>
   <div class="room-feed">
-      <v-container class="vue-container">
-          <v-row align="center" justify="center">
-              <v-col cols="3" class="filter-column">
+          <div class="container">
+              <div class="filter-column">
                   <div>
                     <p>Søk etter rom</p>
                     <v-text-field
@@ -16,113 +15,184 @@
                    </div>
                     <div>
                         <p>Område i kart</p>
+                        <GmapAutocomplete @place_changed="setPlace" style="width: 100%; height: 30px; color: white;" placeHolder="Legg til sted..." :selectFirstOnEnter="true" />
+
+                    </div>
+                    <div>
+                    <GmapMap
+                        :center="{lat:lat, lng:lng}"
+                        :zoom="10"
+                        map-type-id="roadmap"
+                        style="width: 100%; height: 350px"
+                        :options="{
+                            disableDefaultUI: true
+                        }"
+                        >
+                        <GmapMarker
+                            :position="{lat:lat, lng:lng}"
+                            :clickable="true"
+                            @click="center={lat:lat, lng:lng}"
+                        />
+                        <GmapCircle
+                            :center="{lat:lat, lng:lng}"
+                            :radius="placeRadius*1000"
+                            :visible="true"
+                            :options="{fillColor:'red',fillOpacity:0.15}"
+                        ></GmapCircle>
+                        </GmapMap>
+                    </div>
+                    <v-row style="margin-top: 20px" align="center" justify="center">
+                        <v-slider
+                            max="100"
+                            min="1"
+                            style="margin: 0 10px;"
+                            v-model="placeRadius"
+                        ></v-slider>
+                        <p >{{ placeRadius }} km</p>
+                    </v-row>
+                
+                    <h3>Tidspunkt</h3>
+                    <v-menu
+                        ref="menu"
+                        v-model="menu"
+                        :close-on-content-click="false"
+                        :return-value.sync="dateValue"
+                        transition="scale-transition"
+                        offset-y
+                        min-width="auto"
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                            v-model="dateValue"
+                            label="Dato"
+                            prepend-inner-icon="mdi-calendar"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                            outlined
+                        ></v-text-field>
+                        </template>
+                        <v-date-picker
+                        v-model="dateValue"
+                        no-title
+                        scrollable
+                        >
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            text
+                            color="primary"
+                            @click="menu = false"
+                        >
+                            Cancel
+                        </v-btn>
+                        <v-btn
+                            text
+                            color="primary"
+                            @click="$refs.menu.save(dateValue)"
+                        >
+                            OK
+                        </v-btn>
+                        </v-date-picker>
+                    </v-menu>
+                    <v-row>
+                        <v-col cols="6">
+                                <v-select
+                                :items="timeValues"
+                                label="Start"
+                                outlined
+                                v-model="startTimeValue"
+                                ></v-select>
+                        </v-col>
+                        <v-col cols="6">
+                                <v-select
+                                :items="timeValues"
+                                label="Slutt"
+                                outlined
+                                v-model="endTimeValue"
+                                ></v-select>
+                        </v-col>
+                    </v-row>
+
+                    <h2>Annet</h2>
+                    <div>
+                        <p>Ustyr</p>
                         <v-text-field
                             dense
                             hide-details
-                            label="Søk etter sted eller adresse"
+                            label="Utstyr"
                             color="#01AB55"
                             outlined
                         ></v-text-field>
                     </div>
-                <div>KARTKARTKART</div>
-                
-                <h2>Tid</h2>
-                <v-row>
-                    <v-col>
-                        <p>start</p>
-                        <v-text-field
-                            dense
-                            hide-details
-                            label="Dato"
-                            color="#01AB55"
-                            outlined
-                        ></v-text-field>
-                        <vue-timepicker></vue-timepicker>                    
-                    </v-col>
-                    <v-col>
-                        <p>Slutt</p>
-                        <v-text-field
-                            dense
-                            hide-details
-                            label="Dato"
-                            color="#01AB55"
-                            outlined
-                        ></v-text-field>  
-                        <vue-timepicker></vue-timepicker>                  
-                    </v-col>
-                </v-row>
-
-                <div>
-                    <p>Dato</p>
-                    <v-text-field
-                        dense
-                        hide-details
-                        label="Dato"
-                        color="#01AB55"
-                        outlined
-                    ></v-text-field>
-                </div>
-
-                <h2>Annet</h2>
-                <div>
-                    <p>Ustyr</p>
-                    <v-text-field
-                        dense
-                        hide-details
-                        label="Utstyr"
-                        color="#01AB55"
-                        outlined
-                    ></v-text-field>
-                </div>
-                <v-row>
-                    <v-col>
-                        <v-btn color="#01AB55" block @click="searchButtonClicked"><span>Søk</span></v-btn>                    
-                    </v-col>
-                    <v-col>
-                        <v-btn class="ma-1" color="error" plain block><span>Reset</span></v-btn>                    
-                    </v-col>
-                </v-row>
-              </v-col>
-              <v-col cols="6" class="room-list-column" >
+                    <v-row>
+                        <v-col>
+                            <v-btn color="#01AB55" block @click="searchButtonClicked"><span>Søk</span></v-btn>                    
+                        </v-col>
+                        <v-col>
+                            <v-btn v-if="!isNoFilters" class="ma-1" color="error" plain block @click="resetButtonClicked"><span>Reset</span></v-btn>                    
+                        </v-col>
+                    </v-row>
+              </div>
+              <div class="room-list-column" >
                   <div v-for="(room) in rooms" :key="room.id" >
                     <v-row align="center" justify="center">
                         <v-col>
                             <h1>{{ room.name }}</h1>
                             <p>{{ room.address }}</p>
                         </v-col>
+                        <v-spacer></v-spacer>
                         <v-col>
                             <p>{{ room.description }}</p>
                         </v-col>
+                        <v-spacer></v-spacer>
                         <v-col>
                             <v-btn color="#01AB55" @click="goToRoomButtonClicked(room.id)"><span>Gå til rom</span></v-btn>               
                         </v-col>
                     </v-row>
                   </div>
-              </v-col>
-          </v-row>
-      </v-container>
+              </div>
+          </div>
   </div>
 </template>
 
 <script>
-import VueTimepicker from 'vue2-timepicker'
-import 'vue2-timepicker/dist/VueTimepicker.css'
 
 export default {
     name: "RoomFeed",
-    components: {
-        VueTimepicker
-    },
     data(){
         return {
             searchValue: "",
             placeValue: "",
+            placeRadius: 10,
             startTimeValue: "",
             endTimeValue: "",
             dateValue: "",
+            menu: false,
+            modal: false,
+            menu2: false,
             equipmentValue: "",
             isNoFilters: true,
-            filteredList: []
+            filteredList: [],
+            timeValues: [
+                '07:00', '07:15', '07:30', '07:45',
+                '08:00', '08:15', '08:30', '08:45',
+                '09:00', '09:15', '09:30', '09:45',
+                '10:00', '10:15', '10:30', '10:45',
+                '11:00', '11:15', '11:30', '11:45',
+                '12:00', '12:15', '12:30', '12:45',
+                '13:00', '13:15', '13:30', '13:45',
+                '14:00', '14:15', '14:30', '14:45',
+                '15:00', '15:15', '15:30', '15:45',
+                '16:00', '16:15', '16:30', '16:45',
+                '17:00', '17:15', '17:30', '17:45',
+                '18:00', '18:15', '18:30', '18:45',
+                '19:00', '19:15', '19:30', '19:45',
+                '20:00', '20:15', '20:30', '20:45',
+                '21:00', '21:15', '21:30', '21:45',
+                '22:00', '22:15', '22:30', '22:45',
+                '23:00', '23:15', '23:30', '23:45',
+
+            ]
         }
     },
     computed: {
@@ -133,20 +203,89 @@ export default {
                 return this.filteredList;
             }
         },
+        lat(){
+            if(this.placeValue.geometry){
+                return this.placeValue.geometry.location.lat();
+            }else{
+                return 59.911491;
+            }
+        },
+        lng(){
+            if(this.placeValue.geometry){
+                return this.placeValue.geometry.location.lng();
+            }else{
+                return 10.757933;
+            }
+        }
     },
     methods: {
         goToRoomButtonClicked(roomId){
             this.$router.push(`/rooms/${roomId}`);
         },
         searchButtonClicked(){
+            console.log(this.dateValue);
+
             if(this.searchValue !== "" || this.placeValue !== "" || this.startTimeValue !== ""
                 || this.endTimeValue !== "" || this.dateValue !== "" || this.equipmentValue !== ""){
-                this.filteredList = this.$store.getters.getRooms.filter((room) => {
-                    return room.name.includes(this.searchValue);
-                });
+                
+                this.filteredList = this.$store.getters.getRooms;
+
+                if(this.searchValue !== ""){
+                    this.filteredList = this.$store.getters.getRooms.filter((room) => {
+                        return room.name.toLowerCase().includes(this.searchValue.toLowerCase());
+                    });
+                }
+                if(this.placeValue !== "" && this.placeValue.geometry !== null){
+                    let coords1 = {
+                        lat: this.lat,
+                        lng: this.lng
+                    };
+                    this.filteredList = this.filteredList.filter(room => {
+                        return this.calcCrow(coords1, {lat: room.lat, lng: room.lng}) <= parseInt(this.placeRadius);
+                    })
+                }
+
+                if(this.dateValue !== "" && this.startTimeValue !== "" && this.endTimeValue !== ""){
+                    return this.filteredList; //TODO: ADD IMPLEMENTATION FOR CHECKING IF THIS TIMEPERIOD IS FREE
+                }
+                
+                
+
                 this.isNoFilters = false;
                 console.log(this.filteredList);
+            }else{
+                this.isNoFilters = true;
             }
+        },
+        resetButtonClicked(){
+            this.searchValue = "";
+            this.placeValue = "";
+            this.startTimeValue = "";
+            this.endTimeValue = "";
+            this.dateValue = "";
+            this.equipmentValue = "";
+            this.isNoFilters = true;
+        },
+        setPlace(place){
+            this.placeValue = place;
+            console.log(this.placeValue);
+        },
+        calcCrow(coords1, coords2){
+            // km
+            let R = 6371;
+            let dLat = this.toRad(coords2.lat-coords1.lat);
+            let dLon = this.toRad(coords2.lng-coords1.lng);
+            let lat1 = this.toRad(coords1.lat);
+            let lat2 = this.toRad(coords2.lat);
+
+            let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+            let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+            let d = R * c;
+            return d;
+        },
+        toRad(Value){
+            return Value * Math.PI / 180;
         }
     }
 }
@@ -154,20 +293,31 @@ export default {
 
 <style scoped>
 .room-feed {
-    height: 100vh;
+    min-height: 100vh;
     width: 100%;
     background-color: #192138;
 }
 
-.vue-container{
+.container{
+    padding-top: 100px;
     max-width: 100vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .filter-column {
-    border: 1px solid white;
+    background-color: rgba(0, 0, 0, 0.23);
+    padding: 40px;
+    margin-left: 50px;
+    border-radius: 20px;
+    width: 21%;
+    max-height: 1000px;
 }
 
 .room-list-column {
-    border: 1px solid white;
+    width: 71%;
+    margin-right: 50px;
 }
+
 </style>

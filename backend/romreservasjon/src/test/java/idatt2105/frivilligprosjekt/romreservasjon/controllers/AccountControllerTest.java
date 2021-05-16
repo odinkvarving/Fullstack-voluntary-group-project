@@ -92,7 +92,7 @@ public class AccountControllerTest {
         sections.add(section1);
         sections.add(section2);
 
-        room = new Room("testRoom", "testAddress", "testDescription", 8.0, 8);
+        room = new Room("testRoom", "testAddress", "2", "2", "testDescription", 8.0, 8);
         room.setSections(sections);
         roomRepository.save(room);
 
