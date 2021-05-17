@@ -1,6 +1,6 @@
 package idatt2105.frivilligprosjekt.romreservasjon.controllers;
 
-import idatt2105.frivilligprosjekt.romreservasjon.controller.AccountController;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Account;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Reservation;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Room;
@@ -14,20 +14,18 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Set;
@@ -35,17 +33,15 @@ import java.util.Set;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.*;
 
-//WebMvcTest needed?
 @RunWith(SpringRunner.class)
-@WebMvcTest(AccountController.class)
 @ContextConfiguration
 @WebAppConfiguration
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class AccountControllerTest {
 
     @Autowired
@@ -63,32 +59,21 @@ public class AccountControllerTest {
     @Autowired
     private RoomRepository roomRepository;
 
-    @Autowired
-    private ReservationService reservationService;
-
-    private Account account1;
-    private Account account2;
-
     private Room room;
 
-    private Reservation reservation1;
-    private  Reservation reservation2;
 
-    private Section section1;
-    private Section section2;
-
-    private Set<Reservation> reservationSet;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Before
     public void setup() {
-        account1 = new Account("testName1", "testEmail1", "testPassword1", "1234567", true, null);
-        account2 = new Account("testName2", "testEmail2", "testPassword2", "1234567", true, null);
+        Account account1 = new Account("testName1", "testEmail1", "testPassword1", "1234567", true, null);
+        Account account2 = new Account("testName2", "testEmail2", "testPassword2", "1234567", true, null);
         accountRepository.save(account1);
         accountRepository.save(account2);
 
         Set<Section> sections = new HashSet<>();
-        section1 = new Section("testSection1", "testDescription1", 2.0, 5);
-        section2 = new Section("testSection2", "testDescription2", 5.0, 3);
+        Section section1 = new Section("testSection1", "testDescription1", 2.0, 5);
+        Section section2 = new Section("testSection2", "testDescription2", 5.0, 3);
         sections.add(section1);
         sections.add(section2);
 
@@ -96,18 +81,17 @@ public class AccountControllerTest {
         room.setSections(sections);
         roomRepository.save(room);
 
-        reservation1 = new Reservation(null, null, 5, section1, account1);
-        reservation2 = new Reservation(null, null, 3, section2, account2);
+        Reservation reservation1 = new Reservation(null, null, 5, section1, account1);
+        Reservation reservation2 = new Reservation(null, null, 3, section2, account2);
         reservationRepository.save(reservation1);
         reservationRepository.save(reservation2);
 
-        mockMvc = MockMvcBuilders.webAppContextSetup(context)
-                .apply(springSecurity())
-                .build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
     }
 
     @Test
     public void testGetAllAccounts() throws Exception {
+
         this.mockMvc.perform(get("/accounts")
                 .with(SecurityMockMvcRequestPostProcessor.admin())
                 .contentType(MediaType.APPLICATION_JSON))
@@ -120,6 +104,7 @@ public class AccountControllerTest {
 
     @Test
     public void testFindingAccountByEmail() throws Exception {
+
         this.mockMvc.perform(get("/accounts/email=testEmail1")
                 .with(SecurityMockMvcRequestPostProcessor.admin())
                 .contentType(MediaType.APPLICATION_JSON))
@@ -131,6 +116,7 @@ public class AccountControllerTest {
 
     @Test
     public void testFindingAccountById() throws Exception {
+
         this.mockMvc.perform(get("/accounts/email=testEmail1")
                 .with(SecurityMockMvcRequestPostProcessor.admin())
                 .contentType(MediaType.APPLICATION_JSON))
@@ -142,19 +128,75 @@ public class AccountControllerTest {
 
     @Test
     public void testSavingAccount() throws Exception {
+        Account account = new Account("savedAccount", "saveEmail", "savePassword", "1234567", false, null);
+        String jsonString = objectMapper.writeValueAsString(account);
+
         this.mockMvc.perform(MockMvcRequestBuilders.post("/accounts")
                 .with(SecurityMockMvcRequestPostProcessor.admin())
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
+                .content(jsonString))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("NAME"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("EMAIL"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.password").value("PASSWORD"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.phone").value("1234567"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.is_admin").value(true))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.expiration_date").value(LocalDateTime.of(2022, 5, 4, 12, 15)));
-   //https://stackoverflow.com/questions/51346781/how-to-test-post-method-in-spring-boot-using-mockito-and-junit
+                .andExpect(jsonPath("$", is(true)));
+    }
+
+    @Test
+    public void testUpdatingAccount() throws Exception {
+        Account account = new Account("updateAccount", "updateEmail", "updatePassword", "1234567", false, null);
+        String jsonString = objectMapper.writeValueAsString(account);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/accounts/1")
+                .with(SecurityMockMvcRequestPostProcessor.admin())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonString))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", isA(LinkedHashMap.class)))
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.name", is("updateAccount")));
+    }
+
+    @Test
+    public void testDeletingAccount() throws Exception {
+
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/accounts/1")
+                .with(SecurityMockMvcRequestPostProcessor.admin())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testFindAccountReservations() throws Exception {
+
+        this.mockMvc.perform(get("/accounts/1/reservations")
+                .with(SecurityMockMvcRequestPostProcessor.admin())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(1))))
+                .andExpect(jsonPath("$[0].number_of_people", is(5)));
+    }
+
+    @Test
+    public void testCreateAccountReservation() throws Exception {
+        Account account3 = new Account("testName3", "testEmail3", "testPassword3", "1234567", false, null);
+        accountRepository.save(account3);
+
+        Section section3 = new Section("testSection3", "testDescription3", 5.0, 3);
+        room.getSections().add(section3);
+        roomRepository.save(room);
+
+        Reservation reservation = new Reservation(null, null, 2, section3, account3);
+
+        String jsonString = objectMapper.writeValueAsString(reservation);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/accounts/3/reservations")
+                .with(SecurityMockMvcRequestPostProcessor.admin())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonString))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", is(true)));
+
     }
 
     public static class SecurityMockMvcRequestPostProcessor {
