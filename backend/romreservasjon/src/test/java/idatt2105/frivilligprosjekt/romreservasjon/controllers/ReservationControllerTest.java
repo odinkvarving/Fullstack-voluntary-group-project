@@ -42,7 +42,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class AccountControllerTest {
+public class ReservationControllerTest {
 
     @Autowired
     private WebApplicationContext context;
@@ -59,17 +59,17 @@ public class AccountControllerTest {
     @Autowired
     private RoomRepository roomRepository;
 
-    private Account account1;
-    private Account account2;
-
     private Room room;
+
+    private Reservation reservation1;
+    private Reservation reservation2;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Before
     public void setup() {
-        account1 = new Account("testName1", "testEmail1", "testPassword1", "1234567", true, null);
-        account2 = new Account("testName2", "testEmail2", "testPassword2", "1234567", true, null);
+        Account account1 = new Account("testName1", "testEmail1", "testPassword1", "1234567", true, null);
+        Account account2 = new Account("testName2", "testEmail2", "testPassword2", "1234567", true, null);
         accountRepository.save(account1);
         accountRepository.save(account2);
 
@@ -83,8 +83,8 @@ public class AccountControllerTest {
         room.setSections(sections);
         roomRepository.save(room);
 
-        Reservation reservation1 = new Reservation(null, null, 5, section1, account1);
-        Reservation reservation2 = new Reservation(null, null, 3, section2, account2);
+        reservation1 = new Reservation(null, null, 5, section1, account1);
+        reservation2 = new Reservation(null, null, 3, section2, account2);
         reservationRepository.save(reservation1);
         reservationRepository.save(reservation2);
 
@@ -92,98 +92,21 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void testGetAllAccounts() throws Exception {
+    public void testGetAllReservations() throws Exception {
 
-        this.mockMvc.perform(get("/accounts")
+        this.mockMvc.perform(get("/reservations")
                 .with(SecurityMockMvcRequestPostProcessor.admin())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(1))))
-                .andExpect(jsonPath("$[0].name", is("testName1")))
+                .andExpect(jsonPath("$[0].number_of_people", is(5)))
                 .andExpect(jsonPath("$.length()", is(2)));
     }
 
     @Test
-    public void testFindingAccountByEmail() throws Exception {
+    public void testSaveReservation() throws Exception {
 
-        this.mockMvc.perform(get("/accounts/email=testEmail1")
-                .with(SecurityMockMvcRequestPostProcessor.admin())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.*", hasSize(greaterThanOrEqualTo(1))))
-                .andExpect(content().string(containsString("testEmail1")));
-    }
-
-    @Test
-    public void testFindingAccountById() throws Exception {
-
-        this.mockMvc.perform(get("/accounts/1")
-                .with(SecurityMockMvcRequestPostProcessor.admin())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", isA(LinkedHashMap.class)))
-                .andExpect(jsonPath("$.id", is(1)));
-    }
-
-    @Test
-    public void testSavingAccount() throws Exception {
-        Account account = new Account("savedAccount", "saveEmail", "savePassword", "1234567", false, null);
-        String jsonString = objectMapper.writeValueAsString(account);
-
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/accounts")
-                .with(SecurityMockMvcRequestPostProcessor.admin())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonString))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", is(true)));
-    }
-
-    @Test
-    public void testUpdateAccount() throws Exception {
-        assertThat(this.account1.getId()).isEqualTo(1);
-        assertThat(this.account1.getName()).isEqualTo("testName1");
-
-        this.account1.setName("updatedName");
-
-        String jsonString = objectMapper.writeValueAsString(this.account1);
-
-        this.mockMvc.perform(MockMvcRequestBuilders.put("/accounts/1")
-                .with(SecurityMockMvcRequestPostProcessor.admin())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonString))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", isA(LinkedHashMap.class)))
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.name", is("updatedName")));
-    }
-
-    @Test
-    public void testDeletingAccount() throws Exception {
-
-        this.mockMvc.perform(MockMvcRequestBuilders.delete("/accounts/1")
-                .with(SecurityMockMvcRequestPostProcessor.admin())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void testFindAccountReservations() throws Exception {
-
-        this.mockMvc.perform(get("/accounts/1/reservations")
-                .with(SecurityMockMvcRequestPostProcessor.admin())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(1))))
-                .andExpect(jsonPath("$[0].number_of_people", is(5)));
-    }
-
-    @Test
-    public void testCreateAccountReservation() throws Exception {
         Account account3 = new Account("testName3", "testEmail3", "testPassword3", "1234567", false, null);
         accountRepository.save(account3);
 
@@ -195,14 +118,55 @@ public class AccountControllerTest {
 
         String jsonString = objectMapper.writeValueAsString(reservation);
 
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/accounts/3/reservations")
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/reservations")
                 .with(SecurityMockMvcRequestPostProcessor.admin())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonString))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", is(true)));
+    }
 
+    @Test
+    public void testUpdateReservation() throws Exception{
+
+        assertThat(this.reservation1.getId()).isEqualTo(1);
+        assertThat(this.reservation1.getNumber_of_people()).isEqualTo(5);
+
+        this.reservation1.setNumber_of_people(7);
+
+        String jsonString = objectMapper.writeValueAsString(this.reservation1);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/reservations/1")
+                .with(SecurityMockMvcRequestPostProcessor.admin())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonString))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", isA(LinkedHashMap.class)))
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.number_of_people", is(7)));
+    }
+
+    @Test
+    public void testFindReservationById() throws Exception {
+
+        this.mockMvc.perform(get("/reservations/1")
+                .with(SecurityMockMvcRequestPostProcessor.admin())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", isA(LinkedHashMap.class)))
+                .andExpect(jsonPath("$.id", is(1)));
+    }
+
+    @Test
+    public void testDeleteReservation() throws Exception {
+
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/reservations/1")
+                .with(AccountControllerTest.SecurityMockMvcRequestPostProcessor.admin())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     public static class SecurityMockMvcRequestPostProcessor {
