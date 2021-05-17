@@ -1,5 +1,9 @@
 <template>
   <div class="room">
+    <div class="top-header">
+      <h1>{{ room.name }}</h1>
+      <p>{{ room.address }}</p>
+    </div>
     <v-container>
       <v-row>
         <v-col lg="3" md="4" xs="12" v-for="section in room.sections" :key="section.id">
@@ -52,7 +56,24 @@ export default {
         justify-content: center;
   }
 
+  .section-container:hover{
+    cursor: pointer;
+  }
+
   .section-container p{
     margin: 20px 0;
+  }
+
+  .top-header{
+    text-align: center;
+  }
+
+  .top-header h1{
+    font-size: 40px;
+  }
+
+  .top-header p{
+    font-size: 20px;
+    opacity: 70%;
   }
 </style>
