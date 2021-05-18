@@ -1,7 +1,9 @@
 package idatt2105.frivilligprosjekt.romreservasjon.service;
 
 import idatt2105.frivilligprosjekt.romreservasjon.model.Reservation;
+import idatt2105.frivilligprosjekt.romreservasjon.model.Section;
 import idatt2105.frivilligprosjekt.romreservasjon.repository.ReservationRepository;
+import idatt2105.frivilligprosjekt.romreservasjon.repository.SectionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 public class ReservationService {
@@ -19,6 +22,9 @@ public class ReservationService {
 
     @Autowired
     private ReservationRepository reservationRepository;
+
+    @Autowired
+    private SectionRepository sectionRepository;
 
     /**
      * Method for finding all Accounts registered in the database
@@ -41,6 +47,21 @@ public class ReservationService {
      * @return true or false
      */
     public boolean saveReservation(Reservation reservation) {
+
+        Section section = sectionRepository.findById(reservation.getSection().getId()).orElse(null);
+        List<Reservation> relevantDateReservations = section.getInReservations().stream().filter(res -> {
+           return res.getFrom_date().getYear() == reservation.getFrom_date().getYear()
+                   && res.getFrom_date().getMonth() == reservation.getFrom_date().getMonth()
+                   && res.getFrom_date().getDayOfMonth() == reservation.getFrom_date().getDayOfMonth();
+        }).collect(Collectors.toList());
+        for(Reservation res : relevantDateReservations){
+            if((res.getFrom_date().isBefore(reservation.getTo_date()) && reservation.getFrom_date().isBefore(res.getFrom_date())) || (res.getTo_date().isAfter(reservation.getFrom_date())
+            && res.getFrom_date().isBefore(reservation.getFrom_date())) || res.getTo_date().isEqual(reservation.getTo_date()) || res.getFrom_date().isEqual(reservation.getFrom_date())){
+                logger.info("Reservation is overlapping with another reservation...");
+                return false;
+            }
+        }
+
        try {
             reservation.setSection(reservation.getSection());
             reservation.setAccount(reservation.getAccount());
