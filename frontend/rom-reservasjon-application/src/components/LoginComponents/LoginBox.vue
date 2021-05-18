@@ -107,7 +107,7 @@ export default {
     },
 
     validateInput() {
-      var isValid = true;
+      let isValid = true;
       if (this.emailInput === "") {
         this.isEmailValid = false;
         this.eMailErrorMessage = "Dette feltet kan ikke stå tomt";
