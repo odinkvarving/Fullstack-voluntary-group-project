@@ -1,6 +1,7 @@
 package idatt2105.frivilligprosjekt.romreservasjon.controller;
 
 import idatt2105.frivilligprosjekt.romreservasjon.model.Account;
+import idatt2105.frivilligprosjekt.romreservasjon.model.EquipmentReservation;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Reservation;
 import idatt2105.frivilligprosjekt.romreservasjon.service.AccountService;
 import org.slf4j.Logger;
@@ -107,6 +108,18 @@ public class AccountController {
     }
 
     /**
+     * GetMapping for finding all EquipmentReservations for an Account
+     *
+     * @param account_id the ID of the Account
+     * @return a Set containing the EquipmentReservations for the Account
+     */
+    @GetMapping("/accounts/{account_id}/equipment-reservations")
+    public Set<EquipmentReservation> findAccountEquipmentReservations(@PathVariable int account_id) {
+        logger.info("Finding equipment-reservations for Account with ID: " + account_id);
+        return accountService.findAccountEquipmentReservations(account_id);
+    }
+
+    /**
      * PostMapping for registering a new Reservation for a specific Account
      *
      * @param reservation requesting the Body of a new Reservation
@@ -119,6 +132,23 @@ public class AccountController {
         boolean success = accountService.createAccountReservation(reservation, account_id);
         if(success) {
             logger.info("The reservation was successfully registered");
+        }
+        return success;
+    }
+
+    /**
+     * PostMapping for registering a new EquipmentReservation for a specific Account
+     *
+     * @param reservation requesting the Body of a new EquipmentReservation
+     * @param account_id the ID of the Account
+     * @return true or false
+     */
+    @PostMapping("/accounts/{account_id}/equipment-reservations")
+    public boolean createAccountEquipmentReservation(@RequestBody EquipmentReservation reservation, @PathVariable int account_id) {
+        logger.info("Trying to create equipment-reservation: \n" + reservation.toString());
+        boolean success = accountService.createAccountEquipmentReservation(reservation, account_id);
+        if(success) {
+            logger.info("The equipment-reservation was successfully registered");
         }
         return success;
     }

@@ -1,6 +1,7 @@
 package idatt2105.frivilligprosjekt.romreservasjon.service;
 
 import idatt2105.frivilligprosjekt.romreservasjon.model.Account;
+import idatt2105.frivilligprosjekt.romreservasjon.model.EquipmentReservation;
 import idatt2105.frivilligprosjekt.romreservasjon.model.PasswordReset;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Reservation;
 import idatt2105.frivilligprosjekt.romreservasjon.repository.AccountRepository;
@@ -137,6 +138,23 @@ public class AccountService {
     }
 
     /**
+     * Method for finding all EquipmentReservations for a specific Account
+     *
+     * @param id the ID of the Account
+     * @return a Set containing the EquipmentReservations for the Account
+     */
+    public Set<EquipmentReservation> findAccountEquipmentReservations(int id) {
+        try {
+            logger.info("Successfully found all equipment-reservations");
+            return accountRepository.findById(id).orElseThrow(NoSuchElementException::new).getEquipmentReservations();
+        }catch (DataAccessException e) {
+            e.printStackTrace();
+            logger.info("Could not find any equipment-reservations for this account");
+        }
+        return null;
+    }
+
+    /**
      * Method for registering a new Reservation for a specific Account
      *
      * @param reservation the Reservation to be registered to the Account
@@ -154,6 +172,28 @@ public class AccountService {
         }catch (DataAccessException e) {
             e.printStackTrace();
             logger.info("Could not add reservation to account");
+        }
+        return false;
+    }
+
+    /**
+     * Method for registering a new EquipmentReservation for a specific Account
+     *
+     * @param reservation the EquipmentReservation to be registered to the Account
+     * @param id the ID of the Account
+     * @return true or false
+     */
+    public boolean createAccountEquipmentReservation(EquipmentReservation reservation, int id) {
+        try {
+            Account account = accountRepository.findById(id).orElseThrow(NoSuchElementException::new);
+            reservation.setAccount(account);
+            account.getEquipmentReservations().add(reservation);
+            reservation.setEquipment(reservation.getEquipment());
+            accountRepository.save(account);
+            return true;
+        }catch (DataAccessException e) {
+            e.printStackTrace();
+            logger.info("Could not add equipment-reservation to account");
         }
         return false;
     }

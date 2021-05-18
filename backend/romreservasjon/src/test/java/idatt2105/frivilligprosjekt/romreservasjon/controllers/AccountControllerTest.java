@@ -1,13 +1,9 @@
 package idatt2105.frivilligprosjekt.romreservasjon.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import idatt2105.frivilligprosjekt.romreservasjon.model.Account;
-import idatt2105.frivilligprosjekt.romreservasjon.model.Reservation;
-import idatt2105.frivilligprosjekt.romreservasjon.model.Room;
-import idatt2105.frivilligprosjekt.romreservasjon.model.Section;
-import idatt2105.frivilligprosjekt.romreservasjon.repository.AccountRepository;
-import idatt2105.frivilligprosjekt.romreservasjon.repository.ReservationRepository;
-import idatt2105.frivilligprosjekt.romreservasjon.repository.RoomRepository;
+import idatt2105.frivilligprosjekt.romreservasjon.model.*;
+import idatt2105.frivilligprosjekt.romreservasjon.repository.*;
+import idatt2105.frivilligprosjekt.romreservasjon.service.AccountService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,7 +53,16 @@ public class AccountControllerTest {
     private ReservationRepository reservationRepository;
 
     @Autowired
+    private EquipmentReservationRepository equipmentReservationRepository;
+
+    @Autowired
+    private EquipmentRepository equipmentRepository;
+
+    @Autowired
     private RoomRepository roomRepository;
+
+    @Autowired
+    private AccountService accountService;
 
     private Account account1;
     private Account account2;
@@ -79,6 +84,11 @@ public class AccountControllerTest {
         sections.add(section1);
         sections.add(section2);
 
+        Equipment equipment1 = new Equipment("PC-screen");
+        Equipment equipment2 = new Equipment("Speakers");
+        equipmentRepository.save(equipment1);
+        equipmentRepository.save(equipment2);
+
         room = new Room("testRoom", "testAddress", "2", "2", "testDescription", 8.0, 8);
         room.setSections(sections);
         roomRepository.save(room);
@@ -87,6 +97,11 @@ public class AccountControllerTest {
         Reservation reservation2 = new Reservation(null, null, 3, section2, account2);
         reservationRepository.save(reservation1);
         reservationRepository.save(reservation2);
+
+        EquipmentReservation equipmentReservation1 = new EquipmentReservation(null, null, equipment1, account1);
+        EquipmentReservation equipmentReservation2 = new EquipmentReservation(null, null, equipment2, account2);
+        equipmentReservationRepository.save(equipmentReservation1);
+        equipmentReservationRepository.save(equipmentReservation2);
 
         mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
     }
@@ -203,6 +218,37 @@ public class AccountControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", is(true)));
 
+    }
+
+    @Test
+    public void testFindAccountEquipmentReservations() throws Exception {
+
+        this.mockMvc.perform(get("/accounts/1/equipment-reservations")
+                .with(SecurityMockMvcRequestPostProcessor.admin())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(1))))
+                .andExpect(jsonPath("$[0].id", is(1)));
+    }
+
+    @Test
+    public void testCreateAccountEquipmentReservation() throws Exception {
+
+        Equipment equipment = new Equipment("Extender");
+        equipmentRepository.save(equipment);
+
+        EquipmentReservation equipmentReservation = new EquipmentReservation(null, null, equipment, account1);
+
+        String jsonString = objectMapper.writeValueAsString(equipmentReservation);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/accounts/1/equipment-reservations")
+                .with(SecurityMockMvcRequestPostProcessor.admin())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonString))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", is(true)));
     }
 
     public static class SecurityMockMvcRequestPostProcessor {
