@@ -45,11 +45,11 @@ public class ReservationController {
     }
 
     /**
-     * PutMapping for updating a specific Account
+     * PutMapping for updating a specific Reservation
      *
      * @param newReservation requesting the body of a new Reservation (updated version)
      * @param reservation_id the PathVariable of the id for the Reservation
-     * @return the Account that was updated
+     * @return the Reservation that was updated
      */
     @PutMapping("/reservations/{reservation_id}")
     public Reservation updateReservation(@PathVariable("reservation_id") int reservation_id, @RequestBody Reservation newReservation) {
