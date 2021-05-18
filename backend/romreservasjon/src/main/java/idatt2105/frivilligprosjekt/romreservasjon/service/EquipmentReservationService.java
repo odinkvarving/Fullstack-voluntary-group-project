@@ -1,5 +1,6 @@
 package idatt2105.frivilligprosjekt.romreservasjon.service;
 
+import idatt2105.frivilligprosjekt.romreservasjon.model.Equipment;
 import idatt2105.frivilligprosjekt.romreservasjon.model.EquipmentReservation;
 import idatt2105.frivilligprosjekt.romreservasjon.repository.EquipmentReservationRepository;
 import org.slf4j.Logger;
@@ -105,7 +106,19 @@ public class EquipmentReservationService {
     }
 
     /**
-     * TODO: Make method for finding the Equipment in a reservation by Equipment-name
-     * TODO: Make Equipment-controller/service/repo (?) - Necessary?
+     * Method for finding Equipment in a specific EquipmentReservation
+     *
+     * @param id the id of the EquipmentReservation
+     * @return the Equipment that was found
      */
+    public Equipment findReservationEquipment(int id) {
+        try {
+            logger.info("Successfully found all equipment");
+            return equipmentReservationRepository.findById(id).orElseThrow(NoSuchElementException::new).getEquipment();
+        }catch (DataAccessException e) {
+            e.printStackTrace();
+            logger.info("Could not find any equipment for this reservation");
+        }
+        return null;
+    }
 }

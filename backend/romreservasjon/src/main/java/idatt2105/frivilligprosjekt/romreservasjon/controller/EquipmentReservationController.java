@@ -1,5 +1,6 @@
 package idatt2105.frivilligprosjekt.romreservasjon.controller;
 
+import idatt2105.frivilligprosjekt.romreservasjon.model.Equipment;
 import idatt2105.frivilligprosjekt.romreservasjon.model.EquipmentReservation;
 import idatt2105.frivilligprosjekt.romreservasjon.service.EquipmentReservationService;
 import org.slf4j.Logger;
@@ -76,5 +77,15 @@ public class EquipmentReservationController {
     @DeleteMapping("/equipment-reservations/{equipment_reservation_id}")
     public boolean deleteEquipmentReservation(@PathVariable int equipment_reservation_id) {
         return equipmentReservationService.deleteEquipmentReservation(equipment_reservation_id);
+    }
+
+    /**
+     * GetMapping for finding Equipment in a specific EquipmentReservation
+     * @param equipment_reservation_id the id of the EquipmentReservation
+     * @return the Equipment that was found
+     */
+    @GetMapping("equipment-reservations/{equipment_reservation_id}/equipments")
+    public Equipment findReservationEquipment(@PathVariable int equipment_reservation_id) {
+        return equipmentReservationService.findReservationEquipment(equipment_reservation_id);
     }
 }
