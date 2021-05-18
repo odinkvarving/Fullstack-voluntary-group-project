@@ -92,7 +92,7 @@ public class EquipmentReservationService {
      *
      * @param id the ID of the EquipmentReservation to be deleted
      */
-    public boolean deleteReservation(int id) {
+    public boolean deleteEquipmentReservation(int id) {
         try {
             equipmentReservationRepository.deleteById(id);
             return true;

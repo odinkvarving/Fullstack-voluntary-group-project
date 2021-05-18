@@ -52,7 +52,7 @@ public class EquipmentReservationController {
      * @return the EquipmentReservation that was updated
      */
     @PutMapping("/equipments/{equipment_reservation_id}")
-    public EquipmentReservation updateReservation(@PathVariable("equipment_reservation_id") int reservation_id, @RequestBody EquipmentReservation newReservation) {
+    public EquipmentReservation updateEquipmentReservation(@PathVariable("equipment_reservation_id") int reservation_id, @RequestBody EquipmentReservation newReservation) {
         logger.info("Trying to update reservation to: \n" + newReservation.toString());
         return equipmentReservationService.updateEquipmentReservation(reservation_id, newReservation);
     }
@@ -64,7 +64,7 @@ public class EquipmentReservationController {
      * @return the EquipmentReservation that was found
      */
     @GetMapping("equipments/{equipment_reservation_id}")
-    public EquipmentReservation findAccountByEmail(@PathVariable int equipment_reservation_id){
+    public EquipmentReservation findEquipmentReservationById(@PathVariable int equipment_reservation_id){
         return equipmentReservationService.findEquipmentReservationById(equipment_reservation_id);
     }
 
@@ -75,6 +75,6 @@ public class EquipmentReservationController {
      */
     @DeleteMapping("/equipments/{equipment_reservation_id}")
     public boolean deleteEquipmentReservation(@PathVariable int equipment_reservation_id) {
-        return equipmentReservationService.deleteReservation(equipment_reservation_id);
+        return equipmentReservationService.deleteEquipmentReservation(equipment_reservation_id);
     }
 }
