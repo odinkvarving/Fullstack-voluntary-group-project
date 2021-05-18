@@ -6,6 +6,15 @@
 <script>
     import ResetPasswordBox from "../components/ForgotPasswordComponents/ResetPasswordBox.vue";
     
+    /**
+     * ResetPassword is a router for password resetting.
+     * To access this router, the user needs to acquire a unique URL,
+     *  created by a 75 character long string.
+     * The URL is sent to the account email.
+     * 
+     * @author Scott Rydberg Sonen
+     */
+
     export default {
         name: "ResetPassword",
         components: {

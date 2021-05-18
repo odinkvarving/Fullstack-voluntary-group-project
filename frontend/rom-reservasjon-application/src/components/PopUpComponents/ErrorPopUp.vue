@@ -8,6 +8,14 @@
     </div>
 </template>
 <script>
+    /**
+     * ErrorPopUp is a component which represents a custom made error pop up.
+     * The pop up receives a message from a parent component,
+     *  and displays it in the pop up.
+     * 
+     * @author Scott Rydberg Sonen
+     */
+
     export default {
         name: "ErrorPopUp",
 
@@ -18,6 +26,11 @@
         },
 
         methods: {
+            /**
+             * closePopUp is a function which emits close-popup.
+             * This is to tell the parent component when the
+             *  pop up is closed by the user.
+             */
             closePopUp() {
                 this.$emit("close-popup");
             }

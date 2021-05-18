@@ -6,6 +6,7 @@ import Login from "../routes/Login.vue";
 import ForgotPassword from "../routes/ForgotPassword.vue";
 import ResetPassword from "../routes/ResetPassword.vue";
 import AddAccount from "../routes/AddAccount.vue";
+import Reservations from "../routes/Reservations.vue";
 
 const routes = [
     {
@@ -47,6 +48,11 @@ const routes = [
         path: "/addaccount",
         name: "AddAccount",
         component: AddAccount
+    },
+    {
+        path: "/reservations",
+        name: "Reservations",
+        component: Reservations
     }
 ];
 export default routes;

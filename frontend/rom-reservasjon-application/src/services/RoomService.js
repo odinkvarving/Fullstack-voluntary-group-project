@@ -14,7 +14,7 @@ async function getRooms(){
         }
     }
 
-    return fetch(url, requestOptions)
+    return await fetch(url, requestOptions)
         .then(response => response.json())
         .catch(error => console.log(error));
 }
