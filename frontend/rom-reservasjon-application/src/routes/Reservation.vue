@@ -1,26 +1,26 @@
 <template>
-  <div>
-      <v-container>
-          <v-row>
-              <v-col>
-                  <h1>Title</h1>
-              </v-col>
-          </v-row>
-      </v-container>
+  <div class="reservationAdminPage">
+    <ReservationAdminPage />
   </div>
 </template>
 
 <script>
-export default {
-    name: "Reservation",
-    data() {
-        return {
+import ReservationAdminPage from "../components/Reservations/ReservationAdminPage.vue";
 
-        }
-    }
-}
+export default {
+  name: "Reservation",
+  components: {
+    ReservationAdminPage,
+  },
+  data() {
+    return {};
+  },
+};
 </script>
 
 <style>
-
+.reservationAdminPage {
+  background-color: #192138;
+  height: 100vh;
+}
 </style>
