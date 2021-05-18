@@ -116,8 +116,21 @@
                 expirationDateError: "",
                 menu: false,
                 addRequestSent: false,
-                isAccountAdded: false
+                isAccountAdded: false,
+                authenticationRequest: {}
             }
+        },
+
+        mounted() {
+            //let getJwtToken = this.$store.getters.getJwtToken;
+            let account = this.$store.getters.getLoggedInAccount;
+
+            this.authenticationRequest = {
+                username: account.email,
+                password: account.password
+            }
+
+            console.log("ACCOUNT: " + account.email);
         },
 
         methods: {
@@ -160,11 +173,6 @@
             },
 
             async add() {
-                let authenticationRequest = {
-                    username: "admin@admin.no",
-                    password: "admin123"
-                }
-                await this.$store.dispatch("login", authenticationRequest);
                 console.log(this.$store.getters.getLoggedInAccount);
                 console.log(this.$store.getters.getJwtToken);
 
@@ -197,6 +205,8 @@
                         }
                     })
                     .catch(error => console.error(error))
+
+                location.reload();
             }
         }
     }

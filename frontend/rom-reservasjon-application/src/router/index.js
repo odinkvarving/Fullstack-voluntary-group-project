@@ -8,7 +8,7 @@ import AddAccount from "../routes/AddAccount.vue";
 
 const routes = [
     {
-        path: "/",
+        path: "/frontpage",
         name: "FrontPage",
         component: FrontPage
     },
@@ -23,7 +23,7 @@ const routes = [
         component: Room
     },
     {
-        path: "/login",
+        path: "/",
         name: "Login",
         component: Login
     },
