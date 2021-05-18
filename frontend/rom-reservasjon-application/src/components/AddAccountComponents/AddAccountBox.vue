@@ -1,5 +1,5 @@
 <template>
-    <div id="add-account-box" style="color: white;">
+    <div class="add-account-box" style="color: white;">
         <v-container>
             <v-row>
                 <v-col class="col" cols="12">
@@ -234,6 +234,10 @@ export default {
 }
 </script>
 <style scoped>
+    #add-account-box {
+        height: 500px;
+        width: 700px;
+    }
     .col {
         margin-top: -20px;
     }

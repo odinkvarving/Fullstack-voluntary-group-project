@@ -1,6 +1,6 @@
 <template>
     <div class="add-account">
-        <AddAccountBox/>
+        <AddAccountBox class="add-account-box"/>
     </div>
 </template>
 <script>
@@ -26,8 +26,13 @@
     .add-account {
         background-color: #192138;
         position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        padding-top: 100px;
+        height: 100%;
+        width: 100%;
+    }
+    .add-account-box {
+        height: 50%;
+        width: 70%;
+        margin: auto;
     }
 </style>
