@@ -1,6 +1,6 @@
 <template>
   <v-app-bar color="#222B45" absolute>
-    <router-link to="/">
+    <router-link to="/frontpage">
       <div class="d-flex align-center">
         <v-img contain src="../../assets/Logo.png" width="40" />
       </div>
@@ -8,7 +8,7 @@
 
     <v-spacer></v-spacer>
 
-    <router-link class="link" to="/">
+    <router-link class="link" to="/frontpage">
       <v-btn text>
         <span>Hjem</span>
       </v-btn>
@@ -18,11 +18,16 @@
         <span>Se alle rom</span>
       </v-btn>
     </router-link>
+    <router-link v-if="isAdmin" class="link" to="/addaccount">
+      <v-btn text>
+        <span>Lag bruker</span>
+      </v-btn>
+    </router-link>
     
     <v-btn v-if="isLoggedIn" color="#01AB55" @click="logout">
       <span>Logg ut</span>
     </v-btn>
-    <router-link v-else class="link" to="/login">
+    <router-link v-else class="link" to="/">
       <v-btn color="#01AB55">
         <span>Logg inn</span>
       </v-btn>
@@ -40,6 +45,10 @@ export default {
   computed: {
     isLoggedIn(){
       return this.$store.getters.isAuthenticated;
+    },
+
+    isAdmin() {
+      return this.$store.getters.getLoggedInAccount.is_admin;
     }
   },
   methods: {

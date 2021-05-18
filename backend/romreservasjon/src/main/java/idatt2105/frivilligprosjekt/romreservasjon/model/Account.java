@@ -27,6 +27,9 @@ public class Account {
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Reservation> reservations = new HashSet<>();
 
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<EquipmentReservation> equipmentReservations = new HashSet<>();
+
     public Account(String name, String email, String password, String phone, boolean is_admin, LocalDateTime expiration_date) {
         this.name = name;
         this.email = email;
@@ -107,6 +110,14 @@ public class Account {
         this.reservations = reservations;
     }
 
+    public Set<EquipmentReservation> getEquipmentReservations() {
+        return equipmentReservations;
+    }
+
+    public void setEquipmentReservations(Set<EquipmentReservation> equipmentReservations) {
+        this.equipmentReservations = equipmentReservations;
+    }
+
     @Override
     public String toString() {
         return "Account{" +
@@ -118,6 +129,7 @@ public class Account {
                 ", is_admin=" + is_admin +
                 ", expiration_date=" + expiration_date +
                 ", reservations=" + reservations +
+                ", equipment_reservations=" + equipmentReservations +
                 '}';
     }
 }

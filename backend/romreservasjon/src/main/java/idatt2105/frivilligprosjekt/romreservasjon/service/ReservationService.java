@@ -27,9 +27,9 @@ public class ReservationService {
     private SectionRepository sectionRepository;
 
     /**
-     * Method for finding all Accounts registered in the database
+     * Method for finding all Reservations registered in the database
      *
-     * @return a collection of all Accounts registered in the database
+     * @return a collection of all Reservations registered in the database
      */
     public List<Reservation> findAll() {
         Iterable<Reservation> itReservations = reservationRepository.findAll();
@@ -75,9 +75,9 @@ public class ReservationService {
     }
 
     /**
-     * Method for updating a specific Account
+     * Method for updating a specific Reservation
      *
-     * @param id the id of the account (not used)
+     * @param id the id of the Reservation
      * @param reservation the updated version of the Reservation with the specified ID
      * @return the Reservation that was updated
      */
