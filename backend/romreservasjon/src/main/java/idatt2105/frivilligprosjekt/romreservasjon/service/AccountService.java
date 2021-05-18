@@ -12,7 +12,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -58,10 +57,10 @@ public class AccountService {
     }
 
     /**
-     * Method for finding by id
+     * Method for finding a specific Account
      *
-     * @param id
-     * @return
+     * @param id the ID of the Account to be found
+     * @return the Account that was found
      */
     public Account findById(int id){
         Optional<Account> account = accountRepository.findById(id);
@@ -73,7 +72,7 @@ public class AccountService {
      * address, i.e. one which is not associated with an already registered account
      *
      * @param account the new Account to be registered
-     * @return true if the Account was registered, false if an Account with the given email already exists
+     * @return true if the Account was registered, false if an Account with the given id already exists
      */
     public boolean saveAccount(Account account) {
         Optional<Account> acc = accountRepository.findById(account.getId());

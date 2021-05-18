@@ -13,7 +13,9 @@ public class EquipmentReservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private LocalDateTime due_date;
+    private LocalDateTime from_date;
+
+    private LocalDateTime to_date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference(value = "equipment-reservation")
@@ -26,8 +28,9 @@ public class EquipmentReservation {
     public EquipmentReservation() {
     }
 
-    public EquipmentReservation(LocalDateTime due_date, Equipment equipment, Account account) {
-        this.due_date = due_date;
+    public EquipmentReservation(LocalDateTime from_date, LocalDateTime to_date, Equipment equipment, Account account) {
+        this.from_date = from_date;
+        this.to_date = to_date;
         this.equipment = equipment;
         this.account = account;
     }
@@ -40,12 +43,20 @@ public class EquipmentReservation {
         this.id = id;
     }
 
-    public LocalDateTime getDue_date() {
-        return due_date;
+    public LocalDateTime getFrom_date() {
+        return from_date;
     }
 
-    public void setDue_date(LocalDateTime due_date) {
-        this.due_date = due_date;
+    public void setFrom_date(LocalDateTime from_date) {
+        this.from_date = from_date;
+    }
+
+    public LocalDateTime getTo_date() {
+        return to_date;
+    }
+
+    public void setTo_date(LocalDateTime to_date) {
+        this.to_date = to_date;
     }
 
     public Equipment getEquipment() {
@@ -68,7 +79,8 @@ public class EquipmentReservation {
     public String toString() {
         return "EquipmentReservation{" +
                 "id=" + id +
-                ", due_date=" + due_date +
+                ", from_date=" + from_date +
+                ", to_date=" + to_date +
                 ", account=" + account +
                 '}';
     }

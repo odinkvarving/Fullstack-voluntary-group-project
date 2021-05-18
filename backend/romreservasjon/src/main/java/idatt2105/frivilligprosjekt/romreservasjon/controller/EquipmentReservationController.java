@@ -23,7 +23,7 @@ public class EquipmentReservationController {
      *
      * @return a list of all registered EquipmentReservations
      */
-    @GetMapping("/equipments")
+    @GetMapping("/equipment-reservations")
     public List<EquipmentReservation> getAllEquipmentsReservations() {
         return equipmentReservationService.findAll();
     }
@@ -34,7 +34,7 @@ public class EquipmentReservationController {
      * @param reservation requesting the body of the EquipmentReservation to save
      * @return true or false whether the EquipmentReservation was created successfully or not
      */
-    @PostMapping("/equipments")
+    @PostMapping("/equipment-reservations")
     public boolean saveEquipmentReservation(@RequestBody EquipmentReservation reservation) {
         logger.info("Trying to save reservation...");
         boolean success = equipmentReservationService.saveEquipmentReservation(reservation);
@@ -51,7 +51,7 @@ public class EquipmentReservationController {
      * @param reservation_id the PathVariable of the id for the EquipmentReservation
      * @return the EquipmentReservation that was updated
      */
-    @PutMapping("/equipments/{equipment_reservation_id}")
+    @PutMapping("/equipment-reservations/{equipment_reservation_id}")
     public EquipmentReservation updateEquipmentReservation(@PathVariable("equipment_reservation_id") int reservation_id, @RequestBody EquipmentReservation newReservation) {
         logger.info("Trying to update reservation to: \n" + newReservation.toString());
         return equipmentReservationService.updateEquipmentReservation(reservation_id, newReservation);
@@ -63,7 +63,7 @@ public class EquipmentReservationController {
      * @param equipment_reservation_id the PathVariable for the id of the EquipmentReservation
      * @return the EquipmentReservation that was found
      */
-    @GetMapping("equipments/{equipment_reservation_id}")
+    @GetMapping("/equipment-reservations/{equipment_reservation_id}")
     public EquipmentReservation findEquipmentReservationById(@PathVariable int equipment_reservation_id){
         return equipmentReservationService.findEquipmentReservationById(equipment_reservation_id);
     }
@@ -73,7 +73,7 @@ public class EquipmentReservationController {
      *
      * @param equipment_reservation_id the PathVariable of the ID for the EquipmentReservation
      */
-    @DeleteMapping("/equipments/{equipment_reservation_id}")
+    @DeleteMapping("/equipment-reservations/{equipment_reservation_id}")
     public boolean deleteEquipmentReservation(@PathVariable int equipment_reservation_id) {
         return equipmentReservationService.deleteEquipmentReservation(equipment_reservation_id);
     }

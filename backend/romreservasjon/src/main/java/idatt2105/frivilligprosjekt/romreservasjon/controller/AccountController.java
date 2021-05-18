@@ -51,7 +51,7 @@ public class AccountController {
      * @param id
      * @return
      */
-    @GetMapping("accounts/{id}")
+    @GetMapping("/accounts/{id}")
     public Account findById(@PathVariable int id){
         return accountService.findById(id);
     }
@@ -62,7 +62,7 @@ public class AccountController {
      * @param account requesting the body of the Account to save
      * @return true or false whether the Account was created successfully or not
      */
-    @PostMapping("accounts")
+    @PostMapping("/accounts")
     public boolean saveAccount(@RequestBody Account account) {
         logger.info("Trying to save account:\n" + account.toString());
         boolean success = accountService.saveAccount(account);
@@ -79,7 +79,7 @@ public class AccountController {
      * @param account_id the PathVariable of the id for the Account
      * @return the Account that was updated
      */
-    @PutMapping("accounts/{account_id}")
+    @PutMapping("/accounts/{account_id}")
     public Account updateAccount(@PathVariable("account_id") int account_id, @RequestBody Account newAccount) {
         return accountService.updateAccount(account_id, newAccount);
     }
@@ -89,7 +89,7 @@ public class AccountController {
      *
      * @param account_id the PathVariable for the id of the Account
      */
-    @DeleteMapping("accounts/{account_id}")
+    @DeleteMapping("/accounts/{account_id}")
     public void deleteAccount(@PathVariable("account_id") int account_id) {
         accountService.deleteAccount(account_id);
     }
@@ -100,7 +100,7 @@ public class AccountController {
      * @param account_id the ID of the Account
      * @return a Set containing the Reservations for the Account
      */
-    @GetMapping("accounts/{account_id}/reservations")
+    @GetMapping("/accounts/{account_id}/reservations")
     public Set<Reservation> findAccountReservations(@PathVariable int account_id) {
        logger.info("Finding reservations for Account with ID: " + account_id);
         return accountService.findAccountReservations(account_id);
@@ -113,7 +113,7 @@ public class AccountController {
      * @param account_id the ID of the Account
      * @return true or false
      */
-    @PostMapping("accounts/{account_id}/reservations")
+    @PostMapping("/accounts/{account_id}/reservations")
     public boolean createAccountReservation(@RequestBody Reservation reservation, @PathVariable int account_id) {
         logger.info("Trying to create reservation: \n" + reservation.toString());
         boolean success = accountService.createAccountReservation(reservation, account_id);
