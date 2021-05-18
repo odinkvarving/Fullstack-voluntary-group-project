@@ -8,7 +8,7 @@ export default new Vuetify({
         dark: true,
         themes: {
             dark: {
-                green: "#01AB55",
+                green: "#01AB55"
             }
         }
     },

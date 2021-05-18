@@ -83,6 +83,10 @@ export default {
 </script>
 
 <style>
+  body {
+    background-color: #192138;
+  }
+
 .link {
   text-decoration: none;
 }
