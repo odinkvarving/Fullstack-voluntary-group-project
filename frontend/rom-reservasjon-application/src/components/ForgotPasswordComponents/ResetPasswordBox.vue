@@ -21,92 +21,126 @@
     </div>
 </template>
 <script>
-    import SuccessPopUp from "../PopUpComponents/SuccessPopUp.vue";
-    import ErrorPopUp from "../PopUpComponents/ErrorPopUp.vue";
+import SuccessPopUp from "../PopUpComponents/SuccessPopUp.vue";
+import ErrorPopUp from "../PopUpComponents/ErrorPopUp.vue";
 
-    export default {
-        name: "ResetPasswordBox",
-        components: {
-            SuccessPopUp,
-            ErrorPopUp
+/**
+ * ResetPasswordBox is a component which represents the action of resetting a password.
+ * 
+ * @author Scott Rydberg Sonen
+ */
+
+export default {
+    name: "ResetPasswordBox",
+    components: {
+        SuccessPopUp,
+        ErrorPopUp
+    },
+
+    data() {
+        return {
+            passwordInput: "",
+            confirmationInput: "",
+            isPopUpVisible: false,
+            isErrorVisible: false,
+            isPasswordValid: true,
+            isPasswordsEqual: true,
+            message: "",
+            account: {},
+            suffix: this.$route.params.suffix
+        }
+    },
+
+    async created() {
+        const requestOptions = {
+            method: "GET"
+        }
+        await fetch("http://localhost:8080/reset/" + this.suffix, requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                this.account = data;
+                console.log("TEST");
+                console.log(this.account.password);
+            })
+            .catch(error => console.error(error));
+    },
+
+    methods: {
+        /**
+         * reset is a function which firstly validates password,
+         *  to see if the password has a valid length.
+         * Then the function checks whether or not the password and confirmation password are equal.
+         * If they are equal and valid, resetPassword function will run.
+         */
+        reset() {
+            console.log(this.account);
+            this.isPopUpVisible = false;
+            this.isErrorVisible = false;
+            if (!this.validatePassword()) {
+                document.getElementById("password-reset-box").style.filter = "blur(5px)";
+                this.message = "Passordet må være mellom 8 og 30 tegn";
+                this.isErrorVisible = true;
+                return;
+            }
+            if (!this.validateEquality()) {
+                document.getElementById("password-reset-box").style.filter = "blur(5px)";
+                this.message = "Passordene er ikke like";
+                this.isErrorVisible = true;
+                return;
+            }
+
+            this.resetPassword();
         },
 
-        data() {
-            return {
-                passwordInput: "",
-                confirmationInput: "",
-                isPopUpVisible: false,
-                isErrorVisible: false,
-                isPasswordValid: true,
-                isPasswordsEqual: true,
-                message: "",
-                account: {},
-                suffix: this.$route.params.suffix
-            }
+        /**
+         * resetPassword is a function which sends a PUT request.
+         * The request contains a new password for updating latest password.
+         */
+        resetPassword() {
+            /*const requestOptions = {
+                method: "PUT",
+                body: this.passwordInput
+            }*/
         },
 
-        async created() {
-            const requestOptions = {
-                method: "GET"
-            }
-            await fetch("http://localhost:8080/reset/" + this.suffix, requestOptions)
-                .then(response => response.json())
-                .then(data => {
-                    this.account = data;
-                    console.log("TEST");
-                    console.log(this.account.password);
-                })
-                .catch(error => console.error(error));
+        /**
+         * validatePassword is a function which checks if password input has a valid length.
+         */
+        validatePassword() {
+            return this.passwordInput.length >= 8 && this.passwordInput.length <= 30;
         },
 
-        methods: {
-            reset() {
-                console.log(this.account);
-                this.isPopUpVisible = false;
-                this.isErrorVisible = false;
-                if (!this.validatePassword()) {
-                    document.getElementById("password-reset-box").style.filter = "blur(5px)";
-                    this.message = "Passordet må være mellom 8 og 30 tegn";
-                    this.isErrorVisible = true;
-                    return;
-                }
-                if (!this.validateEquality()) {
-                    document.getElementById("password-reset-box").style.filter = "blur(5px)";
-                    this.message = "Passordene er ikke like";
-                    this.isErrorVisible = true;
-                    return;
-                }
+        /**
+         * validateEquality is a function which checks if password and confirmation password are equal.
+         */
+        validateEquality() {
+            return this.passwordInput === this.confirmationInput;
+        },
 
-                
-                /*const requestOptions = {
-                    method: "PUT",
-                    body: this.passwordInput
-                }*/
-            },
+        /**
+         * closePopUp is a function which closes error pop up.
+         */
+        closePopUp() {
+            this.message = "";
+            this.isErrorVisible = false;
+            document.getElementById("password-reset-box").style.filter = "none";
+        },
 
-            validatePassword() {
-                return this.passwordInput.length >= 8 && this.passwordInput.length <= 30;
-            },
+        /**
+         * redirectPage is a function which pushes user to the first page (login) with timeout.
+         */
+        redirectPage() {
+            setTimeout(() => this.$router.push("/"), 3000);
+        },
 
-            validateEquality() {
-                return this.passwordInput === this.confirmationInput;
-            },
-
-            closePopUp() {
-                this.message = "";
-                this.isErrorVisible = false;
-                document.getElementById("password-reset-box").style.filter = "none";
-            },
-
-            redirectPage() {
-                setTimeout(() => this.$router.push("/"), 3000);
-            },
-
-            returnPage() {
-                this.$router.push("/");
-            }
+        /**
+         * returnPage is a function which pushes user to the first page (login) WITHOUT timeout.
+         */
+        returnPage() {
+            this.$router.push("/");
         }
     }
+}
 </script>
 <style scoped>
     .popup {

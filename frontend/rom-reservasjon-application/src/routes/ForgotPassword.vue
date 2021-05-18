@@ -6,6 +6,13 @@
 <script>
     import ForgotPasswordBox from "../components/ForgotPasswordComponents/ForgotPasswordBox.vue";
     
+    /**
+     * ForgotPassword is a router for a page the user will be sent to
+     *  if the user has forgotten their password.
+     * 
+     * @author Scott Rydberg Sonen
+     */
+
     export default {
         name: "ForgotPassword",
         components: {

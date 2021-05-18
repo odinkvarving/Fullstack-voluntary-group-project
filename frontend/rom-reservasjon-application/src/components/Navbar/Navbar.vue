@@ -23,6 +23,11 @@
         <span>Lag bruker</span>
       </v-btn>
     </router-link>
+    <router-link v-if="isAdmin" class="link" to="/reservations">
+      <v-btn text>
+        <span>Reservasjoner</span>
+      </v-btn>
+    </router-link>
     
     <v-btn v-if="isLoggedIn" color="#01AB55" @click="logout">
       <span>Logg ut</span>

@@ -6,17 +6,23 @@
             <h1 class="header">Glemt passord?</h1>
             <p class="sub-title">Skriv inn e-postadressen din nedenfor</p>
             <div class="input-container">
-                <input type="text" class="input" id="email" placeholder="E-post" v-model="emailInput" v-bind:disabled="isSent" v-on:keyup.enter="postAddress"/>
+                <input type="text" class="input" id="email" placeholder="E-post" v-model="emailInput" v-bind:disabled="isSent" v-on:keyup.enter="sendAddress"/>
             </div>
-            <button id="submit-btn" @click="postAddress" v-bind:disabled="isSent">Send</button>
+            <button id="submit-btn" @click="sendAddress" v-bind:disabled="isSent">Send</button>
         </div>
     </div>
 </template>
 <script>
-    import SuccessPopUp from "../PopUpComponents/SuccessPopUp.vue";
-    import ErrorPopUp from "../PopUpComponents/ErrorPopUp.vue";
+import SuccessPopUp from "../PopUpComponents/SuccessPopUp.vue";
+import ErrorPopUp from "../PopUpComponents/ErrorPopUp.vue";
 
-    export default {
+/**
+ * ForgotPasswordBox is a component which represents forgot password functionality.
+ * 
+ * @author Scott Rydberg Sonen
+ */
+
+export default {
     name: "ForgotPasswordBox",
     components: {
         SuccessPopUp,
@@ -35,7 +41,12 @@
     },
 
     methods: {
-        postAddress() {
+        /**
+         * sendAddress is a function which firstly checks if the email input is of valid format.
+         * If the check fails, the user is noted.
+         * If the email is of valid format, send function will run.
+         */
+        sendAddress() {
             this.isEmailValid = true;
             this.isPopUpVisible = false;
             this.isErrorVisible = false;
@@ -55,15 +66,27 @@
             }
         },
 
+        /**
+         * redirectPage is a function which pushes user to the first page (login) with timeout.
+         */
         redirectPage() {
             setTimeout(() => this.$router.push("/"), 3000);
         },
 
+        /**
+         * validateEmail is a function which validates email,
+         *  to see if the email is using a valid format.
+         */
         validateEmail() {
             const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return re.test(String(this.emailInput).toLowerCase());
         },
 
+        /**
+         * send is a function which sends a request to backend containing the email.
+         * If the email of account is registered in the database,
+         *  the email will receive a reset link.
+         */
         async send() {
             const requestOptions = {
                 method: "POST",
@@ -72,13 +95,16 @@
             await fetch("http://localhost:8080/reset/" + this.emailInput, requestOptions);
         },
 
+        /**
+         * closePopUp is a function which closes error pop up.
+         */
         closePopUp() {
             this.message = "";
             this.isErrorVisible = false;
             document.getElementById("input-box").style.filter = "none";
         },
     },
-    };
+}
 </script>
 <style scoped>
     .popup {

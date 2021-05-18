@@ -6,6 +6,12 @@
 <script>
     import AddAccountBox from "../components/AddAccountComponents/AddAccountBox.vue";
 
+    /**
+     * AddAccount is a router for adding account functionality for admins.
+     * 
+     * @author Scott Rydberg Sonen
+     */
+
     export default {
         name: "AddAccount",
         components: {

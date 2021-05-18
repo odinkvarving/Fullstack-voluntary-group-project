@@ -70,6 +70,13 @@
   </div>
 </template>
 <script>
+/**
+ * LoginBox is a component which represents the login area on login router.
+ * The component enables login for all registered accounts.
+ * 
+ * @author Scott Rydberg Sonen
+ */
+
 export default {
   name: "LoginBox",
   components: {},
@@ -88,6 +95,10 @@ export default {
   },
 
   methods: {
+    /**
+     * loginAccount is a function which firstly runs validate-checks for both email and password.
+     * If email is valid, login function is run.
+     */
     loginAccount() {
       this.isEmailValid = true;
       this.isPopUpVisible = false;
@@ -106,6 +117,10 @@ export default {
       }
     },
 
+    /**
+     * validateInput is a function which validates email and password,
+     *  to see if the input fields are empty or not.
+     */
     validateInput() {
       let isValid = true;
       if (this.emailInput === "") {
@@ -125,11 +140,19 @@ export default {
       return isValid;
     },
 
+    /**
+     * validateEmail is a function which validates email,
+     *  to see if the email is using a valid format.
+     */
     validateEmail() {
       const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(String(this.emailInput).toLowerCase());
     },
 
+    /**
+     * login is a function which tries to log in account.
+     * If the login fails, the user will be noted.
+     */
     async login() {
       const authRequest = {
         username: this.emailInput,
@@ -148,12 +171,18 @@ export default {
       }
     },
 
+    /**
+     * closePopUp is a function which closes error pop up.
+     */
     closePopUp() {
       this.message = "";
       this.isErrorVisible = false;
       document.getElementById("login-page").style.filter = "none";
     },
 
+    /**
+     * changePasswordVisibility is a function which toggles password input visibility.
+     */
     changePasswordVisibility() {
       let inputArea = document.getElementById("password");
       if (inputArea.type === "password") inputArea.type = "text";

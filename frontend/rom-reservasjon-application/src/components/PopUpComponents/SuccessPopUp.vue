@@ -7,6 +7,14 @@
     </div>
 </template>
 <script>
+    /**
+     * SuccessPopUp is a component which represents a custom made success pop up.
+     * The pop up receives a message from parent component,
+     *  which is displayed in the pop up.
+     * 
+     * @author Scott Rydberg Sonen
+     */
+
     export default {
         props: {
             message: {

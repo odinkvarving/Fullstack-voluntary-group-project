@@ -6,6 +6,12 @@
 <script>
     import LoginBox from "../components/LoginComponents/LoginBox.vue";
 
+    /**
+     * Login is a router for login page.
+     * 
+     * @author Scott Rydberg Sonen
+     */
+
     export default {
         name: "Login",
         components: {
