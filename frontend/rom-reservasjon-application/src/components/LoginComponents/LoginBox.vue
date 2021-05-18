@@ -141,7 +141,7 @@ export default {
       if (state) {
         this.message = "Bruker logges inn";
         this.isPopUpVisible = true;
-        setTimeout(() => this.$router.push("/"), 1000);
+        setTimeout(() => this.$router.push("/frontpage"), 1000);
       } else {
         this.message = "E-post eller passord er ugyldig";
         this.isErrorVisible = true;
