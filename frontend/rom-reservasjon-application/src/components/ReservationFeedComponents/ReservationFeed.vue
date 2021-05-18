@@ -3,7 +3,7 @@
         <div class="reservation-feed-container">
             <h1>Romreservasjoner</h1>
             <div v-if="isDataReady && rooms">
-                <div class="feed" v-for="r in reservations" :key="r.id">
+                <div class="feed" v-for="r in reservations" :key="r.id" @click="handleReservationClicked(r)">
                     <ReservationBox :reservation="r" :rooms="rooms"/>
                 </div>
             </div>
@@ -50,11 +50,27 @@ export default {
         }
         this.isDataReady = true;
     },
+
+    methods: {
+        /**
+         * handleReservationClicked is a function which redirects the admin to reservation page.
+         * The id is passed through the URL path.
+         */
+        handleReservationClicked(reservation) {
+            this.$router.push("/reservations", {id: reservation.id}); 
+        }
+    }
 }
 </script>
 <style scoped>
     .reservation-feed {
         background-color: #192138;
         padding: 80px;
+    }
+    h1 {
+        color: white;
+    }
+    .feed {
+        cursor: pointer;
     }
 </style>
