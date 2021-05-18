@@ -85,6 +85,10 @@ const store = new Vuex.Store({
                 commit("clearBusy");
             }
         },
+        getAccountInfo: async ({ commit, state }) => {
+            let account = await getAccount(state.jwtToken);
+            commit("setLoggedInAccount", account);
+        },
         logout: ({ commit }) => {
             commit("clearJwtToken");
             commit("clearLoggedInAccount");

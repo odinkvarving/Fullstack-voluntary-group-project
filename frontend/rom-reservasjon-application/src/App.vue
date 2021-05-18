@@ -8,9 +8,6 @@
 </template>
 
 <script>
-import { roomService } from "./services/RoomService"
-import { reservationService } from "./services/ReservationService"
-import { accountService } from "./services/AccountService"
 
 import Navbar from './components/Navbar/Navbar'
 
@@ -20,63 +17,10 @@ export default {
   components: {
     Navbar,
   },
-  methods: {
-    async testButtonClicked(){
-      let authenticationRequest = {
-        username: "admin@admin.no",
-        password: "admin123"
-      }
-
-      await this.$store.dispatch("login", authenticationRequest);
-
-      console.log(this.$store.getters.getLoggedInAccount);
-      console.log(this.$store.getters.getJwtToken);
-
-      let rooms = await roomService.getRooms();
-      console.log(rooms);
-
-      let reservations = await reservationService.getReservations();
-      console.log(reservations);
-
-      let sectionReservations = await reservationService.getSectionsReservations(1, 1);
-      console.log(sectionReservations);
-/*
-      
-      let reservation = {
-        from_date: new Date(),
-        to_date: new Date(),
-        section: {
-          id: 2
-        },
-        account: {
-          id: 1
-        }
-      }
-      let newReservation = await reservationService.addReservation(reservation);
-      console.log(newReservation); 
-/*
-      let deleteResult = await reservationService.deleteReservation(36);
-      console.log(deleteResult);*/
-
-
-      let newReservation = {
-        from_date: new Date(),
-        to_date: new Date(),
-        section: {
-          id: 1
-        },
-        account: {
-          id: 1
-        }
-      }
-      let updateResult = await reservationService.updateReservation(2, newReservation);
-      console.log(updateResult);
-
-      let account = await accountService.getAccount(2);
-      console.log(account);
-    }
-  },
   mounted(){
+    if(this.$store.getters.isAuthenticated){
+      this.$store.dispatch("getAccountInfo");
+    }
     this.$store.dispatch("loadRooms");
   }
 }
