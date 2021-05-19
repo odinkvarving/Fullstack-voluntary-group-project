@@ -2,6 +2,7 @@ import store from "../store/index"
 
 export const reservationService = {
     getReservations,
+    getReservation,
     getSectionsReservations,
     addReservation,
     addRoomReservation,
@@ -11,6 +12,20 @@ export const reservationService = {
 
 async function getReservations(){
     let url = "http://localhost:8080/reservations";
+
+    const requestOptions = {
+        headers: {
+            'Authorization': `Bearer ${store.getters.getJwtToken}`
+        }
+    }
+
+    return await fetch(url, requestOptions)
+        .then(response => response.json())
+        .catch(error => console.log(error));
+}
+
+async function getReservation(reservationId){
+    let url = `http://localhost:8080/reservations/${reservationId}`;
 
     const requestOptions = {
         headers: {
