@@ -1,13 +1,11 @@
 <template>
-  <v-container pt-16>
+  <v-container fill-height>
     <v-row>
       <v-col cols="12">
         <h1>A4-112, Realfagbygget, Gløshaugen</h1>
       </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="12" sm="6">
-        <v-card outlined color="#222b45">
+      <v-col cols="12" md="6">
+        <v-card  outlined color="#222b45">
           <v-card-text>
             <v-container>
               <v-row>
@@ -43,7 +41,7 @@
                   Beskrivelse
                 </v-col>
                 <v-col cols="12">
-                  <v-card outlined color="#222b45">
+                  <v-card  outlined color="#222b45">
                     <v-card-text>
                       Lorem ipsum, dolor sit amet consectetur adipisicing elit.
                       Pariatur, odit dolorum placeat ipsum sed obcaecati
@@ -58,31 +56,30 @@
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col cols="12" sm="6">
-        <v-card outlined color="#222b45">
+      <v-col cols="12" md="6">
+        <v-card  outlined color="#222b45">
           <v-card-text>
-                <v-col cols="12">
-                  <h2>Bruker</h2>
-                </v-col>
-                <v-col>
-                <v-row>
-                  <v-col cols="6">Navn</v-col>
-                  <v-col>Data</v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="6">E-post</v-col>
-                  <v-col>Data</v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="6">Telefonnummer</v-col>
-                  <v-col>Data</v-col>
-                </v-row>
-
-                </v-col>
+            <v-col cols="12">
+              <h2>Bruker</h2>
+            </v-col>
+            <v-col>
+              <v-row>
+                <v-col cols="6">Navn</v-col>
+                <v-col>Data</v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="6">E-post</v-col>
+                <v-col>Data</v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="6">Telefonnummer</v-col>
+                <v-col>Data</v-col>
+              </v-row>
+            </v-col>
           </v-card-text>
         </v-card>
         <div style="height: 24px"></div>
-        <v-card outlined color="#222b45">
+        <v-card  outlined color="#222b45">
           <v-card-text>
             <v-container>
               <v-row>
@@ -118,9 +115,28 @@ export default {
   name: "ReservationAdminPage",
   data() {
     return {
-        
+        roomName: "",
+        section: "",
+        amount: "",
+        date: "",
+        time: "",
+        description: "",
+
+        username: "",
+        userEmail: "",
+        userPhone: "",
+
+        equipment: [],
     };
   },
+
+  computed: {
+
+  },
+
+  methods: {
+
+  }
 };
 </script>
 
