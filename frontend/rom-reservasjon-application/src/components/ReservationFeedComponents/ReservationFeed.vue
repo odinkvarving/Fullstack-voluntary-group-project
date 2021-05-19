@@ -1,15 +1,10 @@
 <template>
     <div class="reservation-feed">
         <div class="reservation-feed-container">
-            <div v-if="!isAdmin">
-                <h2>Innlogget bruker er ikke admin!</h2>
-            </div>
-            <div v-else>
-                <h1>Romreservasjoner</h1>
-                <div v-if="isDataReady && rooms">
-                    <div class="feed" v-for="r in reservations" :key="r.id" @click="handleReservationClicked(r)">
-                        <ReservationBox :reservation="r" :rooms="rooms"/>
-                    </div>
+            <h1>Romreservasjoner</h1>
+            <div v-if="isDataReady && rooms">
+                <div class="feed" v-for="r in reservations" :key="r.id" @click="handleReservationClicked(r)">
+                    <ReservationBox :reservation="r" :rooms="rooms"/>
                 </div>
             </div>
         </div>
@@ -37,7 +32,6 @@ export default {
             reservations: [],
             rooms: [],
             isDataReady: false,
-            isAdmin: true
         }
     },
 
@@ -46,8 +40,12 @@ export default {
      * isDataReady is a flag which turns true when both reservations and rooms arrays are fetched.
      */
     async mounted() {
+        if (!this.$store.getters.isAuthenticated) {
+            this.$router.push("/");
+            return
+        }
         if (!this.$store.getters.getLoggedInAccount.is_admin) {
-            this.isAdmin = false;
+            this.$router.push("/frontpage");
             return;
         }
 
