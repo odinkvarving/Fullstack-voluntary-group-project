@@ -13,6 +13,7 @@
 <script>
 import ReservationBox from "./ReservationBox.vue";
 import { reservationService } from "../../services/ReservationService.js";
+import { adminService } from "../../services/AdminService.js"
 
 /**
  * ReservationFeed is a component which represents the reservation feed visible for admins only
@@ -40,14 +41,8 @@ export default {
      * isDataReady is a flag which turns true when both reservations and rooms arrays are fetched.
      */
     async mounted() {
-        if (!this.$store.getters.isAuthenticated) {
-            this.$router.push("/");
-            return
-        }
-        if (!this.$store.getters.getLoggedInAccount.is_admin) {
-            this.$router.push("/frontpage");
-            return;
-        }
+        adminService.isLoggedIn();
+        await adminService.isAdmin();
 
         this.reservations = await reservationService.getReservations();
         this.rooms = this.$store.getters.getRooms;

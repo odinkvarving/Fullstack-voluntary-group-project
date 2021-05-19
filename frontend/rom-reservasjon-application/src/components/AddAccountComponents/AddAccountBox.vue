@@ -95,6 +95,8 @@
     </div>
 </template>
 <script>
+import { adminService } from "../../services/AdminService.js"
+
 /**
  * AddAccountBox is a component which represents the action of creating a new account.
  * 
@@ -126,15 +128,9 @@ export default {
         }
     },
 
-    mounted() {
-        if (!this.$store.getters.isAuthenticated) {
-            this.$router.push("/");
-            return
-        }
-        if (!this.$store.getters.getLoggedInAccount.is_admin) {
-            this.$router.push("/frontpage");
-            return;
-        }
+    async mounted() {
+        adminService.isLoggedIn();
+        await adminService.isAdmin();
     },
 
     methods: {
