@@ -56,6 +56,19 @@
       <div class="reservations-overview">
             <ReservationsOverview :reservations="reservations" :freeReservations="freeReservations" :date="date" :timeList="timeList"/>
       </div>
+      <button
+        class="btn btn-lg"
+        id="btnVisible"
+        @click="changeChatVisibility"
+      >
+        Skjul kommentarfelt
+      </button>
+      <Chat
+        class="chat"
+        id="chat"
+        :section="section"
+        v-show="isChatVisible"
+      />
   </div>
 </template>
 
@@ -64,11 +77,13 @@ import ReservationsOverview from "../components/Reservations/ReservationsOvervie
 import moment from 'moment'
 import { format, parseISO } from 'date-fns'
 import { reservationService } from "../services/ReservationService"
+import Chat from "./Chat.vue";
 
 export default {
     name: "Section",
     components: {
-        ReservationsOverview
+        ReservationsOverview,
+        Chat,
     },
     props: {
         allSections: {
@@ -94,9 +109,9 @@ export default {
             ],
             startTimeValue: null,
             endTimeValue: null,
-            nPersons: null
-            ,
-            loading: false
+            nPersons: null,
+            loading: false,
+            isChatVisible: true,
         }
     },
     computed: {
@@ -261,7 +276,17 @@ export default {
                 this.endTimeValue = 0;
                 this.loading = false;
             }
-        }
+        },
+
+        changeChatVisibility() {
+            this.isChatVisible = !this.isChatVisible;
+            const btn = document.getElementById("btnVisible");
+            if (this.isChatVisible) {
+                btn.childNodes[0].nodeValue = "Skjul kommentarfelt";
+            } else {
+                btn.childNodes[0].nodeValue = "Vis kommentarfelt";
+            }
+        },
     }
 }
 </script>
@@ -285,4 +310,9 @@ export default {
         display: flex;
         justify-content: center;
     }
+
+    #chat {
+        width: 80vw;
+        margin-top: 1%;
+}
 </style>
