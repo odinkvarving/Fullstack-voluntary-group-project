@@ -17,9 +17,9 @@ export default {
   components: {
     Navbar,
   },
-  mounted(){
+  async mounted(){
     if(this.$store.getters.isAuthenticated){
-      this.$store.dispatch("getAccountInfo");
+      await this.$store.dispatch("getAccountInfo");
     }
     this.$store.dispatch("loadRooms");
   }

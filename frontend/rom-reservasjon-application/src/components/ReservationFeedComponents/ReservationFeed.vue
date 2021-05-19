@@ -68,7 +68,7 @@ export default {
          * The id is passed through the URL path.
          */
         handleReservationClicked(reservation) {
-            this.$router.push("/reservations", {reservationId: reservation.id}); 
+            this.$router.push({name: "Reservation", params: {reservationId: reservation.id}}); 
         }
     }
 }
