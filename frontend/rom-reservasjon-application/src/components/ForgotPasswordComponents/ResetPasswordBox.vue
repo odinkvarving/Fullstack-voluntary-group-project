@@ -1,29 +1,56 @@
 <template>
     <div>
-        <SuccessPopUp class="popup" v-show="isPopUpVisible" :message="message"/>
-        <ErrorPopUp class="popup" v-show="isErrorVisible" v-on:close-popup="closePopUp" :message="message"/>
-        <div id="password-reset-box">
-            <button class="close-btn" @click="returnPage">X</button>
-            <h1>Tilbakestill passord</h1>
-            <p class="sub-title">Skriv inn et nytt passord</p>
-            <div class="input-container">
-                <div class="new-password">
-                    <p class="text">Skriv inn nytt passord</p>
-                    <input type="text" class="input" placeholder="Nytt passord" v-model="passwordInput" v-on:keyup.enter="reset"/>
-                </div>
-                <div class="confirm-password">
-                    <p class="text">Gjenta passord</p>
-                    <input type="text" class="input" placeholder="Gjenta passord" v-model="confirmationInput" v-on:keyup.enter="reset"/>
-                </div>
-            </div>
-            <button class="reset-btn" @click="reset">Fullfør</button>
-        </div>
+        <v-container id="password-reset-box">
+            <v-col cols="12">
+                <v-col cols="6" align="end">
+                    <v-btn color="red" @click="returnPage">
+                        <span>X</span>
+                    </v-btn>
+                </v-col>
+                <h1>Tilbakestill passord</h1>
+                <p class="text--white text--secondary">Skriv inn et nytt passord</p>
+                <v-alert
+                    :value="isPopUpVisible"
+                    type="success"
+                    transition="scale-transition"
+                    style="width: 50%">
+                    Passordene er like, passord resettes
+                </v-alert>
+                <v-alert
+                    :value="isErrorVisible"
+                    type="error"
+                    transition="scale-transition"
+                    style="width: 50%">
+                    {{ message }}
+                </v-alert>
+                <v-col class="new-password">
+                    <p>Skriv inn nytt passord</p>
+                    <v-text-field
+                        label="Nytt passord"
+                        v-model="passwordInput"
+                        v-on:keyup.enter="reset"
+                        outlined color="green"
+                        style="width: 50%"/>
+                </v-col>
+                <v-col class="confirm-password">
+                    <p>Gjenta passord</p>
+                    <v-text-field
+                        label="Gjenta passord"
+                        v-model="confirmationInput"
+                        v-on:keyup.enter="reset"
+                        outlined color="green"
+                        style="width: 50%"/>
+                </v-col>
+                <v-col cols="6" align="end">
+                    <v-btn color="green" @click="reset">
+                        <span>Fullfør</span>
+                    </v-btn>
+                </v-col>
+            </v-col>
+        </v-container>
     </div>
 </template>
 <script>
-import SuccessPopUp from "../PopUpComponents/SuccessPopUp.vue";
-import ErrorPopUp from "../PopUpComponents/ErrorPopUp.vue";
-
 /**
  * ResetPasswordBox is a component which represents the action of resetting a password.
  * 
@@ -32,10 +59,6 @@ import ErrorPopUp from "../PopUpComponents/ErrorPopUp.vue";
 
 export default {
     name: "ResetPasswordBox",
-    components: {
-        SuccessPopUp,
-        ErrorPopUp
-    },
 
     data() {
         return {
@@ -77,13 +100,11 @@ export default {
             this.isPopUpVisible = false;
             this.isErrorVisible = false;
             if (!this.validatePassword()) {
-                document.getElementById("password-reset-box").style.filter = "blur(5px)";
                 this.message = "Passordet må være mellom 8 og 30 tegn";
                 this.isErrorVisible = true;
                 return;
             }
             if (!this.validateEquality()) {
-                document.getElementById("password-reset-box").style.filter = "blur(5px)";
                 this.message = "Passordene er ikke like";
                 this.isErrorVisible = true;
                 return;
@@ -143,7 +164,7 @@ export default {
 }
 </script>
 <style scoped>
-    .popup {
+    /* .popup {
         position: absolute;
         background-color: #222B45;
         z-index: 2;
@@ -210,5 +231,5 @@ export default {
         float: right;
         cursor: pointer;
         margin-top: 20px;
-    }
+    } */
 </style>

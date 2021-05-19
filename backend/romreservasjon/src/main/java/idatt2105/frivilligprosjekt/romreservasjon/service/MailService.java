@@ -64,7 +64,7 @@ public class MailService {
             message.setTo(email);
             message.setSubject(subject);
             message.setText(getPasswordResetMessage(suffix));
-            logger.info(message.getFrom(), message.getTo(), message.getSubject(), message.getText());
+            logger.info("From: " + message.getFrom() + " - To: " + message.getTo() + " - Subject: " + message.getSubject() + " - Text: " + message.getText());
             mailSender.send(message);
             logger.info("Password reset mail sent to " + email);
         } catch(MailException e) {

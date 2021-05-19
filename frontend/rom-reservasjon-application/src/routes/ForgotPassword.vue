@@ -22,9 +22,12 @@
 </script>
 <style scoped>
     .forgot-password {
+        background-color: #192138;
         position: fixed;
-        top: 40%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        height: 100%;
+        width: 100%;
+        padding-left: 30vw;
+        padding-top: 250px;
     }
+    
 </style>
