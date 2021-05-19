@@ -65,6 +65,7 @@ export default {
     .reservation-feed {
         background-color: #192138;
         padding: 80px;
+        height: 100vh;
     }
     h1 {
         color: white;
