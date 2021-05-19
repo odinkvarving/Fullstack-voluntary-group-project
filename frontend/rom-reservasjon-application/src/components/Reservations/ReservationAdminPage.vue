@@ -12,41 +12,59 @@
                 <v-col cols="6">
                   Seksjon
                 </v-col>
-                <v-col cols="6"> {{ section }} </v-col>
+                <v-col cols="6" v-if="!inEditMode"> {{ section }} </v-col>
+                <v-col cols="6" v-else> <v-text-field color="green" outlined hide-details height="22px" :placeholder="section"></v-text-field></v-col>
               </v-row>
 
               <v-row>
                 <v-col cols="6">
                   Antall
                 </v-col>
-                <v-col cols="6"> {{ reservation.number_of_people }} </v-col>
+                <v-col cols="6" v-if="!inEditMode"> {{ reservation.number_of_people }} </v-col>
+                <v-col cols="6" v-else> <v-text-field color="green" type="number" outlined hide-details height="22px" :placeholder="reservation.number_of_people"></v-text-field></v-col>
               </v-row>
 
               <v-row>
                 <v-col cols="6">
                   Dato
                 </v-col>
-                <v-col cols="6"> {{ date }} </v-col>
+                <v-col cols="6" v-if="!inEditMode"> {{ date }} </v-col>
+                <v-col cols="6" v-else> <v-text-field color="green" type="number" outlined hide-details height="22px" :placeholder="section"></v-text-field></v-col>
               </v-row>
 
               <v-row>
                 <v-col cols="6">
                   Klokkeslett
                 </v-col>
-                <v-col cols="6"> {{ time }} </v-col>
+                <v-col cols="6" v-if="!inEditMode"> {{ time }} </v-col>
+                <v-col cols="6" v-else></v-col>
               </v-row>
 
               <v-row>
                 <v-col cols="6">
                   Beskrivelse
                 </v-col>
-                <v-col cols="12">
+                <v-col cols="12" v-if="!inEditMode">
                   <v-card outlined color="#222b45">
                     <v-card-text>
                       {{ description }}
                     </v-card-text>
                   </v-card>
                 </v-col>
+                <v-col cols="12" v-else>
+                  <v-card outlined color="#222b45">
+                    <v-card-text>
+                      <v-textarea filled color="green" :placeholder="description"></v-textarea>
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+              </v-row>
+              <v-row>
+                  <v-col align="center">
+                      <v-btn color="green" v-if="inEditMode">
+                          Fullfør
+                      </v-btn>
+                  </v-col>
               </v-row>
             </v-container>
           </v-card-text>
@@ -95,10 +113,10 @@
         </v-card>
         <v-row justify="space-between" class="pt-5">
           <v-col cols="12" md="6">
-            <v-btn color="green">Endre reservasjon</v-btn>
+            <v-btn @click="editButtonClicked" color="green">Endre reservasjon</v-btn>
           </v-col>
           <v-col cols="12" md="6" align="end">
-            <v-btn color="error">Slett reservasjon</v-btn>
+            <v-btn @click="deleteReservation" color="error">Slett reservasjon</v-btn>
           </v-col>
         </v-row>
       </v-col>
@@ -114,6 +132,7 @@ export default {
   data() {
     return {
       reservation: null,
+      reservationId: null,
 
       roomName: "Navn",
       section: "data",
@@ -127,6 +146,7 @@ export default {
       userPhone: "",
 
       isDataReady: false,
+      inEditMode: false,
     };
   },
 
@@ -134,8 +154,8 @@ export default {
     adminService.isLoggedIn();
     await adminService.isAdmin();
 
-    const id = parseInt(this.$route.params.reservationId);
-    this.reservation = await reservationService.getReservation(id);
+    this.reservationId = parseInt(this.$route.params.reservationId);
+    this.reservation = await reservationService.getReservation(this.reservationId);
     console.log(this.reservation);
 
     this.findTime();
@@ -149,8 +169,27 @@ export default {
       let endTime = this.reservation.to_date.slice(11, 16);
       this.time = startTime + " - " + endTime;
     },
+
+    editButtonClicked() {
+        this.inEditMode = !this.inEditMode;
+        console.log("Edit mode: " + this.inEditMode);
+    },
+
+    editReservation() {
+
+    },
+
+    async deleteReservation() {
+        await reservationService.deleteReservation(this.reservationId);
+    }
   },
 };
 </script>
 
-<style></style>
+<style scoped>
+.v-text-field .v-input__control .v-input__slot {
+    min-height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+</style>
