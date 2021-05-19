@@ -53,6 +53,7 @@
 <script>
 /**
  * ResetPasswordBox is a component which represents the action of resetting a password.
+ * Functionality of this component is based on some code from Systemutvikling 2 project.
  * 
  * @author Scott Rydberg Sonen
  */
@@ -74,7 +75,7 @@ export default {
         }
     },
 
-    async created() {
+    async mounted() {
         const requestOptions = {
             method: "GET"
         }
@@ -83,7 +84,7 @@ export default {
             .then(data => {
                 this.account = data;
                 console.log("TEST");
-                console.log(this.account.password);
+                console.log(this.account);
             })
             .catch(error => console.error(error));
     },
@@ -117,11 +118,17 @@ export default {
          * resetPassword is a function which sends a PUT request.
          * The request contains a new password for updating latest password.
          */
-        resetPassword() {
-            /*const requestOptions = {
+        async resetPassword() {
+            this.account.password = this.passwordInput
+
+            const requestOptions = {
                 method: "PUT",
-                body: this.passwordInput
-            }*/
+                body: this.account
+            }
+
+            return await fetch(`http://localhost:8080/accounts/${this.account.id}`, requestOptions)
+                .then(response => response.json())
+                .catch(error => console.error(error));
         },
 
         /**

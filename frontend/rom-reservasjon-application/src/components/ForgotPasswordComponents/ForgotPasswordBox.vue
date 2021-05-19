@@ -32,6 +32,7 @@
 <script>
 /**
  * ForgotPasswordBox is a component which represents forgot password functionality.
+ * Functionality of this component is based on some code from Systemutvikling 2 project.
  * 
  * @author Scott Rydberg Sonen
  */

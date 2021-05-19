@@ -153,11 +153,24 @@ public class AccountController {
         return success;
     }
 
+    /**
+     * GetMapping for finding account with given resetsuffix.
+     * Functionality is based on code from Systemutvikling 2 project.
+     *
+     * @param suffix: the reset suffix.
+     * @return account with given suffix.
+     */
     @GetMapping("/reset/{suffix}")
     public Account getAccountByResetSuffix(@PathVariable("suffix") String suffix) {
-        return this.accountService.findAccountByResetSuffix(suffix);
+        return this.accountService.findAccountBySuffix(suffix);
     }
 
+    /**
+     * PostMapping for generating reset link and sending it to input email.
+     * Functionality is based on code from Systemutvikling 2 project.
+     *
+     * @param mail: account email which will receive mail.
+     */
     @PostMapping("/reset/{mail}")
     public void requestPasswordReset(@PathVariable("mail") String mail) {
         this.accountService.generatePasswordReset(mail);
