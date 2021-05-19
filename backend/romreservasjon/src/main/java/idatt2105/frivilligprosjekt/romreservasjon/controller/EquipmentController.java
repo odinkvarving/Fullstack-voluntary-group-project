@@ -46,7 +46,7 @@ public class EquipmentController {
      * @return true or false whether the Equipment was created successfully or not
      */
     @PostMapping("/equipments")
-    public boolean saveAccount(@RequestBody Equipment equipment) {
+    public boolean saveEquipment(@RequestBody Equipment equipment) {
         logger.info("Trying to save equipment:\n" + equipment.toString());
         boolean success = equipmentService.saveEquipment(equipment);
         if (success) {
