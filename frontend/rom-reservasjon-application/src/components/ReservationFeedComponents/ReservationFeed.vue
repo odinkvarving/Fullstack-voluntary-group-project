@@ -2,7 +2,7 @@
     <div class="reservation-feed">
         <div class="reservation-feed-container">
             <div v-if="!isAdmin">
-                <h2>User is not an admin!</h2>
+                <h2>Innlogget bruker er ikke admin!</h2>
             </div>
             <div v-else>
                 <h1>Romreservasjoner</h1>
