@@ -50,7 +50,7 @@ const routes = [
         component: AddAccount
     },
     {
-        path: "/reservations",
+        path: "/reservations/:reservationId",
         name: "Reservation",
         component: Reservation
     }

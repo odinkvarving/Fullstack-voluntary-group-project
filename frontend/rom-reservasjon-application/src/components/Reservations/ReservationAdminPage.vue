@@ -4,7 +4,7 @@
       <v-col cols="12">
         <h1>A4-112, Realfagbygget, Gløshaugen</h1>
       </v-col>
-      <v-col cols="12" md="6">
+      <v-col cols="12" sm="6">
         <v-card  outlined color="#222b45">
           <v-card-text>
             <v-container>
@@ -56,7 +56,7 @@
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col cols="12" md="6">
+      <v-col cols="12" sm="6">
         <v-card  outlined color="#222b45">
           <v-card-text>
             <v-col cols="12">
@@ -98,10 +98,10 @@
           </v-card-text>
         </v-card>
         <v-row justify="space-between" class="pt-5">
-          <v-col cols="6">
+          <v-col cols="12" md="6">
             <v-btn color="green">Endre reservasjon</v-btn>
           </v-col>
-          <v-col cols="6" align="end">
+          <v-col cols="12" md="6" align="end">
             <v-btn color="error">Slett reservasjon</v-btn>
           </v-col>
         </v-row>
