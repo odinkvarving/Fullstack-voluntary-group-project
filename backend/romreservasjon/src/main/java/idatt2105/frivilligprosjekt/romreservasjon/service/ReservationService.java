@@ -48,30 +48,76 @@ public class ReservationService {
      */
     public boolean saveReservation(Reservation reservation) {
 
+        if(!validateReservation(reservation)){
+            return false;
+        }else {
+            try {
+                reservation.setSection(reservation.getSection());
+                reservation.setAccount(reservation.getAccount());
+                reservationRepository.save(reservation);
+                return true;
+            } catch (DataAccessException e) {
+                e.printStackTrace();
+                logger.info("Could not fetch either the Account or Section for this reservation.");
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Helper method that checks whether a reservation is overlapping with existing ones
+     *
+     * @param reservation
+     * @return
+     */
+    private boolean validateReservation(Reservation reservation){
         Section section = sectionRepository.findById(reservation.getSection().getId()).orElse(null);
-        List<Reservation> relevantDateReservations = section.getInReservations().stream().filter(res -> {
-           return res.getFrom_date().getYear() == reservation.getFrom_date().getYear()
-                   && res.getFrom_date().getMonth() == reservation.getFrom_date().getMonth()
-                   && res.getFrom_date().getDayOfMonth() == reservation.getFrom_date().getDayOfMonth();
-        }).collect(Collectors.toList());
-        for(Reservation res : relevantDateReservations){
-            if((res.getFrom_date().isBefore(reservation.getTo_date()) && reservation.getFrom_date().isBefore(res.getFrom_date())) || (res.getTo_date().isAfter(reservation.getFrom_date())
-            && res.getFrom_date().isBefore(reservation.getFrom_date())) || res.getTo_date().isEqual(reservation.getTo_date()) || res.getFrom_date().isEqual(reservation.getFrom_date())){
-                logger.info("Reservation is overlapping with another reservation...");
+        if(section == null){
+            logger.info("Section not found in database...");
+            return false;
+        }else {
+            List<Reservation> relevantDateReservations = section.getInReservations().stream().filter(res -> {
+                return res.getFrom_date().getYear() == reservation.getFrom_date().getYear()
+                        && res.getFrom_date().getMonth() == reservation.getFrom_date().getMonth()
+                        && res.getFrom_date().getDayOfMonth() == reservation.getFrom_date().getDayOfMonth();
+            }).collect(Collectors.toList());
+            for (Reservation res : relevantDateReservations) {
+                if ((res.getFrom_date().isBefore(reservation.getTo_date()) && reservation.getFrom_date().isBefore(res.getFrom_date())) || (res.getTo_date().isAfter(reservation.getFrom_date())
+                        && res.getFrom_date().isBefore(reservation.getFrom_date())) || res.getTo_date().isEqual(reservation.getTo_date()) || res.getFrom_date().isEqual(reservation.getFrom_date())) {
+                    logger.info("Reservation is overlapping with another reservation...");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+
+    /**
+     * Save a new reservation in all sections when user books the whole room
+     *
+     * @param reservations
+     * @return
+     */
+    public boolean saveRoomReservation(List<Reservation> reservations){
+        for(Reservation reservation : reservations){
+            if(!validateReservation(reservation)){
                 return false;
             }
         }
 
-       try {
-            reservation.setSection(reservation.getSection());
-            reservation.setAccount(reservation.getAccount());
-            reservationRepository.save(reservation);
+        try {
+            for(Reservation reservation : reservations){
+                reservation.setSection(reservation.getSection());
+                reservation.setAccount(reservation.getAccount());
+                reservationRepository.save(reservation);
+            }
             return true;
-       }catch (DataAccessException e) {
-           e.printStackTrace();
-           logger.info("Could not fetch either the Account or Section for this reservation.");
-       }
-       return false;
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            logger.info("Could not fetch either the Account or Section for this reservation.");
+            return false;
+        }
     }
 
     /**

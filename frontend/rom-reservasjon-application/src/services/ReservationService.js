@@ -4,6 +4,7 @@ export const reservationService = {
     getReservations,
     getSectionsReservations,
     addReservation,
+    addRoomReservation,
     deleteReservation,
     updateReservation
 }
@@ -47,6 +48,23 @@ async function addReservation(reservation){
             'Authorization': `Bearer ${store.getters.getJwtToken}`
         },
         body: JSON.stringify(reservation)
+    }
+
+    return fetch(url, requestOptions)
+        .then(response => response.json())
+        .catch(error => console.log(error));
+}
+
+async function addRoomReservation(reservations){
+    let url = `http://localhost:8080/reservations/room`;
+
+    const requestOptions = {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${store.getters.getJwtToken}`
+        },
+        body: JSON.stringify(reservations)
     }
 
     return fetch(url, requestOptions)

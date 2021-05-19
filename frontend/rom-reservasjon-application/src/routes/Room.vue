@@ -1,8 +1,17 @@
 <template>
   <div class="room">
     <div class="top-header">
+      <div class="title">
       <h1>{{ room.name }}</h1>
       <p>{{ room.address }}</p>
+      </div>
+      <v-btn color="green" v-if="!showRoomReservation" @click="roomReservationClicked"><span>Reserver hele rommet</span></v-btn>
+      <v-btn color="red" v-else @click="roomReservationClicked"><span>Lukk</span></v-btn>
+      <p class="or-text">eller velg seksjon nedenfor</p>
+    </div>
+
+    <div v-if="showRoomReservation">
+      <Section :allSections="room.sections" />
     </div>
     <v-container>
       <v-row>
@@ -22,8 +31,18 @@
 </template>
 
 <script>
+import Section from "./Section"
+
 export default {
   name: "Room",
+  components: {
+    Section
+  },
+  data(){
+    return {
+      showRoomReservation: false,
+    }
+  },
   computed: {
     room(){
       return this.$store.getters.getRooms.filter((room) => room.id === parseInt(this.$route.params.id))[0] || [];
@@ -32,6 +51,13 @@ export default {
   methods: {
     sectionClicked(sectionId){
       this.$router.push(`/rooms/${this.$route.params.id}/sections/${sectionId}`)
+    },
+    roomReservationClicked(){
+      if(this.showRoomReservation){
+        this.showRoomReservation = false;
+      }else{
+        this.showRoomReservation = true;
+      }
     }
   }
 }
@@ -68,12 +94,22 @@ export default {
     text-align: center;
   }
 
-  .top-header h1{
+  .top-header .title{
+    margin-bottom: 40px;
+  }
+
+  .top-header .title h1{
     font-size: 40px;
   }
 
-  .top-header p{
+  .top-header .title p{
     font-size: 20px;
     opacity: 70%;
+  }
+
+  .or-text{
+    font-size: 16px;
+    opacity: 70%;
+    margin-top: 40px;
   }
 </style>

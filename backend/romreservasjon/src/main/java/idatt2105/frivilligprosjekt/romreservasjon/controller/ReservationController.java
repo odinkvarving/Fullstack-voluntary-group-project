@@ -39,7 +39,17 @@ public class ReservationController {
         logger.info("Trying to save reservation...");
         boolean success = reservationService.saveReservation(reservation);
         if (success) {
-            logger.info("Reservation has been registered.");
+            logger.info("Reservation has been registered!");
+        }
+        return success;
+    }
+
+    @PostMapping("/reservations/room")
+    public boolean saveRoomReservation(@RequestBody List<Reservation> reservations){
+        logger.info("Trying to save room reservation...");
+        boolean success = reservationService.saveRoomReservation(reservations);
+        if(success){
+            logger.info("Room reservation was successfully registered!");
         }
         return success;
     }

@@ -70,6 +70,12 @@ export default {
     components: {
         ReservationsOverview
     },
+    props: {
+        allSections: {
+            type: Array,
+            required: false
+        }
+    },
     data(){
         return{
             date: "",
@@ -95,7 +101,7 @@ export default {
     },
     computed: {
         section(){
-            if(this.$store.getters.getRooms.length !== 0){
+            if(this.$store.getters.getRooms.length !== 0 && this.$route.params.roomId !== undefined){
                 let room = this.$store.getters.getRooms.filter((room) =>{
                     return room.id === parseInt(this.$route.params.roomId);
                 })[0];
@@ -105,6 +111,16 @@ export default {
             }
         },
         reservations(){
+            if(this.$route.params.sectionId === undefined && this.$route.params.roomId === undefined && this.$store.getters.getRooms.length !== 0){
+                let allReservations = [];
+                this.allSections.forEach(section => {
+                    section.inReservations.forEach(res => {
+                        allReservations.push(res);
+                    });
+                })
+                console.log(allReservations);
+                return allReservations;
+            }
             return this.section.inReservations;
         },
         computedDateFormattedMomentjs () {
@@ -196,24 +212,49 @@ export default {
                 let startTimeValueString = this.startTimeValue < 10 ? `0${this.startTimeValue}` : `${this.startTimeValue}`
                 let endTimeValueString = this.endTimeValue < 10 ? `0${this.endTimeValue}` : `${this.endTimeValue}`
 
-
-                let reservation = {
-                    from_date: `${this.date}T${startTimeValueString}:00`,
-                    to_date: `${this.date}T${endTimeValueString}:00`,
-                    number_of_people: 3,
-                    account: {
-                        id: this.$store.getters.getLoggedInAccount.id
-                    },
-                    section: {
-                        id: this.section.id
+                if(this.$route.params.roomId === undefined && this.$route.params.sectionId === undefined){
+                    let reservations = [];
+                    this.allSections.forEach(section => {
+                        reservations.push({
+                           from_date: `${this.date}T${startTimeValueString}:00`,
+                            to_date: `${this.date}T${endTimeValueString}:00`,
+                            number_of_people: this.nPersons,
+                            account: {
+                                id: this.$store.getters.getLoggedInAccount.id
+                            },
+                            section: {
+                                id: section.id
+                            } 
+                        });
+                    })
+                    let result = await reservationService.addRoomReservation(reservations);
+                    if(result){
+                        console.log("Reservation successfully added");
+                        for(let i = 0; i < this.allSections.length; i ++){
+                            this.allSections[i].inReservations.push(reservations[i]);
+                        }
+                    }else{
+                        console.log("Something went wrong when creating reservation...");
                     }
-                }
-                let result = await reservationService.addReservation(reservation);
-                if(result){
-                    console.log("Reservation successfully added");
-                    this.section.inReservations.push(reservation);
                 }else{
-                    console.log("Something went wrong when creating reservation...");
+                    let reservation = {
+                        from_date: `${this.date}T${startTimeValueString}:00`,
+                        to_date: `${this.date}T${endTimeValueString}:00`,
+                        number_of_people: this.nPersons,
+                        account: {
+                            id: this.$store.getters.getLoggedInAccount.id
+                        },
+                        section: {
+                            id: this.section.id
+                        }
+                    }
+                    let result = await reservationService.addReservation(reservation);
+                    if(result){
+                        console.log("Reservation successfully added");
+                        this.section.inReservations.push(reservation);
+                    }else{
+                        console.log("Something went wrong when creating reservation...");
+                    }
                 }
 
                 this.startTimeValue = 0;
