@@ -26,6 +26,9 @@ public class ReservationService {
     @Autowired
     private SectionRepository sectionRepository;
 
+    @Autowired
+    private AccountService accountService;
+
     /**
      * Method for finding all Reservations registered in the database
      *

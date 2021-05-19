@@ -30,8 +30,8 @@ public class AccountController {
      * @return a list of all registered Accounts
      */
     @GetMapping("accounts")
-    public List<Account> getAllAccounts() {
-        return accountService.findAll();
+    public List<Account> getAllAccounts(@RequestHeader("authorization") String jwt) {
+        return accountService.findAll(jwt);
     }
 
     /**
@@ -41,8 +41,8 @@ public class AccountController {
      * @return
      */
     @GetMapping("accounts/email={email}")
-    public Account findAccountByEmail(@PathVariable String email){
-        return accountService.findByEmail(email);
+    public Account findAccountByEmail(@PathVariable String email, @RequestHeader("authorization") String jwt){
+        return accountService.findByEmail(email, jwt);
     }
 
 
@@ -53,8 +53,8 @@ public class AccountController {
      * @return
      */
     @GetMapping("/accounts/{id}")
-    public Account findById(@PathVariable int id){
-        return accountService.findById(id);
+    public Account findById(@PathVariable int id, @RequestHeader("authorization") String jwt){
+        return accountService.findById(id, jwt);
     }
 
     /**
@@ -64,9 +64,9 @@ public class AccountController {
      * @return true or false whether the Account was created successfully or not
      */
     @PostMapping("/accounts")
-    public boolean saveAccount(@RequestBody Account account) {
+    public boolean saveAccount(@RequestBody Account account, @RequestHeader("authorization") String jwt) {
         logger.info("Trying to save account:\n" + account.toString());
-        boolean success = accountService.saveAccount(account);
+        boolean success = accountService.saveAccount(account, jwt);
         if (success) {
             logger.info("The account was successfully created");
         }
@@ -81,8 +81,8 @@ public class AccountController {
      * @return the Account that was updated
      */
     @PutMapping("/accounts/{account_id}")
-    public Account updateAccount(@PathVariable("account_id") int account_id, @RequestBody Account newAccount) {
-        return accountService.updateAccount(account_id, newAccount);
+    public Account updateAccount(@PathVariable("account_id") int account_id, @RequestBody Account newAccount, @RequestHeader("authorization") String jwt) {
+        return accountService.updateAccount(account_id, newAccount, jwt);
     }
 
     /**
@@ -91,8 +91,8 @@ public class AccountController {
      * @param account_id the PathVariable for the id of the Account
      */
     @DeleteMapping("/accounts/{account_id}")
-    public void deleteAccount(@PathVariable("account_id") int account_id) {
-        accountService.deleteAccount(account_id);
+    public void deleteAccount(@PathVariable("account_id") int account_id, @RequestHeader("authorization") String jwt) {
+        accountService.deleteAccount(account_id, jwt);
     }
 
     /**
@@ -117,40 +117,6 @@ public class AccountController {
     public Set<EquipmentReservation> findAccountEquipmentReservations(@PathVariable int account_id) {
         logger.info("Finding equipment-reservations for Account with ID: " + account_id);
         return accountService.findAccountEquipmentReservations(account_id);
-    }
-
-    /**
-     * PostMapping for registering a new Reservation for a specific Account
-     *
-     * @param reservation requesting the Body of a new Reservation
-     * @param account_id the ID of the Account
-     * @return true or false
-     */
-    @PostMapping("/accounts/{account_id}/reservations")
-    public boolean createAccountReservation(@RequestBody Reservation reservation, @PathVariable int account_id) {
-        logger.info("Trying to create reservation: \n" + reservation.toString());
-        boolean success = accountService.createAccountReservation(reservation, account_id);
-        if(success) {
-            logger.info("The reservation was successfully registered");
-        }
-        return success;
-    }
-
-    /**
-     * PostMapping for registering a new EquipmentReservation for a specific Account
-     *
-     * @param reservation requesting the Body of a new EquipmentReservation
-     * @param account_id the ID of the Account
-     * @return true or false
-     */
-    @PostMapping("/accounts/{account_id}/equipment-reservations")
-    public boolean createAccountEquipmentReservation(@RequestBody EquipmentReservation reservation, @PathVariable int account_id) {
-        logger.info("Trying to create equipment-reservation: \n" + reservation.toString());
-        boolean success = accountService.createAccountEquipmentReservation(reservation, account_id);
-        if(success) {
-            logger.info("The equipment-reservation was successfully registered");
-        }
-        return success;
     }
 
     @GetMapping("/reset/{suffix}")

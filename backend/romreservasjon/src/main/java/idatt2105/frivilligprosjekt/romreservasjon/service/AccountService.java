@@ -6,6 +6,7 @@ import idatt2105.frivilligprosjekt.romreservasjon.model.PasswordReset;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Reservation;
 import idatt2105.frivilligprosjekt.romreservasjon.repository.AccountRepository;
 import idatt2105.frivilligprosjekt.romreservasjon.repository.PasswordResetRepository;
+import idatt2105.frivilligprosjekt.romreservasjon.util.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class AccountService {
     private AccountRepository accountRepository;
 
     @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -37,13 +41,18 @@ public class AccountService {
      *
      * @return a collection of all Accounts registered in the database
      */
-    public List<Account> findAll() {
-        Iterable<Account> itAccounts = accountRepository.findAll();
-        List<Account> accounts = new ArrayList<>();
+    public List<Account> findAll(String jwt) {
+        if(isAdmin(jwt)){
+            Iterable<Account> itAccounts = accountRepository.findAll();
+            List<Account> accounts = new ArrayList<>();
 
-        itAccounts.forEach(accounts::add);
+            itAccounts.forEach(accounts::add);
 
-        return accounts;
+            return accounts;
+        }else{
+            logger.info("Only admins can use this endpoint...");
+            return null;
+        }
     }
 
     /**
@@ -52,9 +61,13 @@ public class AccountService {
      * @param email the email of the Account
      * @return the Account that was found with this email
      */
-    public Account findByEmail(String email){
-        Optional<Account> account = accountRepository.findByEmail(email);
-        return account.orElse(null);
+    public Account findByEmail(String email, String jwt){
+        if(isSameUser(jwt, email) || isAdmin(jwt)){
+            Optional<Account> account = accountRepository.findByEmail(email);
+            return account.orElse(null);
+        }else {
+            return null;
+        }
     }
 
     /**
@@ -63,9 +76,18 @@ public class AccountService {
      * @param id the ID of the Account to be found
      * @return the Account that was found
      */
-    public Account findById(int id){
+    public Account findById(int id, String jwt){
         Optional<Account> account = accountRepository.findById(id);
-        return account.orElse(null);
+        if(account.isPresent()){
+            if(isSameUser(jwt, account.get().getEmail()) || isAdmin(jwt) ){
+                return account.get();
+            }else{
+                logger.info("Can't access others userdata unless you are an admin...");
+                return null;
+            }
+        }else{
+            return null;
+        }
     }
 
     /**
@@ -75,15 +97,19 @@ public class AccountService {
      * @param account the new Account to be registered
      * @return true if the Account was registered, false if an Account with the given id already exists
      */
-    public boolean saveAccount(Account account) {
-        Optional<Account> acc = accountRepository.findById(account.getId());
-        if (acc.isPresent()) {
-            logger.info("Error! Could not create account, ID already exists");
+    public boolean saveAccount(Account account, String jwt) {
+        if(isAdmin(jwt)){
+            Optional<Account> acc = accountRepository.findById(account.getId());
+            if (acc.isPresent()) {
+                logger.info("Error! Could not create account, ID already exists");
+                return false;
+            } else {
+                account.setPassword(passwordEncoder.encode(account.getPassword()));
+                accountRepository.save(account);
+                return true;
+            }
+        }else{
             return false;
-        } else {
-            account.setPassword(passwordEncoder.encode(account.getPassword()));
-            accountRepository.save(account);
-            return true;
         }
     }
 
@@ -94,15 +120,19 @@ public class AccountService {
      * @param account the updated version of the Account with the specified ID
      * @return the Account that was updated
      */
-    public Account updateAccount(int id, Account account) {
-        try {
-            logger.info("Account updated!");
-            account.setId(id);
-            return accountRepository.save(account);
-        } catch (DataAccessException e) {
-            logger.info("Could not update account");
+    public Account updateAccount(int id, Account account, String jwt) {
+        if(isAdmin(jwt)){
+            try {
+                logger.info("Account updated!");
+                account.setId(id);
+                return accountRepository.save(account);
+            } catch (DataAccessException e) {
+                logger.info("Could not update account");
+                return null;
+            }
+        }else{
+            return null;
         }
-        return null;
     }
 
     /**
@@ -111,12 +141,14 @@ public class AccountService {
      *
      * @param id the id of the account to delete.
      */
-    public void deleteAccount(int id) {
-        try {
-            this.accountRepository.deleteById(id);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            logger.error("null was passed as an argument while trying to delete account");
+    public void deleteAccount(int id, String jwt) {
+        if(isAdmin(jwt)){
+            try {
+                this.accountRepository.deleteById(id);
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+                logger.error("null was passed as an argument while trying to delete account");
+            }
         }
     }
 
@@ -154,49 +186,6 @@ public class AccountService {
         return null;
     }
 
-    /**
-     * Method for registering a new Reservation for a specific Account
-     *
-     * @param reservation the Reservation to be registered to the Account
-     * @param id the ID of the Account
-     * @return true or false
-     */
-    public boolean createAccountReservation(Reservation reservation, int id) {
-        try {
-            Account account = accountRepository.findById(id).orElseThrow(NoSuchElementException::new);
-            reservation.setAccount(account);
-            account.getReservations().add(reservation);
-            reservation.setSection(reservation.getSection());
-            accountRepository.save(account);
-            return true;
-        }catch (DataAccessException e) {
-            e.printStackTrace();
-            logger.info("Could not add reservation to account");
-        }
-        return false;
-    }
-
-    /**
-     * Method for registering a new EquipmentReservation for a specific Account
-     *
-     * @param reservation the EquipmentReservation to be registered to the Account
-     * @param id the ID of the Account
-     * @return true or false
-     */
-    public boolean createAccountEquipmentReservation(EquipmentReservation reservation, int id) {
-        try {
-            Account account = accountRepository.findById(id).orElseThrow(NoSuchElementException::new);
-            reservation.setAccount(account);
-            account.getEquipmentReservations().add(reservation);
-            reservation.setEquipment(reservation.getEquipment());
-            accountRepository.save(account);
-            return true;
-        }catch (DataAccessException e) {
-            e.printStackTrace();
-            logger.info("Could not add equipment-reservation to account");
-        }
-        return false;
-    }
 
     public Account findAccountByResetSuffix(String suffix) {
         try {
@@ -278,4 +267,19 @@ public class AccountService {
         });
         this.passwordResetRepository.deleteAll(resetsToDelete);
     }*/
+
+    public boolean isAdmin(String jwt){
+        String email = jwtUtil.extractUsername(jwt.split(" ")[1]);
+        Account account = accountRepository.findByEmail(email).orElse(null);
+        if(account.isIs_admin()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public boolean isSameUser(String jwt, String username){
+        String email = jwtUtil.extractUsername(jwt.split(" ")[1]);
+        return username.equalsIgnoreCase(email);
+    }
 }
