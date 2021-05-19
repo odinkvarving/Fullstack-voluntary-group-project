@@ -1,5 +1,6 @@
 package idatt2105.frivilligprosjekt.romreservasjon.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "equipment")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Equipment {
 
     @Id

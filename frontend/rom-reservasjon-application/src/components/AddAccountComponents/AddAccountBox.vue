@@ -1,105 +1,102 @@
 <template>
     <div class="add-account-box">
-        <div v-if="!isAdmin">
-            <h2>Innlogget bruker er ikke admin!</h2>
-        </div>
-        <div v-else>
-            <v-container>
-                <v-row>
-                    <v-col class="col" cols="12">
-                        <h1>Lag en ny bruker</h1>
-                        <p class="white--text text--secondary">Skriv inn brukerinfo nedenfor</p>
-                        <v-alert
-                            type="error"
-                            :value="isErrorVisible"
-                            transition="scale-transition">
-                            Bruker ble ikke lagt til
-                        </v-alert>
-                        <v-alert
-                            :value="isPopUpVisible"
-                            type="success"
-                            transition="scale-transition">
-                            Bruker ble lagt til
-                        </v-alert>
-                    </v-col>
-                    <v-col class="col" cols="12">
-                        <p>Skriv inn navn</p>
+        <v-container>
+            <v-row>
+                <v-col class="col" cols="12">
+                    <h1>Lag en ny bruker</h1>
+                    <p class="white--text text--secondary">Skriv inn brukerinfo nedenfor</p>
+                    <v-alert
+                        type="error"
+                        :value="isErrorVisible"
+                        transition="scale-transition">
+                        Bruker ble ikke lagt til
+                    </v-alert>
+                    <v-alert
+                        :value="isPopUpVisible"
+                        type="success"
+                        transition="scale-transition">
+                        Bruker ble lagt til
+                    </v-alert>
+                </v-col>
+                <v-col class="col" cols="12">
+                    <p>Skriv inn navn</p>
+                    <v-text-field
+                        label="Navn"
+                        v-model="nameInput"
+                        v-on:keyup.enter="addAccount"
+                        outlined color="green"
+                        :error-messages="nameError"/>
+                </v-col>
+                <v-col class="col" cols="12">
+                    <p>Skriv inn e-post</p>
+                    <v-text-field
+                        label="E-post"
+                        v-model="emailInput"
+                        v-on:keyup.enter="addAccount"
+                        outlined color="green"
+                        :error-messages="emailError"/>
+                </v-col>
+                <v-col class="col" cols="12">
+                    <p>Skriv inn telefonnummer</p>
+                    <v-text-field
+                        label="Tlf"
+                        maxlength="8"
+                        v-model="phoneInput"
+                        v-on:keyup.enter="addAccount"
+                        outlined color="green"
+                        :error-messages="phoneError"
+                        oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                </v-col>
+                <v-col class="col" cols="12">
+                    <p>Skriv inn passord</p>
+                    <v-text-field
+                        label="Passord" 
+                        maxlength="30" 
+                        v-model="passwordInput" 
+                        v-on:keyup.enter="addAccount" 
+                        outlined color="green" 
+                        :error-messages="passwordError"/>
+                </v-col>
+                <v-col class="col" cols="12" lg="6" >
+                    <p>Velg utløpsdato</p>
+                    <v-menu
+                        ref="menu"
+                        v-model="menu"
+                        :close-on-content-click="false"
+                        transition="scale-transition"
+                        offset-y
+                        max-width="290px"
+                        min-width="auto">
+                        <template v-slot:activator="{ on, attrs }">
                         <v-text-field
-                            label="Navn"
-                            v-model="nameInput"
-                            v-on:keyup.enter="addAccount"
-                            outlined color="green"
-                            :error-messages="nameError"/>
-                    </v-col>
-                    <v-col class="col" cols="12">
-                        <p>Skriv inn e-post</p>
-                        <v-text-field
-                            label="E-post"
-                            v-model="emailInput"
-                            v-on:keyup.enter="addAccount"
-                            outlined color="green"
-                            :error-messages="emailError"/>
-                    </v-col>
-                    <v-col class="col" cols="12">
-                        <p>Skriv inn telefonnummer</p>
-                        <v-text-field
-                            label="Tlf"
-                            maxlength="8"
-                            v-model="phoneInput"
-                            v-on:keyup.enter="addAccount"
-                            outlined color="green"
-                            :error-messages="phoneError"
-                            oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
-                    </v-col>
-                    <v-col class="col" cols="12">
-                        <p>Skriv inn passord</p>
-                        <v-text-field
-                            label="Passord" 
-                            maxlength="30" 
-                            v-model="passwordInput" 
-                            v-on:keyup.enter="addAccount" 
-                            outlined color="green" 
-                            :error-messages="passwordError"/>
-                    </v-col>
-                    <v-col class="col" cols="12" lg="6" >
-                        <p>Velg utløpsdato</p>
-                        <v-menu
-                            ref="menu"
-                            v-model="menu"
-                            :close-on-content-click="false"
-                            transition="scale-transition"
-                            offset-y
-                            max-width="290px"
-                            min-width="auto">
-                            <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
-                                v-model="expirationDateInput"
-                                label="Dato"
-                                persistent-hint
-                                prepend-icon="mdi-calendar"
-                                v-bind="attrs"
-                                v-on="on"
-                                :error-messages="expirationDateError"
-                            ></v-text-field>
-                            </template>
-                            <v-date-picker
-                                v-model="expirationDateInput"
-                                no-title
-                                @input="menu = false"
-                            ></v-date-picker>
-                        </v-menu>
-                    </v-col>
-                    <v-col cols="6" align="end">
-                        <v-btn color="green" @click="addAccount">
-                            <span>Lag ny bruker</span>
-                        </v-btn>
-                    </v-col>
-                </v-row>
-            </v-container>
-        </div>
+                            v-model="expirationDateInput"
+                            label="Dato"
+                            persistent-hint
+                            prepend-icon="mdi-calendar"
+                            v-bind="attrs"
+                            v-on="on"
+                            :error-messages="expirationDateError"
+                        ></v-text-field>
+                        </template>
+                        <v-date-picker
+                            v-model="expirationDateInput"
+                            no-title
+                            @input="menu = false"
+                        ></v-date-picker>
+                    </v-menu>
+                </v-col>
+                <v-col cols="6" align="end">
+                    <v-btn color="green" @click="addAccount">
+                        <span>Lag ny bruker</span>
+                    </v-btn>
+                </v-col>
+            </v-row>
+        </v-container>
     </div>
 </template>
 <script>
+import { adminService } from "../../services/AdminService.js"
+
 /**
  * AddAccountBox is a component which represents the action of creating a new account.
  * 
@@ -128,15 +125,12 @@ export default {
             menu: false,
             addRequestSent: false,
             isAccountAdded: false,
-            isAdmin: true
         }
     },
 
-    mounted() {
-        if (!this.$store.getters.getLoggedInAccount.is_admin) {
-            this.isAdmin = false;
-            return;
-        }
+    async mounted() {
+        adminService.isLoggedIn();
+        await adminService.isAdmin();
     },
 
     methods: {

@@ -1,15 +1,10 @@
 <template>
     <div class="reservation-feed">
         <div class="reservation-feed-container">
-            <div v-if="!isAdmin">
-                <h2>Innlogget bruker er ikke admin!</h2>
-            </div>
-            <div v-else>
-                <h1>Romreservasjoner</h1>
-                <div v-if="isDataReady && rooms">
-                    <div class="feed" v-for="r in reservations" :key="r.id" @click="handleReservationClicked(r)">
-                        <ReservationBox :reservation="r" :rooms="rooms"/>
-                    </div>
+            <h1>Romreservasjoner</h1>
+            <div v-if="isDataReady && rooms">
+                <div class="feed" v-for="r in reservations" :key="r.id" @click="handleReservationClicked(r)">
+                    <ReservationBox :reservation="r" :rooms="rooms"/>
                 </div>
             </div>
         </div>
@@ -18,6 +13,7 @@
 <script>
 import ReservationBox from "./ReservationBox.vue";
 import { reservationService } from "../../services/ReservationService.js";
+import { adminService } from "../../services/AdminService.js"
 
 /**
  * ReservationFeed is a component which represents the reservation feed visible for admins only
@@ -37,7 +33,6 @@ export default {
             reservations: [],
             rooms: [],
             isDataReady: false,
-            isAdmin: true
         }
     },
 
@@ -46,19 +41,12 @@ export default {
      * isDataReady is a flag which turns true when both reservations and rooms arrays are fetched.
      */
     async mounted() {
-        if (!this.$store.getters.getLoggedInAccount.is_admin) {
-            this.isAdmin = false;
-            return;
-        }
+        adminService.isLoggedIn();
+        await adminService.isAdmin();
 
         this.reservations = await reservationService.getReservations();
         this.rooms = this.$store.getters.getRooms;
-        while (!this.reservations) {
-            this.isDataReady = false;
-        }
-        while (!this.rooms) {
-            this.isDataReady = false;
-        }
+        
         this.isDataReady = true;
     },
 
@@ -68,7 +56,7 @@ export default {
          * The id is passed through the URL path.
          */
         handleReservationClicked(reservation) {
-            this.$router.push("/reservations", {id: reservation.id}); 
+            this.$router.push({name: "Reservation", params: {reservationId: reservation.id}}); 
         }
     }
 }
