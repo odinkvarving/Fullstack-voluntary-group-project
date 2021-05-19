@@ -73,14 +73,14 @@ const store = new Vuex.Store({
                 
                 commit("setLoggedInAccount", account);
 
-                return true;
+                return account;
                 
             }catch(error){
                 console.log("CATCHED ERROR");
                 console.log(error);
                 commit("setError", "Failed to login, error occured");
 
-                return false;
+                return null;
             }finally{
                 commit("clearBusy");
             }
