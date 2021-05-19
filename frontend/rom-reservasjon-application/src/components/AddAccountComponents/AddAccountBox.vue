@@ -1,5 +1,5 @@
 <template>
-    <div id="add-account-box" style="color: white;">
+    <div class="add-account-box" style="color: white;">
         <v-container>
             <v-row>
                 <v-col class="col" cols="12">
@@ -95,123 +95,149 @@
     </div>
 </template>
 <script>
-    export default {
-        name: "AddAccountBox",
+/**
+ * AddAccountBox is a component which represents the action of creating a new account.
+ * 
+ * @author Scott Rydberg Sonen
+ */
 
-        data() {
-            return {
-                isEmailValid: true,
-                nameInput: "",
-                emailInput: "",
-                phoneInput: "",
-                passwordInput: "",
-                expirationDateInput: null,
-                isPopUpVisible: false,
-                isErrorVisible: false,
-                message: "",
-                nameError: "",
-                emailError: "",
-                phoneError: "",
-                passwordError: "",
-                expirationDateError: "",
-                menu: false,
-                addRequestSent: false,
-                isAccountAdded: false,
-                authenticationRequest: {}
+export default {
+    name: "AddAccountBox",
+
+    data() {
+        return {
+            isEmailValid: true,
+            nameInput: "",
+            emailInput: "",
+            phoneInput: "",
+            passwordInput: "",
+            expirationDateInput: null,
+            isPopUpVisible: false,
+            isErrorVisible: false,
+            message: "",
+            nameError: "",
+            emailError: "",
+            phoneError: "",
+            passwordError: "",
+            expirationDateError: "",
+            menu: false,
+            addRequestSent: false,
+            isAccountAdded: false,
+            authenticationRequest: {}
+        }
+    },
+
+    mounted() {
+        //let getJwtToken = this.$store.getters.getJwtToken;
+        let account = this.$store.getters.getLoggedInAccount;
+
+        this.authenticationRequest = {
+            username: account.email,
+            password: account.password
+        }
+
+        console.log("ACCOUNT: " + account.email);
+    },
+
+    methods: {
+        /**
+         * addAccount is a function which firstly validates all new account input.
+         * If input is valid, the add function is called.
+         */
+        addAccount() {
+            this.isEmailValid = true;
+            if (!this.validateInput()) {
+                return;
             }
+            this.add();
         },
 
-        mounted() {
-            //let getJwtToken = this.$store.getters.getJwtToken;
-            let account = this.$store.getters.getLoggedInAccount;
-
-            this.authenticationRequest = {
-                username: account.email,
-                password: account.password
+        /**
+         * validateInput validates all parameters created by the admin.
+         * If atleast one of the fields are invalid, the function will return false and error(s).
+         */
+        validateInput() {
+            let isValid = true;
+            if (this.nameInput === "") {
+                this.nameError = "Navne-feltet kan ikke stå tomt";
+                isValid = false;
+            } else this.nameError = "";
+            if (!this.validateEmail()) {
+                this.emailError = "E-post-feltet kan ikke stå tomt";
+                isValid = false;
+            } else this.emailError = "";
+            if (this.phoneInput.length !== 8) {
+                this.phoneError = "Telefonnummeret må ha åtte siffer";
+                isValid = false;
+            } else this.phoneError = "";
+            if (this.passwordInput.length < 8 || this.passwordInput.length >= 30) {
+                this.passwordError = "Passordet må være mellom 8 og 30 tegn";
+                isValid = false;
+            } else this.passwordError = "";
+            if (this.expirationDateInput === null) {
+                this.expirationDateError = "Utløpsdato-feltet kan ikke stå tomt";
+                isValid = false;
             }
-
-            console.log("ACCOUNT: " + account.email);
+            return isValid;
         },
 
-        methods: {
-            addAccount() {
-                this.isEmailValid = true;
-                if (!this.validateInput()) {
-                    return;
-                }
-                this.add();
-            },
+        /**
+         * validateEmail is a function which validates email,
+         *  to see if the email is using a valid format.
+         */
+        validateEmail() {
+            const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(String(this.emailInput).toLowerCase());
+        },
 
-            validateInput() {
-                let isValid = true;
-                if (this.nameInput === "") {
-                    this.nameError = "Navne-feltet kan ikke stå tomt";
-                    isValid = false;
-                } else this.nameError = "";
-                if (!this.validateEmail()) {
-                    this.emailError = "E-post-feltet kan ikke stå tomt";
-                    isValid = false;
-                } else this.emailError = "";
-                if (this.phoneInput.length !== 8) {
-                    this.phoneError = "Telefonnummeret må ha åtte siffer";
-                    isValid = false;
-                } else this.phoneError = "";
-                if (this.passwordInput.length < 8 || this.passwordInput.length >= 30) {
-                    this.passwordError = "Passordet må være mellom 8 og 30 tegn";
-                    isValid = false;
-                } else this.passwordError = "";
-                if (this.expirationDateInput === null) {
-                    this.expirationDateError = "Utløpsdato-feltet kan ikke stå tomt";
-                    isValid = false;
-                }
-                return isValid;
-            },
+        /**
+         * add is a function which sends a POST request.
+         * This request contains the new account.
+         */
+        async add() {
+            console.log(this.$store.getters.getLoggedInAccount);
+            console.log(this.$store.getters.getJwtToken);
 
-            validateEmail() {
-                const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                return re.test(String(this.emailInput).toLowerCase());
-            },
-
-            async add() {
-                console.log(this.$store.getters.getLoggedInAccount);
-                console.log(this.$store.getters.getJwtToken);
-
-                const account = {
-                    name: this.nameInput,
-                    email: this.emailInput,
-                    password: this.passwordInput,
-                    phone: this.phoneInput,
-                    is_admin: false,
-                    expiration_date: new Date(this.expirationDateInput)
-                }
-
-                const requestOptions = {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${this.$store.getters.getJwtToken}`
-                    },
-                    body: JSON.stringify(account)
-                }
-                await fetch("http://localhost:8080/accounts", requestOptions)
-                    .then(response => response.json())
-                    .then(data => {
-                        this.addRequestSent = true;
-                        this.isAccountAdded = data;
-                        if (this.isAccountAdded) {
-                            this.isPopUpVisible = true;
-                        } else {
-                            this.isErrorVisible = true;
-                        }
-                    })
-                    .catch(error => console.error(error))
-
-                location.reload();
+            const account = {
+                name: this.nameInput,
+                email: this.emailInput,
+                password: this.passwordInput,
+                phone: this.phoneInput,
+                is_admin: false,
+                expiration_date: new Date(this.expirationDateInput)
             }
+
+            const requestOptions = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${this.$store.getters.getJwtToken}`
+                },
+                body: JSON.stringify(account)
+            }
+            await fetch("http://localhost:8080/accounts", requestOptions)
+                .then(response => response.json())
+                .then(data => {
+                    this.addRequestSent = true;
+                    this.isAccountAdded = data;
+                    if (this.isAccountAdded) {
+                        this.isPopUpVisible = true;
+                    } else {
+                        this.isErrorVisible = true;
+                    }
+                })
+                .catch(error => console.error(error))
+
+            location.reload();
         }
     }
+}
 </script>
 <style scoped>
+    #add-account-box {
+        height: 500px;
+        width: 700px;
+    }
     .col {
         margin-top: -20px;
     }

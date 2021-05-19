@@ -9,7 +9,7 @@ export const reservationService = {
     updateReservation
 }
 
-function getReservations(){
+async function getReservations(){
     let url = "http://localhost:8080/reservations";
 
     const requestOptions = {
@@ -18,7 +18,7 @@ function getReservations(){
         }
     }
 
-    return fetch(url, requestOptions)
+    return await fetch(url, requestOptions)
         .then(response => response.json())
         .catch(error => console.log(error));
 }
