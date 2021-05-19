@@ -51,12 +51,7 @@ export default {
 
         this.reservations = await reservationService.getReservations();
         this.rooms = this.$store.getters.getRooms;
-        while (!this.reservations) {
-            this.isDataReady = false;
-        }
-        while (!this.rooms) {
-            this.isDataReady = false;
-        }
+        
         this.isDataReady = true;
     },
 
