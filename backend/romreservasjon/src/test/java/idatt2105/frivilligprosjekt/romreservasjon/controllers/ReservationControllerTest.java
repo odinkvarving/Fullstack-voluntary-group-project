@@ -74,8 +74,8 @@ public class ReservationControllerTest {
         accountRepository.save(account2);
 
         Set<Section> sections = new HashSet<>();
-        Section section1 = new Section("testSection1", "testDescription1", 2.0, 5);
-        Section section2 = new Section("testSection2", "testDescription2", 5.0, 3);
+        Section section1 = new Section("testSection1", "testDescription1", 2.0, 5, "");
+        Section section2 = new Section("testSection2", "testDescription2", 5.0, 3, "");
         sections.add(section1);
         sections.add(section2);
 
@@ -110,7 +110,7 @@ public class ReservationControllerTest {
         Account account3 = new Account("testName3", "testEmail3", "testPassword3", "1234567", false, null);
         accountRepository.save(account3);
 
-        Section section3 = new Section("testSection3", "testDescription3", 5.0, 3);
+        Section section3 = new Section("testSection3", "testDescription3", 5.0, 3, "");
         room.getSections().add(section3);
         roomRepository.save(room);
 

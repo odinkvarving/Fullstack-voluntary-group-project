@@ -122,6 +122,7 @@
                             label="Utstyr"
                             color="#01AB55"
                             outlined
+                            v-model="equipmentValue"
                         ></v-text-field>
                     </div>
                     <v-row>
@@ -209,8 +210,6 @@ export default {
             this.$router.push(`/rooms/${roomId}`);
         },
         searchButtonClicked(){
-            console.log(this.dateValue);
-
             if(this.searchValue !== "" || this.placeValue !== "" || this.startTimeValue !== ""
                 || this.endTimeValue !== "" || this.dateValue !== "" || this.equipmentValue !== ""){
                 
@@ -235,7 +234,11 @@ export default {
                     return this.filteredList; //TODO: ADD IMPLEMENTATION FOR CHECKING IF THIS TIMEPERIOD IS FREE
                 }
                 
-                
+                if(this.equipmentValue !== ""){
+                    this.filteredList = this.filteredList.filter(room => {
+                        return room.sections.filter(section => section.equipmentDescription.includes(this.equipmentValue)).length > 0
+                    })
+                }
 
                 this.isNoFilters = false;
                 console.log(this.filteredList);

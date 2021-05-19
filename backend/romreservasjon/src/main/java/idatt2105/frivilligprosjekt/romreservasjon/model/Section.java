@@ -20,6 +20,7 @@ public class Section {
     private String description;
     private double size;
     private int max_persons;
+    private String equipmentDescription;
 
     @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference(value = "section-reservation")
@@ -32,11 +33,12 @@ public class Section {
     public Section() {
     }
 
-    public Section(String name, String description, double size, int max_persons) {
+    public Section(String name, String description, double size, int max_persons, String equipmentDescription) {
         this.name = name;
         this.description = description;
         this.size = size;
         this.max_persons = max_persons;
+        this.equipmentDescription = equipmentDescription;
     }
 
     public int getId() {
@@ -77,6 +79,14 @@ public class Section {
 
     public void setMax_persons(int max_persons) {
         this.max_persons = max_persons;
+    }
+
+    public String getEquipmentDescription() {
+        return equipmentDescription;
+    }
+
+    public void setEquipmentDescription(String equipmentDescription) {
+        this.equipmentDescription = equipmentDescription;
     }
 
     public Set<Reservation> getInReservations() {

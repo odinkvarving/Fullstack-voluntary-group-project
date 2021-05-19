@@ -56,8 +56,8 @@ public class RoomControllerTest {
     @Before
     public void setup() {
         Set<Section> sections1 = new HashSet<>();
-        Section section1 = new Section("testSection1", "testDescription1", 2.0, 5);
-        Section section2 = new Section("testSection2", "testDescription2", 5.0, 3);
+        Section section1 = new Section("testSection1", "testDescription1", 2.0, 5, "");
+        Section section2 = new Section("testSection2", "testDescription2", 5.0, 3, "");
         sections1.add(section1);
         sections1.add(section2);
 
@@ -66,8 +66,8 @@ public class RoomControllerTest {
         roomRepository.save(room1);
 
         Set<Section> sections2 = new HashSet<>();
-        Section section3 = new Section("testSection3", "testDescription3", 3.0, 6);
-        Section section4 = new Section("testSection4", "testDescription4", 6.0, 4);
+        Section section3 = new Section("testSection3", "testDescription3", 3.0, 6, "");
+        Section section4 = new Section("testSection4", "testDescription4", 6.0, 4, "");
         sections2.add(section3);
         sections2.add(section4);
 
@@ -108,8 +108,8 @@ public class RoomControllerTest {
     public void testSaveRoom() throws Exception {
 
         Set<Section> sections3 = new HashSet<>();
-        Section section5 = new Section("testSection5", "testDescription5", 3.0, 6);
-        Section section6 = new Section("testSection6", "testDescription6", 6.0, 4);
+        Section section5 = new Section("testSection5", "testDescription5", 3.0, 6, "");
+        Section section6 = new Section("testSection6", "testDescription6", 6.0, 4, "");
         sections3.add(section5);
         sections3.add(section6);
 
