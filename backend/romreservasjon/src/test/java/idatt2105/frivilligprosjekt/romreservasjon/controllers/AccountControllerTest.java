@@ -3,7 +3,6 @@ package idatt2105.frivilligprosjekt.romreservasjon.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import idatt2105.frivilligprosjekt.romreservasjon.model.*;
 import idatt2105.frivilligprosjekt.romreservasjon.repository.*;
-import idatt2105.frivilligprosjekt.romreservasjon.service.AccountService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,9 +59,6 @@ public class AccountControllerTest {
 
     @Autowired
     private RoomRepository roomRepository;
-
-    @Autowired
-    private AccountService accountService;
 
     private Account account1;
     private Account account2;
