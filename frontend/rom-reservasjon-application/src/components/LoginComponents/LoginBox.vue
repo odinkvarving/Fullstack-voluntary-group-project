@@ -4,6 +4,10 @@
       <v-container>
         <v-row>
           <v-col cols="12">
+            <h1>Velkommen tilbake</h1>
+            <p class="white--text text--secondary">Logg på kontoen din</p>
+          </v-col>
+          <v-col cols="12">
             <div style="position: relative">
               <v-alert
                 :value="isErrorVisible"
@@ -22,10 +26,6 @@
                 {{ message }}
               </v-alert>
             </div>
-          </v-col>
-          <v-col cols="12">
-            <h1>Velkommen tilbake</h1>
-            <p class="white--text text--secondary">Logg på kontoen din</p>
           </v-col>
           <v-col cols="12">
             <p class="text">Skriv inn e-post</p>
@@ -158,13 +158,20 @@ export default {
         username: this.emailInput,
         password: this.passwordInput,
       };
-      let state = await this.$store.dispatch("login", authRequest);
-      console.log("Authenticated: " + state);
+      let account = await this.$store.dispatch("login", authRequest);
+      console.log("Authenticated: " + account);
 
-      if (state) {
-        this.message = "Bruker logges inn";
-        this.isPopUpVisible = true;
-        setTimeout(() => this.$router.push("/frontpage"), 1000);
+      if (account) {
+        let date = new Date(account.expiration_date);
+        let now = Date.now();
+        if (date < now && account.expiration_date) {
+          this.message = "Bruker er utløpt";
+          this.isErrorVisible = true;
+        } else {
+          this.message = "Bruker logges inn";
+          this.isPopUpVisible = true;
+          setTimeout(() => this.$router.push("/frontpage"), 1000);
+        }
       } else {
         this.message = "E-post eller passord er ugyldig";
         this.isErrorVisible = true;
