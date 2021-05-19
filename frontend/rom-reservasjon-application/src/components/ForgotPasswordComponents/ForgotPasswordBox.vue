@@ -102,6 +102,8 @@ export default {
                 method: "POST",
             }
 
+            console.log("Reset email: " + this.emailInput);
+
             await fetch("http://localhost:8080/reset/" + this.emailInput, requestOptions)
             .then(response => response.json())
             .catch(error => console.error(error));
