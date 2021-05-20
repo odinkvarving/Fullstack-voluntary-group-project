@@ -1,13 +1,13 @@
 <template>
     <div class="reservation-feed">
-        <div class="reservation-feed-container">
+        <v-container class="reservation-feed-container">
             <h1>Romreservasjoner</h1>
-            <div v-if="isDataReady && rooms">
+            <v-row v-if="isDataReady && rooms">
                 <div class="feed" v-for="r in reservations" :key="r.id" @click="handleReservationClicked(r)">
                     <ReservationBox :reservation="r" :rooms="rooms"/>
                 </div>
-            </div>
-        </div>
+            </v-row>
+        </v-container>
     </div>
 </template>
 <script>
@@ -72,5 +72,12 @@ export default {
     }
     .feed {
         cursor: pointer;
+    }
+    @media (max-width: 600px) {
+        .reservation-feed {
+            background-color: #192138;
+            padding: 80px 10%;
+            height: 100vh;
+        }
     }
 </style>
