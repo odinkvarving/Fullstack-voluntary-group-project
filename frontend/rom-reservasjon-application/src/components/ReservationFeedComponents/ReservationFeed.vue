@@ -2,13 +2,62 @@
     <div class="reservation-feed">
         <v-container class="reservation-feed-container">
             <h1>Romreservasjoner</h1>
-            <v-app-bar color="#192138" flat>
-                <v-app-bar-nav-icon @click="drawer = true"/>
-                <v-toolbar-title>Filter</v-toolbar-title>
-                <v-btn color="green" @click="clearFilter()" style="margin-left: 30px">
-                    <span>Tøm filter</span>
-                </v-btn>
-            </v-app-bar>
+            <v-row class="big-menu">
+                <v-row>
+                    <v-col cols="4">
+                        <v-app-bar color="#192138" flat>
+                            <v-app-bar-nav-icon @click="drawer = true"/>
+                            <v-toolbar-title>Filtrer</v-toolbar-title>
+                            <v-btn color="green" @click="clearFilter()" style="margin-left: 30px">
+                                <span>Tøm filter</span>
+                            </v-btn>
+                        </v-app-bar>
+                    </v-col>
+                    <v-col cols="5" align="end">
+                        <v-app-bar color="#192138" flat>
+                            <v-select
+                                :items="items"
+                                item-text="value"
+                                item-value="id"
+                                label="Sorter"
+                                outlined
+                                v-model="sortKey"
+                                :on-change="sort()"
+                                color="green"
+                                style="margin: auto;"/>
+                            <v-btn color="green" @click="clearSort()" style="margin-left: 30px">
+                                <span>Tøm sortering</span>
+                            </v-btn>
+                        </v-app-bar>
+                    </v-col>
+                </v-row>
+            </v-row>
+            <v-col class="small-menu">
+                    <v-app-bar color="#192138" flat>
+                        <v-app-bar-nav-icon @click="drawer = true"/>
+                        <v-toolbar-title>Filtrer</v-toolbar-title>
+                        <v-btn color="green" @click="clearFilter()" style="margin-left: 30px">
+                            <span>Tøm filter</span>
+                        </v-btn>
+                    </v-app-bar>
+                </v-col>
+            <v-col class="small-menu">
+                <v-app-bar color="#192138" flat>
+                    <v-select
+                        :items="items"
+                        item-text="value"
+                        item-value="id"
+                        label="Sorter"
+                        outlined
+                        v-model="sortKey"
+                        :on-change="sort()"
+                        color="green"
+                        style="margin: auto;"/>
+                    <v-btn color="green" @click="clearSort()" style="margin-left: 30px">
+                        <span>Tøm sortering</span>
+                    </v-btn>
+                </v-app-bar>
+            </v-col>
             <v-navigation-drawer
                 v-model="drawer"
                 absolute
@@ -61,7 +110,7 @@
                     </v-btn>
                 </v-col>
             </v-navigation-drawer>
-            
+                
             <div v-if="match">
                 <v-row align="center" justify="center" v-show="!finishedLoading">
                     <v-progress-circular
@@ -118,12 +167,19 @@ export default {
             sectionFilter: "",
             accountFilter: "",
             dateFilter: "",
-            match: true
+            match: true,
+            items: [
+                { id: 1, value: "Tidspunkt tidligst-senest" },
+                { id: 2, value: "Tidspunkt senest-tidligst" },
+                { id: 3, value: "Antall personer lav-høy"},
+                { id: 4, value: "Antall personer høy-lav"}],
+            sortKey: 0,
+            prevSortKey: 0,
         }
     },
 
     /**
-     * mounted declares reservations and rooms, so the arrays can be passed as props to ReservationBox.
+     * mounted declares reservations, sections and accounts, so the arrays can be passed as props to ReservationBox.
      * isDataReady is a flag which turns true when both reservations and rooms arrays are fetched.
      */
     async mounted() {
@@ -131,8 +187,11 @@ export default {
         await adminService.isAdmin();
 
         this.reservations = await reservationService.getReservations();
+        this.reservations = this.reservations.sort((a,b) => {
+            return new Date(a.reservation.from_date) - new Date(b.reservation.from_date);
+        });
         this.accounts = await accountService.getAccounts();
-        //this.sections = this.$store.getters.getSections; When page is updated, sections don't render
+        //this.sections = this.$store.getters.getSections; When page is refreshed, sections don't render
         this.sections = await sectionService.getSections();
         this.filteredReservations = this.reservations;
         
@@ -156,6 +215,9 @@ export default {
             if (this.count == this.reservations.length) this.finishedLoading = true;
         },
 
+        /**
+         * filter is a function which filters reservations list based on filter input
+         */
         filter() {
             let list = this.reservations;
             let chosenFilter = false;
@@ -180,6 +242,9 @@ export default {
             this.drawer = false;
         },
 
+        /**
+         * filterBySection is a function which filters a list based on section filter
+         */
         filterBySection(list) {
             let section = null;
             this.sections.forEach(sec => {
@@ -195,6 +260,9 @@ export default {
             });
         },
 
+        /**
+         * filterByAccount is a function which filters a list based on account filter
+         */
         filterByAccount(list) {
             let account = null;
             this.accounts.forEach(acc => {
@@ -210,15 +278,97 @@ export default {
             });
         },
 
+        /**
+         * filterByDate is a function which filters a list based on date filter
+         */
         filterByDate(list) {
             return list.filter(res => {
                 return res.reservation.from_date.slice(0,10) === this.dateFilter;
             });
         },
 
+        /**
+         * clearFilter is a function which clears all filters and refreshes the feed
+         */
         clearFilter() {
             this.filteredReservations = this.reservations;
             this.match = true;
+        },
+
+        /**
+         * sort is a function which sorts a list based on sort key.
+         * We also check if previous key is equal to the new key,
+         *  so we don't get an infinite loop on select option change.
+         */
+        sort() {
+            if (this.sortKey !== this.prevSortKey) {
+                switch(this.sortKey) {
+                    case 1: {
+                        this.filteredReservations = this.sortByTimeEarliest();
+                        this.prevSortKey = this.sortKey;
+                        break;
+                    }
+                    case 2: {
+                        this.filteredReservations = this.sortByTimeLatest();
+                        this.prevSortKey = this.sortKey;
+                        break;
+                    }
+                    case 3: {
+                        this.filteredReservations = this.sortByPeopleAsc();
+                        this.prevSortKey = this.sortKey;
+                        break;
+                    }
+                    case 4: {
+                        this.filteredReservations = this.sortByPeopleDesc();
+                        this.prevSortKey = this.sortKey;
+                        break;
+                    }
+                }
+            }
+        },
+
+        /**
+         * sortByTimeEarliest is a function which sorts filteredReservations list by time earliest to latest
+         */
+        sortByTimeEarliest() {
+            return this.filteredReservations.sort((a,b) => {
+                return new Date(a.reservation.from_date) - new Date(b.reservation.from_date);
+            });
+        },
+
+        /**
+         * sortByTimeLatest is a function which sorts filteredReservations list by time latest to earliest
+         */
+        sortByTimeLatest() {
+            return this.filteredReservations.sort((a,b) => {
+                return new Date(b.reservation.from_date) - new Date(a.reservation.from_date);
+            });
+        },
+
+        /**
+         * sortByPeopleAsc is a function which sorts filteredReservations list by number of people lowest to highest
+         */
+        sortByPeopleAsc() {
+            return this.filteredReservations.sort((a,b) => {
+                return a.reservation.number_of_people - b.reservation.number_of_people;
+            });
+        },
+
+        /**
+         * sortByPeopleDesc is a function which sorts filteredReservations list by number of people highest to lowest
+         */
+        sortByPeopleDesc() {
+            return this.filteredReservations.sort((a,b) => {
+                return b.reservation.number_of_people - a.reservation.number_of_people;
+            });
+        },
+
+        /**
+         * clearFilter is a function which clears sort and refreshes the feed with default sorting
+         */
+        clearSort() {
+            this.filteredReservations = this.sortByTimeEarliest();
+            this.sortKey = 0;
         }
     }
 }
@@ -235,11 +385,18 @@ export default {
     .feed {
         cursor: pointer;
     }
-    @media (max-width: 600px) {
-        .reservation-feed {
-            background-color: #192138;
-            padding: 80px 10%;
-            height: 100vh;
+    .big-menu {
+        display: block;
+    }
+    .small-menu {
+        display: none;
+    }
+    @media (max-width: 1263px) {
+        .big-menu {
+            display: none;
+        }
+        .small-menu {
+            display: block;
         }
     }
 </style>

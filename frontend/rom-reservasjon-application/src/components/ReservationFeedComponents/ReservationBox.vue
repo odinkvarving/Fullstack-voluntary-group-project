@@ -1,45 +1,35 @@
 <template>
     <div class="reservation-box">
         <v-col cols="24">
-            <!-- <v-row align="center" justify="center"> -->
-                <v-row>
-                    <p class="text">ReservasjonsID:</p>
-                    <p class="param">{{ reservation.reservation.id }}</p>
-                </v-row>
-                <v-row>
-                    <p class="text">SeksjonsID:</p>
-                    <p class="param">{{ section.id }}</p>
-                </v-row>
-
-                <v-row>
-                    <p class="text">Seksjonsnavn:</p>
-                    <p class="param">{{ section.name }}</p>
-                </v-row>
-                <!-- <hr class="divider"> -->
-
-                <v-row>
-                    <p class="text">Bruker-email:</p>
-                    <p class="param">{{ account.email }}</p>
-                </v-row>
-
-                <v-row>
-                    <p class="text">Dato:</p>
-                    <p class="param">{{ date }}</p>
-                </v-row>
-                <!-- <hr class="divider"> -->
-                <v-row>
-                    <p class="text">Klokkeslett:</p>
-                    <p class="param">{{ startTime }} - {{ endTime }}</p>
-                </v-row>
-                <!-- <hr class="divider"> -->
-                <v-row>
-                    <p class="text">Antall personer:</p>
-                    <p class="param">{{ reservation.reservation.number_of_people }}</p>
-                </v-row>
-                
-            <!-- </v-row> -->
+            <v-row>
+                <p class="text">ReservasjonsID:</p>
+                <p class="param">{{ reservation.reservation.id }}</p>
+            </v-row>
+            <v-row>
+                <p class="text">SeksjonsID:</p>
+                <p class="param">{{ section.id }}</p>
+            </v-row>
+            <v-row>
+                <p class="text">Seksjonsnavn:</p>
+                <p class="param">{{ section.name }}</p>
+            </v-row>
+            <v-row>
+                <p class="text">Bruker-email:</p>
+                <p class="param">{{ account.email }}</p>
+            </v-row>
+            <v-row>
+                <p class="text">Dato:</p>
+                <p class="param">{{ date }}</p>
+            </v-row>
+            <v-row>
+                <p class="text">Klokkeslett:</p>
+                <p class="param">{{ startTime }} - {{ endTime }}</p>
+            </v-row>
+            <v-row>
+                <p class="text">Antall personer:</p>
+                <p class="param">{{ reservation.reservation.number_of_people }}</p>
+            </v-row>
         </v-col>
-        
     </div>
 </template>
 <script>
