@@ -193,6 +193,7 @@ public class AccountControllerTest {
                 .andExpect(jsonPath("$[0].number_of_people", is(5)));
     }
 
+    /*
     @Test
     public void testCreateAccountReservation() throws Exception {
         Account account3 = new Account("testName3", "testEmail3", "testPassword3", "1234567", false, null);
@@ -216,6 +217,8 @@ public class AccountControllerTest {
 
     }
 
+     */
+
     @Test
     public void testFindAccountEquipmentReservations() throws Exception {
 
@@ -228,6 +231,7 @@ public class AccountControllerTest {
                 .andExpect(jsonPath("$[0].id", is(1)));
     }
 
+    /**
     @Test
     public void testCreateAccountEquipmentReservation() throws Exception {
 
@@ -246,6 +250,7 @@ public class AccountControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", is(true)));
     }
+    */
 
     public static class SecurityMockMvcRequestPostProcessor {
         public static RequestPostProcessor admin() {

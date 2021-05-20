@@ -22,7 +22,8 @@ export default {
     if(this.$store.getters.isAuthenticated){
       await this.$store.dispatch("getAccountInfo");
     }
-    this.$store.dispatch("loadRooms");
+    await this.$store.dispatch("loadRooms");
+    await this.$store.dispatch("loadSections");
   }
 }
 </script>

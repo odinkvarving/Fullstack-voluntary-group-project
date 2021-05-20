@@ -1,27 +1,51 @@
 <template>
     <div class="reservation-box">
-        <v-row align="center" justify="center">
-            <p class="text">ID:</p>
-            <p class="param">{{ reservation.reservation.id }}</p>
-            <v-spacer></v-spacer>
-            <p class="divider">|</p>
-            <v-spacer></v-spacer>
-            <p class="text">Dato:</p>
-            <p class="param">{{ date }}</p>
-            <v-spacer></v-spacer>
-            <p class="divider">|</p>
-            <v-spacer></v-spacer>
-            <p class="text">Klokkeslett:</p>
-            <p class="param">{{ startTime }} - {{ endTime }}</p>
-            <v-spacer></v-spacer>
-            <p class="divider">|</p>
-            <v-spacer></v-spacer>
-            <p class="text">Antall personer:</p>
-            <p class="param">{{ reservation.reservation.number_of_people }}</p>
-        </v-row>
+        <v-col cols="24">
+            <!-- <v-row align="center" justify="center"> -->
+                <v-row>
+                    <p class="text">ReservasjonsID:</p>
+                    <p class="param">{{ reservation.reservation.id }}</p>
+                </v-row>
+                <v-row>
+                    <p class="text">SeksjonsID:</p>
+                    <p class="param">{{ section.id }}</p>
+                </v-row>
+
+                <v-row>
+                    <p class="text">Seksjonsnavn:</p>
+                    <p class="param">{{ section.name }}</p>
+                </v-row>
+                <!-- <hr class="divider"> -->
+
+                <!-- <v-row>
+                    <p class="text">Bruker-email:</p>
+                    <p class="param">{{ account.email }}</p>
+                </v-row> -->
+
+                <v-row>
+                    <p class="text">Dato:</p>
+                    <p class="param">{{ date }}</p>
+                </v-row>
+                <!-- <hr class="divider"> -->
+                <v-row>
+                    <p class="text">Klokkeslett:</p>
+                    <p class="param">{{ startTime }} - {{ endTime }}</p>
+                </v-row>
+                <!-- <hr class="divider"> -->
+                <v-row>
+                    <p class="text">Antall personer:</p>
+                    <p class="param">{{ reservation.reservation.number_of_people }}</p>
+                </v-row>
+                
+            <!-- </v-row> -->
+        </v-col>
+        
     </div>
 </template>
 <script>
+// import { sectionService } from "../../services/SectionService.js";
+import { accountService } from "../../services/AccountService.js";
+
 /**
  * ReservationBox is a component which represents a single reservation in reservation feed.
  * 
@@ -36,10 +60,10 @@ export default {
             type: Object,
             required: true
         },
-        rooms: {
+        sections: {
             type: Array,
             required: true
-        }
+        },
     },
 
     data() {
@@ -49,11 +73,15 @@ export default {
             date: "",
             startTime: "",
             endTime: "",
+            section: {},
+            account: {},
         }
     },
 
     mounted() {
         this.findTime();
+        this.findSection();
+        this.$emit("finished-loading");
     },
 
     methods: {
@@ -61,9 +89,32 @@ export default {
          * findTime is a function which converts LocalDateTime object to date and time parts.
          */
         findTime() {
-            this.date = this.reservation.reservation.from_date.slice(0,10).replaceAll("-", "/");
+            this.date = this.reservation.reservation.from_date
+                .slice(0,10)
+                .split("-")
+                .reverse()
+                .toString()
+                .replaceAll(",",".");
             this.startTime = this.reservation.reservation.from_date.slice(11,16);
             this.endTime = this.reservation.reservation.to_date.slice(11,16);
+        },
+
+        /**
+         * findSection is a function which finds section by given id
+         */
+        findSection() {
+            for (let i = 0; i < this.sections.length; i++) {
+                if (this.sections[i].id === this.reservation.sectionId) {
+                    this.section = this.sections[i];
+                }
+            }
+        },
+
+        /**
+         * findAccount is a function which calls getAccount function in accountService with given account ID
+         */
+        async findAccount() {
+            this.account = await accountService.getAccount(this.reservation.accountId);
         }
     }
 }
@@ -74,19 +125,17 @@ export default {
         color: white;
         border: 1px solid #01AB55;
         border-radius: 4px;
-        height: 60px;
-        margin-top: 50px;
-        padding: 10px 100px;
+        margin: 30px;
+        padding: 20px;
     }
     .text {
         opacity: 50%;
         margin-right: 8px;
     }
-    .param {
-        font-size: 20px;
-    }
     .divider {
-        font-size: 40px;
-        color: #01AB55;
+        height: 1px;
+        border: none;
+        background-color: #01AB55;
+        margin: 5px;
     }
 </style>
