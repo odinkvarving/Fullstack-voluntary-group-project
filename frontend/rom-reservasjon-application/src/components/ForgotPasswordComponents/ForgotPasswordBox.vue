@@ -1,33 +1,44 @@
 <template>
     <div>
-        <SuccessPopUp class="popup" v-show="isPopUpVisible" :message="message"/>
-        <ErrorPopUp class="popup" v-show="isErrorVisible" v-on:close-popup="closePopUp" :message="message"/>
-        <div id="input-box">
-            <h1 class="header">Glemt passord?</h1>
-            <p class="sub-title">Skriv inn e-postadressen din nedenfor</p>
-            <div class="input-container">
-                <input type="text" class="input" id="email" placeholder="E-post" v-model="emailInput" v-bind:disabled="isSent" v-on:keyup.enter="sendAddress"/>
-            </div>
-            <button id="submit-btn" @click="sendAddress" v-bind:disabled="isSent">Send</button>
-        </div>
+        <v-container id="input-box" color="#222B45">
+            <v-col cols="12">
+                <h1>Glemt passord?</h1>
+                <p class="text--white text--secondary">Skriv inn e-postadressen din nedenfor</p>
+                <v-alert
+                    :value="isPopUpVisible"
+                    type="success"
+                    transition="scale-transition"
+                    style="width: 50%">
+                    Email er sendt til bruker, dersom email eksisterer
+                </v-alert>
+                <v-text-field
+                    id="email"
+                    label="E-post"
+                    v-model="emailInput"
+                    v-on:keyup.enter="sendAddress"
+                    outlined color="green"
+                    v-bind:disabled="isSent"
+                    :error-messages="emailError"
+                    style="width: 50%"/>
+                <v-col cols="6" align="end">
+                    <v-btn color="green" @click="sendAddress" v-bind:disabled="isSent">
+                        <span>Send</span>
+                    </v-btn>
+                </v-col>
+            </v-col>
+        </v-container>
     </div>
 </template>
 <script>
-import SuccessPopUp from "../PopUpComponents/SuccessPopUp.vue";
-import ErrorPopUp from "../PopUpComponents/ErrorPopUp.vue";
-
 /**
  * ForgotPasswordBox is a component which represents forgot password functionality.
+ * Functionality of this component is based on some code from Systemutvikling 2 project.
  * 
  * @author Scott Rydberg Sonen
  */
 
 export default {
     name: "ForgotPasswordBox",
-    components: {
-        SuccessPopUp,
-        ErrorPopUp
-    },
 
     data() {
         return {
@@ -36,7 +47,8 @@ export default {
             isSent: false,
             isPopUpVisible: false,
             isErrorVisible: false,
-            message: ""
+            message: "",
+            emailError: ""
         };
     },
 
@@ -51,13 +63,12 @@ export default {
             this.isPopUpVisible = false;
             this.isErrorVisible = false;
             if (!this.validateEmail()) {
-                document.getElementById("input-box").style.filter = "blur(5px)";
                 this.isEmailValid = false;
                 this.message = "E-postadressen er ikke gyldig";
+                this.emailError = "E-postadressen er ikke gyldig";
                 this.isErrorVisible = true;
             }
             if (this.isEmailValid) {
-                document.getElementById("input-box").style.filter = "blur(5px)";
                 this.send();
                 this.isSent = true;
                 this.message = "E-post er sendt til oppgitt e-post dersom epost er registert\nGår tilbake til login-siden...";
@@ -92,7 +103,11 @@ export default {
                 method: "POST",
             }
 
-            await fetch("http://localhost:8080/reset/" + this.emailInput, requestOptions);
+            console.log("Reset email: " + this.emailInput);
+
+            await fetch("http://localhost:8080/reset/" + this.emailInput, requestOptions)
+            .then(response => response.json())
+            .catch(error => console.error(error));
         },
 
         /**
@@ -101,64 +116,7 @@ export default {
         closePopUp() {
             this.message = "";
             this.isErrorVisible = false;
-            document.getElementById("input-box").style.filter = "none";
         },
     },
 }
 </script>
-<style scoped>
-    .popup {
-        position: absolute;
-        background-color: #222B45;
-        z-index: 2;
-        top: 25%;
-        left: 15%;
-    }
-    #input-box {
-        position: relative;
-        z-index: 1;
-    }
-    h1 {
-        font-size: 48px;
-    }
-    .sub-title {
-        opacity: 50%;
-        font-size: 17px;
-        font-weight: lighter;
-        margin-top: 0;
-    }
-    .input-container {
-        margin-top: 50px;
-    }
-    .input {
-        outline: none;
-        width: 100%;
-        height: 50px;
-        background-color: #192138;
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        border-radius: 4px;
-        padding-left: 3%;
-        font-family: "Inter";
-        font-size: 18px;
-        color: white;
-        cursor: text;
-        margin-top: 10px;
-    }
-    .input:focus {
-        outline: none;
-        border: 1px solid #01AB55;
-    }
-    #submit-btn {
-        background-color: #01AB55;
-        color: white;
-        font-family: "Inter";
-        font-size: 18px;
-        height: 40px;
-        width: 140px;
-        border: none;
-        border-radius: 4px;
-        float: right;
-        cursor: pointer;
-        margin-top: 20px;
-    }
-</style>

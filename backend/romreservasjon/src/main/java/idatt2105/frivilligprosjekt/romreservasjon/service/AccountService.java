@@ -187,7 +187,14 @@ public class AccountService {
     }
 
 
-    public Account findAccountByResetSuffix(String suffix) {
+    /**
+     * Method for finding account by reset suffix in URL.
+     * Functionality is based on code from Systemutvikling 2 project.
+     *
+     * @param suffix: reset suffix.
+     * @return account with given reset suffix.
+     */
+    public Account findAccountBySuffix(String suffix) {
         try {
             PasswordReset reset = this.passwordResetRepository.findBySuffix(suffix).orElseThrow(Exception::new);
             logger.info("accountId: " + reset.getAccountId());
@@ -201,6 +208,7 @@ public class AccountService {
 
     /**
      * Sends a password reset link to the provided mail address if it exists in the database.
+     * Functionality is based on code from Systemutvikling 2 project.
      *
      * @param mailToReset the mail to reset the password to.
      */
@@ -228,45 +236,24 @@ public class AccountService {
         }
     }
 
+    /**
+     * Method for creating a random reset suffix.
+     * Functionality is based on code from Systemutvikling 2 project.
+     *
+     * @param length
+     * @return
+     */
     private String generateRandomAlphanumericString(int length) {
         int leftLimit = 48; // numeral '0'
         int rightLimit = 122; // letter 'z'
         Random random = new Random();
 
         return random.ints(leftLimit, rightLimit + 1)
-                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-                .limit(length)
-                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                .toString();
+            .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+            .limit(length)
+            .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+            .toString();
     }
-
-    /*private String generateRandomAlphanumericString(int length) {
-        int leftLimit = 48; // numeral '0'
-        int rightLimit = 122; // letter 'z'
-        Random random = new Random();
-
-        return random.ints(leftLimit, rightLimit + 1)
-                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-                .limit(length)
-                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                .toString();
-    }*/
-
-    /**
-     * Goes trough the repo and deletes the entities that is past expiration time.
-     */
-    /*private void updatePasswordResetRepo() {
-        logger.info("refreshing passwordreset repo");
-        final int TIME_LIMIT = 30;
-        Set<PasswordReset> resetsToDelete = new HashSet<>();
-        LocalDateTime now = LocalDateTime.now();
-        this.passwordResetRepository.findAll().forEach(passwordReset -> {
-            if (ChronoUnit.MINUTES.between(passwordReset.getTimeProduced(), now) > TIME_LIMIT) {
-                resetsToDelete.add(passwordReset);
-            }
-        });
-        this.passwordResetRepository.deleteAll(resetsToDelete);
-    }*/
 
     public boolean isAdmin(String jwt){
         String email = jwtUtil.extractUsername(jwt.split(" ")[1]);
