@@ -327,4 +327,7 @@ export default {
     margin: 0;
 }
 
+.number-info-row p{
+    font-size: 10px;
+}
 </style>

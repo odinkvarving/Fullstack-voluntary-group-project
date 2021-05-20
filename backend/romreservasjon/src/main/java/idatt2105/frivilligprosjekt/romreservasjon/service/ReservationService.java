@@ -149,9 +149,10 @@ public class ReservationService {
      * @param id the id of the Reservation
      * @return the Reservation that was found
      */
-    public Reservation findReservationById(int id) {
+    public ReservationDTO findReservationById(int id) {
         try {
-            return reservationRepository.findById(id).orElseThrow(NoSuchElementException::new);
+            Reservation reservation = reservationRepository.findById(id).orElseThrow(NoSuchElementException::new);
+            return new ReservationDTO(reservation, reservation.getAccount().getId(), reservation.getSection().getId());
         }catch (DataAccessException e) {
             e.printStackTrace();
             logger.info("Could not find a reservation with this ID");

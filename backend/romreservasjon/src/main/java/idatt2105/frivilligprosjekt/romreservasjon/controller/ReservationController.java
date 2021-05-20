@@ -75,7 +75,7 @@ public class ReservationController {
      * @return the Reservation that was found
      */
     @GetMapping("/reservations/{reservation_id}")
-    public Reservation findReservationById(@PathVariable int reservation_id) {
+    public ReservationDTO findReservationById(@PathVariable int reservation_id) {
         return reservationService.findReservationById(reservation_id);
     }
 
