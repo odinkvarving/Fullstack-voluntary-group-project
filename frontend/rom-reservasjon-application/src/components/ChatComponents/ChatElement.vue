@@ -50,20 +50,17 @@ export default {
     };
   },
 
-  created() {
-    this.getAccountInfo();
+  async mounted() {
+    let account = await accountService.getAccount(this.chatMessage.accountId);
     this.time = this.chatMessage.timeStamp;
     this.message = this.chatMessage.message;
+    this.name = account.name;
   },
 
   methods: {
-    async getAccountInfo() {
-      let account = await accountService.getAccount(this.chatMessage.accountId);
-      this.name = account.name;
-    },
 
     async deleteMessage() {
-      if (confirm("Vil du virkelig slette denne kommentaren?")) {
+      if (confirm("Er du sikker på at du vil slette denne kommentaren?")) {
         await roomService.deleteMessage(this.chatMessage.id);
       }
     },

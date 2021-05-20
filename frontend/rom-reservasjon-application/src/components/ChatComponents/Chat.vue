@@ -107,9 +107,6 @@ export default {
           sectionId: this.sectionId,
         };
         this.message = "";
-        console.log("ROOM ID: " + this.$route.params.roomId);
-        console.log("SECTION ID" + this.$route.params.sectionId);
-        console.log("ACCOUNT ID" + this.accountId);
         await roomService.sendMessage(
           this.$route.params.roomId,
           this.$route.params.sectionId,

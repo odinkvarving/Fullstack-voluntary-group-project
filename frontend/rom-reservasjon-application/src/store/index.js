@@ -76,7 +76,7 @@ const store = new Vuex.Store({
                 return account;
                 
             }catch(error){
-                console.log("CATCHED ERROR");
+                console.log("CAUGHT ERROR");
                 console.log(error);
                 commit("setError", "Failed to login, error occured");
 
