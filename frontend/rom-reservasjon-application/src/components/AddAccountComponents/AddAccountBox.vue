@@ -227,6 +227,10 @@ export default {
             location.reload();
         },
 
+        /**
+         * generatePassword is a function which automatically generates a random password for a new account.
+         * This is an idea we got from Qs, where each account gets its own random password.
+         */
         generatePassword() {
             const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             const charLen = chars.length;

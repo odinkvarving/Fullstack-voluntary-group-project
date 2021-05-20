@@ -189,15 +189,6 @@ export default {
       this.isErrorVisible = false;
       document.getElementById("login-page").style.filter = "none";
     },
-
-    /**
-     * changePasswordVisibility is a function which toggles password input visibility.
-     */
-    changePasswordVisibility() {
-      let inputArea = document.getElementById("password");
-      if (inputArea.type === "password") inputArea.type = "text";
-      else inputArea.type = "password";
-    },
   },
 };
 </script>
