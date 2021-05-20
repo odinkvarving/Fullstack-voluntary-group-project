@@ -134,9 +134,9 @@
                     </v-row>
               </div>
               <div class="room-list-column" >
-                  <div v-for="(room) in rooms" :key="room.id" >
+                  <div v-for="(room) in rooms" :key="room.id" class="room-container">
                     <v-row align="center" justify="center">
-                        <v-col>
+                        <v-col cols="5">
                             <h1>{{ room.name }}</h1>
                             <p>{{ room.address }}</p>
                             <v-row class="number-info-row">
@@ -145,11 +145,11 @@
                             </v-row>
                         </v-col>
                         <v-spacer></v-spacer>
-                        <v-col>
+                        <v-col cols="5">
                             <p>{{ room.description }}</p>
                         </v-col>
                         <v-spacer></v-spacer>
-                        <v-col>
+                        <v-col cols="2">
                             <v-btn color="#01AB55" @click="goToRoomButtonClicked(room.id)"><span>Gå til rom</span></v-btn>               
                         </v-col>
                     </v-row>
@@ -319,7 +319,7 @@ export default {
 }
 
 .room-list-column {
-    width: 71%;
+    width: 67%;
     margin-right: 50px;
 }
 
@@ -327,4 +327,16 @@ export default {
     margin: 0;
 }
 
+.number-info-row p{
+    font-size: 16px;
+    opacity: 70%;
+    margin: 0 15px 0 0;
+}
+
+.room-container{
+    background-color: rgba(0, 0, 0, 0.23);
+    width: 100%;
+    padding: 20px;
+    margin: 20px 0;
+}
 </style>
