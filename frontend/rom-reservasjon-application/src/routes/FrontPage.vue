@@ -2,7 +2,7 @@
   <div class="frontpage">
     <v-container>
       <v-row align="center" justify="center" class="pt-10">
-        <v-col cols="12" sm="6">
+        <v-col cols="12" sm="6" class="header-text">
           <h1 class="white--text">
             Finn et keegt rom for<br />deg og dine
             <span style="color: #01AB55">behov</span>
@@ -24,7 +24,7 @@
         </v-col>
       </v-row>
     </v-container>
-
+<!--
     <div class="selection-field">
       <v-container pt-10 pb-10>
         <v-row align="center">
@@ -118,6 +118,7 @@
         </v-row>
       </v-container>
     </div>
+    -->
   </div>
 </template>
 
@@ -136,14 +137,22 @@ export default {
 <style scoped>
 .frontpage {
   background-color: #192138;
+  min-height: 100vh;
 }
-
-.selection-field {
-  background-color: #222b45;
-  height: 100vh;
-}
-
 h1 {
   font-size: 3em;
+}
+@media (max-width: 700px) {
+
+  h1{
+    font-size: 1.7em;
+  }
+
+  .header-text {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }
 </style>

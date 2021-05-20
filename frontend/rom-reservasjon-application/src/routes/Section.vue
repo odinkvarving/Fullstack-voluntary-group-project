@@ -273,6 +273,11 @@ export default {
                 this.loading = false;
             }
         }
+    },
+    mounted(){
+        if(!this.$store.getters.isAuthenticated){
+            this.$router.push("/");
+        }
     }
 }
 </script>
@@ -319,5 +324,32 @@ export default {
     .reserve-button{
         width: 100%;
         margin-top: 20px;
+    }
+
+    @media (max-width: 1200px) {
+        .row{
+            align-items: center;
+            justify-content: center;
+        }
+
+        .reservations-overview{
+            width: 80%;
+        }
+        .time-selection{
+            width: 80%;
+        }
+    }
+
+    @media (max-width: 500px) {
+        .title h1{
+            font-size: 30px;
+        }
+
+        .title p{
+            font-size: 15px;
+        }
+        .row{
+            width: 100%;
+        }
     }
 </style>

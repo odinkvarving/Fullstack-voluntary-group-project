@@ -53,18 +53,19 @@ export default {
         display: flex;
         align-items: center;
         margin-left: 5%;
+        width: 90%;
     }
 
     .timestamp p {
-        margin: 0;
+        margin-bottom: 0;
+        margin-right: 10px;
     }
 
     .time-box{
-        width: 80%;
+        width: 100%;
         border: 1px solid #01AB55;
         opacity: 70%;
         height: 40px;
-        margin-left: 5%;
     }
 
     .date-picker{
@@ -77,4 +78,6 @@ export default {
         height: 1px;
         background-color: #01AB55;
     }
+
+
 </style>
