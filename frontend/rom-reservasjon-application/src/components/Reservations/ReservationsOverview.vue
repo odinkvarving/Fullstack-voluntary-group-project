@@ -6,7 +6,7 @@
           <div class="timestamp" v-for="(timestamp, index) in timeList" :key="index">
               <p> {{timestamp}}</p>
               <div class="time-box" v-if="!freeReservations[index].disabled" style="background-color: #192138;"></div>
-              <div class="time-box" v-else style="background-color: #C33838"></div>
+              <div class="time-box" v-else style="background-color: #B71C1C"></div>
           </div>
       </div>
   </div>
@@ -34,7 +34,6 @@ export default {
 
 <style scoped>
     .reservation-overview{
-        border: 2px solid #01AB55;
         border-radius: 4px;
         width: 100%;
         height: 800px;
@@ -63,7 +62,7 @@ export default {
 
     .time-box{
         width: 100%;
-        border: 1px solid #01AB55;
+        border: 1px solid #969696;
         opacity: 70%;
         height: 40px;
     }
@@ -76,7 +75,7 @@ export default {
         width: 90%;
         margin: auto;
         height: 1px;
-        background-color: #01AB55;
+        background-color: #222B45;
     }
 
 

@@ -1,24 +1,30 @@
 <template>
   <div class="chat">
     <v-container>
-      <v-row no-gutters>
-        <v-col sm="2" class="scrollable">
+      <v-row align="center">
+        <v-col cols="10">
+          <v-text-field
+            v-model="message"
+            placeholder="Skriv en kommentar"
+            outlined
+            hide-details
+            color="green"
+            v-on:keyup.enter="sendMessage"
+          >
+          </v-text-field>
+        </v-col>
+
+        <v-col cols="2">
+          <v-btn rounded color="green" @click="sendMessage">
+            <span>Send</span>
+          </v-btn>
+        </v-col>
+        <v-col>
           <div v-for="message in messages" :key="message.id">
             <ChatElement
               :chatMessage="message"
               :loggedInAccountId="accountId"
             />
-          </div>
-          <div class="chat-input">
-            <textarea
-              type="text"
-              class="input"
-              id="message-field"
-              placeholder="Legg til en kommentar"
-              rows="2"
-              v-model="message"
-            />
-            <button @click="sendMessage">✔</button>
           </div>
         </v-col>
       </v-row>
@@ -27,7 +33,7 @@
 </template>
 
 <script>
-import { roomService } from "../services/RoomService.js";
+import { roomService } from "../../services/RoomService.js";
 import ChatElement from "./ChatElement.vue";
 
 export default {
@@ -75,7 +81,7 @@ export default {
     },
 
     startTimer() {
-      this.timerId = setInterval(() => this.loadMessages(), 10000);
+      this.timerId = setInterval(() => this.loadMessages(), 2000);
     },
 
     stillOnPage() {
@@ -114,24 +120,4 @@ export default {
   },
 };
 </script>
-<style>
-.input {
-  padding: 0 10px;
-  border: solid 2px #eca82b;
-  outline: none;
-}
-#message-field {
-  resize: none;
-}
-.chat-input {
-  display: grid;
-  grid-template-columns: 75% auto;
-  margin-right: 8%;
-  display: fixed;
-}
-
-#chat {
-  width: 80vw;
-  margin-bottom: 100px;
-}
-</style>
+<style></style>

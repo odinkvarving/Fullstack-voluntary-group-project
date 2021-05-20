@@ -89,25 +89,21 @@
         />
       </div>
     </div>
-    <v-container>
-      <v-row>
+    <v-container pt-12>
+      <v-row class="mx-auto">
         <v-col cols="12" align="center">
-          <button
-            class="btn btn-lg"
-            id="btnVisible"
-            @click="changeChatVisibility"
-          >
-            Skjul kommentarfelt
-          </button>
+          <v-btn @click="changeChatVisibility" color="green">
+            {{ chatButtonStatus ? "Vis" : "Skjul" }} kommentarfelt
+          </v-btn>
         </v-col>
         <v-col cols="12" align="center">
-          <Chat
-            class="chat"
-            id="chat"
-            :section="section"
-            v-show="isChatVisible"
-            :accountId="accountId"
-          />
+          <div>
+            <Chat
+              :section="section"
+              v-show="isChatVisible"
+              :accountId="accountId"
+            />
+          </div>
         </v-col>
       </v-row>
     </v-container>
@@ -119,7 +115,7 @@ import ReservationsOverview from "../components/Reservations/ReservationsOvervie
 import moment from "moment";
 import { format, parseISO } from "date-fns";
 import { reservationService } from "../services/ReservationService";
-import Chat from "./Chat.vue";
+import Chat from "../components/ChatComponents/Chat.vue";
 
 export default {
   name: "Section",
@@ -179,7 +175,8 @@ export default {
       endTimeValue: null,
       nPersons: null,
       loading: false,
-      isChatVisible: true,
+      isChatVisible: false,
+      chatButtonStatus: true,
     };
   },
   computed: {
@@ -394,13 +391,8 @@ export default {
     },
 
     changeChatVisibility() {
+      this.chatButtonStatus = !this.chatButtonStatus;
       this.isChatVisible = !this.isChatVisible;
-      const btn = document.getElementById("btnVisible");
-      if (this.isChatVisible) {
-        btn.childNodes[0].nodeValue = "Skjul kommentarfelt";
-      } else {
-        btn.childNodes[0].nodeValue = "Vis kommentarfelt";
-      }
     },
   },
 };
@@ -443,11 +435,6 @@ export default {
   width: 30%;
   display: flex;
   justify-content: center;
-}
-
-#chat {
-  width: 80vw;
-  margin-top: 1%;
 }
 
 .reserve-button {
