@@ -1,5 +1,6 @@
 package idatt2105.frivilligprosjekt.romreservasjon.service;
 
+import idatt2105.frivilligprosjekt.romreservasjon.model.DTO.ReservationDTO;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Reservation;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Section;
 import idatt2105.frivilligprosjekt.romreservasjon.repository.ReservationRepository;
@@ -34,12 +35,13 @@ public class ReservationService {
      *
      * @return a collection of all Reservations registered in the database
      */
-    public List<Reservation> findAll() {
+    public List<ReservationDTO> findAll() {
         Iterable<Reservation> itReservations = reservationRepository.findAll();
-        List<Reservation> reservations = new ArrayList<>();
+        List<ReservationDTO> reservations = new ArrayList<>();
 
-        itReservations.forEach(reservations::add);
-
+        itReservations.forEach(reservation -> {
+            reservations.add(new ReservationDTO(reservation, reservation.getAccount().getId(), reservation.getSection().getId()));
+        });
         return reservations;
     }
 
@@ -147,9 +149,10 @@ public class ReservationService {
      * @param id the id of the Reservation
      * @return the Reservation that was found
      */
-    public Reservation findReservationById(int id) {
+    public ReservationDTO findReservationById(int id) {
         try {
-            return reservationRepository.findById(id).orElseThrow(NoSuchElementException::new);
+            Reservation reservation = reservationRepository.findById(id).orElseThrow(NoSuchElementException::new);
+            return new ReservationDTO(reservation, reservation.getAccount().getId(), reservation.getSection().getId());
         }catch (DataAccessException e) {
             e.printStackTrace();
             logger.info("Could not find a reservation with this ID");

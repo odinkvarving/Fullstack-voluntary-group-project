@@ -1,5 +1,6 @@
 package idatt2105.frivilligprosjekt.romreservasjon.controller;
 
+import idatt2105.frivilligprosjekt.romreservasjon.model.DTO.ReservationDTO;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Reservation;
 import idatt2105.frivilligprosjekt.romreservasjon.service.ReservationService;
 import org.slf4j.Logger;
@@ -24,7 +25,7 @@ public class ReservationController {
      * @return a list of all registered Reservations
      */
     @GetMapping("/reservations")
-    public List<Reservation> getAllReservations() {
+    public List<ReservationDTO> getAllReservations() {
         return reservationService.findAll();
     }
 
@@ -74,7 +75,7 @@ public class ReservationController {
      * @return the Reservation that was found
      */
     @GetMapping("/reservations/{reservation_id}")
-    public Reservation findReservationById(@PathVariable int reservation_id) {
+    public ReservationDTO findReservationById(@PathVariable int reservation_id) {
         return reservationService.findReservationById(reservation_id);
     }
 

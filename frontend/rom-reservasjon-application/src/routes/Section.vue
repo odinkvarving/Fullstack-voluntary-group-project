@@ -101,13 +101,13 @@
           </button>
         </v-col>
         <v-col cols="12" align="center">
-        <Chat
-          class="chat"
-          id="chat"
-          :section="section"
-          v-show="isChatVisible"
-          :accountId="accountId"
-        />
+          <Chat
+            class="chat"
+            id="chat"
+            :section="section"
+            v-show="isChatVisible"
+            :accountId="accountId"
+          />
         </v-col>
       </v-row>
     </v-container>
@@ -406,7 +406,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .section {
   background-color: #192138;
   min-height: 100vh;
@@ -449,8 +449,36 @@ export default {
   width: 80vw;
   margin-top: 1%;
 }
+
 .reserve-button {
   width: 100%;
   margin-top: 20px;
+}
+
+@media (max-width: 1200px) {
+  .row {
+    align-items: center;
+    justify-content: center;
+  }
+
+  .reservations-overview {
+    width: 80%;
+  }
+  .time-selection {
+    width: 80%;
+  }
+}
+
+@media (max-width: 500px) {
+  .title h1 {
+    font-size: 30px;
+  }
+
+  .title p {
+    font-size: 15px;
+  }
+  .row {
+    width: 100%;
+  }
 }
 </style>
