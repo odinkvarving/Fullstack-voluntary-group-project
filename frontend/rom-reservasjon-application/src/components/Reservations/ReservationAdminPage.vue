@@ -65,7 +65,38 @@
                   Klokkeslett
                 </v-col>
                 <v-col cols="6" v-if="!inEditMode"> {{ time }} </v-col>
-                <v-col cols="6" v-else></v-col>
+                <v-col cols="6" v-else
+                  ><v-dialog
+                    ref="dialog"
+                    v-model="modal"
+                    :return-value.sync="time"
+                    persistent
+                    width="290px"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="time"
+                        prepend-icon="mdi-clock-time-four-outline"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                      ></v-text-field>
+                    </template>
+                    <v-time-picker v-if="modal" v-model="time" full-width format="24hr">
+                      <v-spacer></v-spacer>
+                      <v-btn text color="primary" @click="modal = false">
+                        Cancel
+                      </v-btn>
+                      <v-btn
+                        text
+                        color="primary"
+                        @click="$refs.dialog.save(time)"
+                      >
+                        OK
+                      </v-btn>
+                    </v-time-picker>
+                  </v-dialog></v-col
+                >
               </v-row>
 
               <v-row>
@@ -174,7 +205,7 @@ export default {
       section: "data",
       amount: "",
       date: "",
-      time: "",
+      time: null,
       description: "Lorem",
 
       username: "",
@@ -183,6 +214,7 @@ export default {
 
       isDataReady: false,
       inEditMode: false,
+      modal: false,
     };
   },
 
@@ -222,9 +254,12 @@ export default {
     },
 
     async updateReservation() {
-        await reservationService.updateReservation(this.reservationId, this.reservation);
-        //TODO: Legg til onClick
-    }
+      await reservationService.updateReservation(
+        this.reservationId,
+        this.reservation
+      );
+      //TODO: Legg til onClick
+    },
   },
 };
 </script>
