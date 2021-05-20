@@ -37,7 +37,7 @@ public class SectionChatService {
      */
     public List<SectionChat> getMessagesInSectionSorted(int sectionId) {
         logger.debug("Returned all messages for section: " + sectionId);
-        return this.sectionChatRepository.findSectionChatsBySectionIdOrderByTimeStampDesc(sectionId);
+        return this.sectionChatRepository.findSectionChatsBySectionIdOrderByTimeStampAsc(sectionId);
     }
 
     /**
