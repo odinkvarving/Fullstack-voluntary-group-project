@@ -41,13 +41,15 @@
           <v-col cols="12">
             <p class="text">Skriv inn passord</p>
             <v-text-field
-              type="password"
+              :type="isPasswordVisible ? 'text' : 'password'"
+              :append-icon="isPasswordVisible ? 'visibility' : 'visibility_off'"
               label="Passord"
               v-model="passwordInput"
               v-on:keyup.enter="loginAccount"
               outlined
               color="green"
               :error-messages="passwordErrorMessage"
+              @click:append="isPasswordVisible = !isPasswordVisible"
             ></v-text-field>
           </v-col>
           <v-col cols="6">
@@ -91,6 +93,7 @@ export default {
       message: "",
       eMailErrorMessage: "",
       passwordErrorMessage: "",
+      isPasswordVisible: false
     };
   },
 
@@ -185,15 +188,6 @@ export default {
       this.message = "";
       this.isErrorVisible = false;
       document.getElementById("login-page").style.filter = "none";
-    },
-
-    /**
-     * changePasswordVisibility is a function which toggles password input visibility.
-     */
-    changePasswordVisibility() {
-      let inputArea = document.getElementById("password");
-      if (inputArea.type === "password") inputArea.type = "text";
-      else inputArea.type = "password";
     },
   },
 };
