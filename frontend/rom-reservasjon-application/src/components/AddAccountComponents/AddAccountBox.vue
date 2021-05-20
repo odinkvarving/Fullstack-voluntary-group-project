@@ -25,7 +25,8 @@
                         v-model="nameInput"
                         v-on:keyup.enter="addAccount"
                         outlined color="green"
-                        :error-messages="nameError"/>
+                        :error-messages="nameError"
+                        clearable/>
                 </v-col>
                 <v-col class="col" cols="12">
                     <p>Skriv inn e-post</p>
@@ -34,7 +35,8 @@
                         v-model="emailInput"
                         v-on:keyup.enter="addAccount"
                         outlined color="green"
-                        :error-messages="emailError"/>
+                        :error-messages="emailError"
+                        clearable/>
                 </v-col>
                 <v-col class="col" cols="12">
                     <p>Skriv inn telefonnummer</p>
@@ -45,12 +47,12 @@
                         v-on:keyup.enter="addAccount"
                         outlined color="green"
                         :error-messages="phoneError"
-                        oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                        oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                        clearable/>
                 </v-col>
                 <v-col class="col" cols="12">
                     <p>Skriv inn passord</p>
                     <v-text-field
-                        label="Passord" 
                         maxlength="30" 
                         v-model="passwordInput" 
                         v-on:keyup.enter="addAccount" 
@@ -112,7 +114,7 @@ export default {
             nameInput: "",
             emailInput: "",
             phoneInput: "",
-            passwordInput: "",
+            passwordInput: this.generatePassword(),
             expirationDateInput: null,
             isPopUpVisible: false,
             isErrorVisible: false,
@@ -223,6 +225,16 @@ export default {
                 .catch(error => console.error(error))
 
             location.reload();
+        },
+
+        generatePassword() {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            const charLen = chars.length;
+            let password = "";
+            for (let i = 0; i < 10; i++) {
+                password += chars.charAt(Math.floor(Math.random() * charLen));
+            }
+            return password;
         }
     }
 }
