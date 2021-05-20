@@ -1,5 +1,6 @@
 package idatt2105.frivilligprosjekt.romreservasjon.service;
 
+import idatt2105.frivilligprosjekt.romreservasjon.model.DTO.ReservationDTO;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Reservation;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Section;
 import idatt2105.frivilligprosjekt.romreservasjon.repository.ReservationRepository;
@@ -34,12 +35,13 @@ public class ReservationService {
      *
      * @return a collection of all Reservations registered in the database
      */
-    public List<Reservation> findAll() {
+    public List<ReservationDTO> findAll() {
         Iterable<Reservation> itReservations = reservationRepository.findAll();
-        List<Reservation> reservations = new ArrayList<>();
+        List<ReservationDTO> reservations = new ArrayList<>();
 
-        itReservations.forEach(reservations::add);
-
+        itReservations.forEach(reservation -> {
+            reservations.add(new ReservationDTO(reservation, reservation.getAccount().getId()));
+        });
         return reservations;
     }
 
