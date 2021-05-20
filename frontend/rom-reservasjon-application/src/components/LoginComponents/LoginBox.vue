@@ -7,7 +7,7 @@
             <h1>Velkommen tilbake</h1>
             <p class="white--text text--secondary">Logg på kontoen din</p>
           </v-col>
-          <v-col cols="12">
+          <v-col cols="12" class="pt-6">
             <div style="position: relative">
               <v-alert
                 :value="isErrorVisible"

@@ -27,7 +27,7 @@
 
     <div class="selection-field">
       <v-container pt-10 pb-10>
-        <v-row align="center">
+        <v-row align="start">
           <v-col cols="4" xs="4" sm="2">
             <v-text-field
               dense
@@ -71,7 +71,7 @@
             <v-btn color="green"><span>Søk</span></v-btn>
           </v-col>
         </v-row>
-        <v-row align="center">
+        <v-row align="start">
           <v-col cols="4" xs="4" sm="2">
             <v-text-field
               dense

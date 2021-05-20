@@ -1,5 +1,5 @@
 <template>
-  <v-container fill-height v-if="isDataReady">
+  <v-container fill-height>
     <v-row>
       <v-col cols="12">
         <h1>{{ roomName }}</h1>
@@ -13,15 +13,34 @@
                   Seksjon
                 </v-col>
                 <v-col cols="6" v-if="!inEditMode"> {{ section }} </v-col>
-                <v-col cols="6" v-else> <v-text-field color="green" outlined hide-details height="22px" :placeholder="section"></v-text-field></v-col>
+                <v-col cols="6" v-else>
+                  <v-text-field
+                    color="green"
+                    outlined
+                    hide-details
+                    height="22px"
+                    :placeholder="section"
+                  ></v-text-field
+                ></v-col>
               </v-row>
 
               <v-row>
                 <v-col cols="6">
                   Antall
                 </v-col>
-                <v-col cols="6" v-if="!inEditMode"> {{ reservation.number_of_people }} </v-col>
-                <v-col cols="6" v-else> <v-text-field color="green" type="number" outlined hide-details height="22px" :placeholder="reservation.number_of_people"></v-text-field></v-col>
+                <v-col cols="6" v-if="!inEditMode">
+                  {{ reservation.number_of_people }}
+                </v-col>
+                <v-col cols="6" v-else>
+                  <v-text-field
+                    color="green"
+                    type="number"
+                    outlined
+                    hide-details
+                    height="22px"
+                    :placeholder="reservation.number_of_people"
+                  ></v-text-field
+                ></v-col>
               </v-row>
 
               <v-row>
@@ -29,7 +48,16 @@
                   Dato
                 </v-col>
                 <v-col cols="6" v-if="!inEditMode"> {{ date }} </v-col>
-                <v-col cols="6" v-else> <v-text-field color="green" type="number" outlined hide-details height="22px" :placeholder="section"></v-text-field></v-col>
+                <v-col cols="6" v-else>
+                  <v-text-field
+                    color="green"
+                    type="number"
+                    outlined
+                    hide-details
+                    height="22px"
+                    :placeholder="section"
+                  ></v-text-field
+                ></v-col>
               </v-row>
 
               <v-row>
@@ -54,17 +82,21 @@
                 <v-col cols="12" v-else>
                   <v-card outlined color="#222b45">
                     <v-card-text>
-                      <v-textarea filled color="green" :placeholder="description"></v-textarea>
+                      <v-textarea
+                        filled
+                        color="green"
+                        :placeholder="description"
+                      ></v-textarea>
                     </v-card-text>
                   </v-card>
                 </v-col>
               </v-row>
               <v-row>
-                  <v-col align="center">
-                      <v-btn color="green" v-if="inEditMode">
-                          Fullfør
-                      </v-btn>
-                  </v-col>
+                <v-col align="center">
+                  <v-btn color="green" v-if="inEditMode">
+                    Fullfør
+                  </v-btn>
+                </v-col>
               </v-row>
             </v-container>
           </v-card-text>
@@ -112,11 +144,15 @@
           </v-card-text>
         </v-card>
         <v-row justify="space-between" class="pt-5">
-          <v-col cols="12" md="6">
-            <v-btn @click="editButtonClicked" color="green">Endre reservasjon</v-btn>
+          <v-col cols="12" md="6" align="center">
+            <v-btn @click="editButtonClicked" color="green"
+              >Endre reservasjon</v-btn
+            >
           </v-col>
-          <v-col cols="12" md="6" align="end">
-            <v-btn @click="deleteReservation" color="error">Slett reservasjon</v-btn>
+          <v-col cols="12" md="6" align="center">
+            <v-btn @click="deleteReservation" color="error"
+              >Slett reservasjon</v-btn
+            >
           </v-col>
         </v-row>
       </v-col>
@@ -126,7 +162,7 @@
 
 <script>
 import { reservationService } from "../../services/ReservationService";
-import { adminService } from "../../services/AdminService"
+import { adminService } from "../../services/AdminService";
 export default {
   name: "ReservationAdminPage",
   data() {
@@ -155,11 +191,15 @@ export default {
     await adminService.isAdmin();
 
     this.reservationId = parseInt(this.$route.params.reservationId);
-    this.reservation = await reservationService.getReservation(this.reservationId);
+    this.reservation = await reservationService.getReservation(
+      this.reservationId
+    );
     console.log(this.reservation);
 
     this.findTime();
     this.isDataReady = true;
+
+    //console.log(this.reservation)
   },
 
   methods: {
@@ -171,25 +211,28 @@ export default {
     },
 
     editButtonClicked() {
-        this.inEditMode = !this.inEditMode;
-        console.log("Edit mode: " + this.inEditMode);
+      this.inEditMode = !this.inEditMode;
+      console.log("Edit mode: " + this.inEditMode);
     },
 
-    editReservation() {
-
-    },
+    editReservation() {},
 
     async deleteReservation() {
-        await reservationService.deleteReservation(this.reservationId);
+      await reservationService.deleteReservation(this.reservationId);
+    },
+
+    async updateReservation() {
+        await reservationService.updateReservation(this.reservationId, this.reservation);
+        //TODO: Legg til onClick
     }
   },
 };
 </script>
 
 <style scoped>
-.v-text-field .v-input__control .v-input__slot {
-    min-height: auto !important;
-    display: flex !important;
-    align-items: center !important;
-  }
+>>> .v-text-field .v-input__control .v-input__slot {
+  min-height: auto !important;
+  display: flex !important;
+  align-items: center !important;
+}
 </style>
