@@ -24,9 +24,9 @@ public class SectionChatService {
      * @param sectionId the id of the Section the message belongs to.
      * @param message the message.
      */
-    public void addMessageToSection(int accountId, int sectionId, String message) {
+    public SectionChat addMessageToSection(int accountId, int sectionId, String message) {
         logger.info("adding message from account: " + accountId + ", to section: " + sectionId + ", with message: \n" + message);
-        this.sectionChatRepository.save(new SectionChat(accountId, sectionId, message));
+        return this.sectionChatRepository.save(new SectionChat(accountId, sectionId, message));
     }
 
     /**
@@ -37,7 +37,7 @@ public class SectionChatService {
      */
     public List<SectionChat> getMessagesInSectionSorted(int sectionId) {
         logger.debug("Returned all messages for section: " + sectionId);
-        return this.sectionChatRepository.findSectionChatBySectionIdOrderByTimeStamp(sectionId);
+        return this.sectionChatRepository.findSectionChatsBySectionIdOrderByTimeStamp(sectionId);
     }
 
     /**

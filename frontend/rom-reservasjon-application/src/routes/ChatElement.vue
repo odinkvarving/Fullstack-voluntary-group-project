@@ -1,62 +1,60 @@
 <template>
-    <div class="chatbox">
-        <div v-if="
-        chatMessage.accountId === loggedInAccountId">
-            <button @click="deleteMessage()" class="delete">×</button>
-        </div>
-        <p class="message">{{ message }}</p>
-        <p class="time">{{ time }}</p>
+  <div class="chatbox">
+    <div v-if="chatMessage.accountId === loggedInAccountId">
+      <button @click="deleteMessage()" class="delete">×</button>
     </div>
+    <p class="name">{{ name }}</p>
+    <p class="message">{{ message }}</p>
+    <p class="time">{{ time }}</p>
+  </div>
 </template>
 
 <script>
-import { accountService } from "../services/AccountService.js"
-import { roomService } from '../services/RoomService.js';
+import { accountService } from "../services/AccountService.js";
+import { roomService } from "../services/RoomService.js";
 
 export default {
-    name: "ChatElement",
+  name: "ChatElement",
 
-    props: {
-
-        chatMessage: {
-            type: Object,
-            required: true,
-        },
-
-        loggedInAccountId: {
-            type: Number,
-            required: true,
-        },
+  props: {
+    chatMessage: {
+      type: Object,
+      required: true,
     },
 
-    data() {
-        return {
+    loggedInAccountId: {
+      type: Number,
+      required: true,
+    },
+  },
 
-            name: "",
-            time: null,
-            message: "",
-        };
+  data() {
+    return {
+      name: "",
+      time: null,
+      message: "",
+    };
+  },
+
+  created() {
+    this.getAccountInfo();
+    this.time = this.chatMessage.timeStamp;
+    this.message = this.chatMessage.message;
+  },
+
+  methods: {
+    async getAccountInfo() {
+      let account = await accountService.getAccount(this.chatMessage.accountId);
+      this.name = account.name;
     },
 
-    created() {
-        this.getAccountInfo();
-        this.time = this.chatMessage.timeStamp;
-        this.message = this.chatMessage.message;
+    async deleteMessage() {
+      if (confirm("Vil du virkelig slette denne kommentaren?")) {
+        await roomService.deleteMessage(this.chatMessage.id);
+      }
     },
-
-    methods: {
-        async getAccountInfo() {
-            let account = await accountService.getAccount(this.$store.getters.getLoggedInAccount.id)
-            this.name = account.name;
-        },
-
-        async deleteMessage() {
-            if (confirm("Vil du virkelig slette denne kommentaren?")) {
-                await roomService.deleteMessage(this.chatMessage.id);
-            }
-        },
-    }
-}
+  },
+};
 </script>
 <style>
 .box {

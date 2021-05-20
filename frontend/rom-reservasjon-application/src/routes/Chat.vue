@@ -1,30 +1,32 @@
 <template>
-    <div class="chat">
-        <v-container>
-            <v-row no-gutters>
-                <v-col sm="2" class="scrollable">
-                    <div v-for="message in messages" :key="message.id">
-                        <ChatElement :chatMessage="message" :loggedInAccountId="accountId"/>
-                    </div>
-                    <div class="chat-input">
-                        <textarea
-                            type="text"
-                            class="input"
-                            id="message-field"
-                            placeholder="Legg til en kommentar"
-                            rows="2"
-                            v-model="message"
-                        />
-                        <button @click="sendMessage">✔</button>
-                    </div>
-                </v-col>
-            </v-row>
-        </v-container>
-    </div>
+  <div class="chat">
+    <v-container>
+      <v-row no-gutters>
+        <v-col sm="2" class="scrollable">
+          <div v-for="message in messages" :key="message.id">
+            <ChatElement
+              :chatMessage="message"
+              :loggedInAccountId="accountId"
+            />
+          </div>
+          <div class="chat-input">
+            <textarea
+              type="text"
+              class="input"
+              id="message-field"
+              placeholder="Legg til en kommentar"
+              rows="2"
+              v-model="message"
+            />
+            <button @click="sendMessage">✔</button>
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
 </template>
 
 <script>
-import { accountService } from "../services/AccountService.js";
 import { roomService } from "../services/RoomService.js";
 import ChatElement from "./ChatElement.vue";
 
@@ -40,6 +42,11 @@ export default {
       type: Object,
       required: true,
     },
+
+    accountId: {
+      type: Number,
+      required: true,
+    },
   },
 
   data() {
@@ -48,25 +55,27 @@ export default {
       message: "",
       timerId: null,
       pageRoute: "",
-      accountId: null,
+      roomId: null,
+      sectionId: null,
     };
   },
 
-  created() {
-    this.pageRoute = this.$route.name;
-    this.loadAccountId();
-    this.startTimer();
+  computed: {},
+
+  async mounted() {
+    await this.getInfo();
   },
 
   methods: {
-    startTimer() {
-      this.timerId = setInterval(() => this.loadMessages(), 10000);
+    async getInfo() {
+      this.pageRoute = this.$route.name;
+      this.startTimer();
+      this.roomId = this.$route.params.roomId;
+      this.sectionId = this.$route.params.sectionId;
     },
 
-    async loadAccountId() {
-      await accountService.getAccount(this.$store.getters.getLoggedInAccount.id).then((data) => {
-        this.accountId = data.id;
-      });
+    startTimer() {
+      this.timerId = setInterval(() => this.loadMessages(), 10000);
     },
 
     stillOnPage() {
@@ -75,7 +84,10 @@ export default {
 
     async loadMessages() {
       if (this.stillOnPage()) {
-        this.messages = await roomService.getSectionMessages(this.$route.params.roomId, this.$route.params.sectionId); //await necessary?
+        this.messages = await roomService.getSectionMessages(
+          this.roomId,
+          this.sectionId
+        ); //await necessary?
       } else {
         clearInterval(this.timerId);
       }
@@ -83,16 +95,20 @@ export default {
 
     async sendMessage() {
       if (this.message.length > 0) {
-        if (this.$store.getters.isAuthenticated) {
-          const data = {
-            accountId: this.accountId,
-            message: this.message,
-          };
-          this.message = "";
-          await roomService.sendMessage(this.$route.params.roomId, this.$route.params.sectionId, data);
-        } else {
-          console.error("User must be logged in to post message");
-        }
+        const data = {
+          accountId: this.accountId,
+          message: this.message,
+          sectionId: this.sectionId,
+        };
+        this.message = "";
+        console.log("ROOM ID: " + this.$route.params.roomId);
+        console.log("SECTION ID" + this.$route.params.sectionId);
+        console.log("ACCOUNT ID" + this.accountId);
+        await roomService.sendMessage(
+          this.$route.params.roomId,
+          this.$route.params.sectionId,
+          data
+        );
       }
     },
   },
