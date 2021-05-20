@@ -89,7 +89,12 @@ export default {
          * findTime is a function which converts LocalDateTime object to date and time parts.
          */
         findTime() {
-            this.date = this.reservation.reservation.from_date.slice(0,10).replaceAll("-", "/");
+            this.date = this.reservation.reservation.from_date
+                .slice(0,10)
+                .split("-")
+                .reverse()
+                .toString()
+                .replaceAll(",",".");
             this.startTime = this.reservation.reservation.from_date.slice(11,16);
             this.endTime = this.reservation.reservation.to_date.slice(11,16);
         },
