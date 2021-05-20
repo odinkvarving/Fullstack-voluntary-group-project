@@ -23,7 +23,7 @@ public class EquipmentController {
      *
      * @return a list of all registered Equipment
      */
-    @GetMapping("/equipments")
+    @GetMapping("/equipment")
     public List<Equipment> getAllEquipment() {
         return equipmentService.findAllEquipment();
     }
@@ -34,7 +34,7 @@ public class EquipmentController {
      * @param id the id of the Equipment to be found
      * @return the Equipment that was found
      */
-    @GetMapping("/equipments/{id}")
+    @GetMapping("/equipment/{id}")
     public Equipment findEquipmentById(@PathVariable int id){
         return equipmentService.findEquipmentById(id);
     }
@@ -45,7 +45,7 @@ public class EquipmentController {
      * @param equipment requesting the body of the Equipment to save
      * @return true or false whether the Equipment was created successfully or not
      */
-    @PostMapping("/equipments")
+    @PostMapping("/equipment")
     public boolean saveEquipment(@RequestBody Equipment equipment) {
         logger.info("Trying to save equipment:\n" + equipment.toString());
         boolean success = equipmentService.saveEquipment(equipment);
@@ -62,7 +62,7 @@ public class EquipmentController {
      * @param equipment_id the PathVariable of the id for the Equipment
      * @return the Equipment that was updated
      */
-    @PutMapping("/equipments/{equipment_id}")
+    @PutMapping("/equipment/{equipment_id}")
     public Equipment updateEquipment(@PathVariable("equipment_id") int equipment_id, @RequestBody Equipment newEquipment) {
         return equipmentService.updateEquipment(equipment_id, newEquipment);
     }
@@ -72,7 +72,7 @@ public class EquipmentController {
      *
      * @param equipment_id the PathVariable for the id of the Equipment
      */
-    @DeleteMapping("/equipments/{equipment_id}")
+    @DeleteMapping("/equipment/{equipment_id}")
     public void deleteEquipment(@PathVariable("equipment_id") int equipment_id) {
         equipmentService.deleteEquipment(equipment_id);
     }

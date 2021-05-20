@@ -10,6 +10,7 @@ const store = new Vuex.Store({
         loggedInAccount: {},
         rooms: [],
         sections: [],
+        equipment: [],
         isBusy: false,
         error: "",
     },
@@ -39,6 +40,12 @@ const store = new Vuex.Store({
         clearSections: (state) => {
             state.sections = [];
         },
+        setEquipment: (state, equipment) => {
+            state.equipment = equipment;
+        },
+        clearEquipment: (state) => {
+            state.equipment = [];
+        },
         setBusy: (state) => state.isBusy = true,
         clearBusy: (state) => state.isBusy = false,
         setError: (state, error) => state.error = error,
@@ -49,7 +56,8 @@ const store = new Vuex.Store({
         getJwtToken: (state) => state.jwtToken,
         getLoggedInAccount: (state) => state.loggedInAccount,
         getRooms: (state) => state.rooms,
-        getSections: (state) => state.sections
+        getSections: (state) => state.sections,
+        getEquipment: (state) => state.equipment
     },
     actions:{
         login: async({ commit, state }, authRequest) => {
@@ -147,6 +155,28 @@ const store = new Vuex.Store({
             } finally {
                 commit("clearBusy");
                 console.log("Sections loaded in successfully!") ;
+            }
+        },
+        loadEquipment: async({commit}) => {
+            try {
+                commit("setBusy");
+                commit("clearError");
+
+                const url = "http://localhost:8080/equipment";
+
+                await fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Loading in equipment...");
+                        console.log(data);
+                        commit("setEquipment", data);
+                    })
+                    .catch(error => console.error(error));
+            } catch(error) {
+                console.error(error);
+            } finally {
+                commit("clearBusy");
+                console.log("Equipment loaded in successfully!") ;
             }
         }
     }
