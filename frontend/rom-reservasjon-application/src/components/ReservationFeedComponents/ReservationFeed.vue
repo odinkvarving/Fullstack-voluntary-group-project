@@ -2,9 +2,18 @@
     <div class="reservation-feed">
         <v-container class="reservation-feed-container">
             <h1>Romreservasjoner</h1>
-            <v-row v-if="isDataReady && rooms">
+            <v-row align="center" justify="center" v-show="!finishedLoading">
+                <v-progress-circular
+                    indeterminate
+                    color="green"
+                    size="150"
+                    :width="5"
+                    style="margin-top: 200px"
+                ></v-progress-circular>
+            </v-row>
+            <v-row v-if="isDataReady && sections" v-show="finishedLoading">
                 <div class="feed" v-for="r in reservations" :key="r.id" @click="handleReservationClicked(r)">
-                    <ReservationBox :reservation="r" :rooms="rooms"/>
+                    <ReservationBox :reservation="r" :sections="sections" v-on:finished-loading="checkLoadingStatus"/>
                 </div>
             </v-row>
         </v-container>
@@ -31,8 +40,10 @@ export default {
     data() {
         return {
             reservations: [],
-            rooms: [],
+            sections: [],
             isDataReady: false,
+            count: 0,
+            finishedLoading: false,
         }
     },
 
@@ -45,7 +56,7 @@ export default {
         await adminService.isAdmin();
 
         this.reservations = await reservationService.getReservations();
-        this.rooms = this.$store.getters.getRooms;
+        this.sections = this.$store.getters.getSections;
         
         this.isDataReady = true;
     },
@@ -57,6 +68,11 @@ export default {
          */
         handleReservationClicked(reservation) {
             this.$router.push({name: "Reservation", params: {reservationId: reservation.reservation.id}}); 
+        },
+
+        checkLoadingStatus() {  
+            this.count++;
+            if (this.count == this.reservations.length) this.finishedLoading = true;
         }
     }
 }

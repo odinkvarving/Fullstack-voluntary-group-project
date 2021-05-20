@@ -3,10 +3,25 @@
         <v-col cols="24">
             <!-- <v-row align="center" justify="center"> -->
                 <v-row>
-                    <p class="text">ID:</p>
-                    <p class="param">{{ reservation.sectionId }}</p>
+                    <p class="text">ReservasjonsID:</p>
+                    <p class="param">{{ reservation.reservation.id }}</p>
+                </v-row>
+                <v-row>
+                    <p class="text">SeksjonsID:</p>
+                    <p class="param">{{ section.id }}</p>
+                </v-row>
+
+                <v-row>
+                    <p class="text">Seksjonsnavn:</p>
+                    <p class="param">{{ section.name }}</p>
                 </v-row>
                 <!-- <hr class="divider"> -->
+
+                <!-- <v-row>
+                    <p class="text">Bruker-email:</p>
+                    <p class="param">{{ account.email }}</p>
+                </v-row> -->
+
                 <v-row>
                     <p class="text">Dato:</p>
                     <p class="param">{{ date }}</p>
@@ -28,6 +43,7 @@
     </div>
 </template>
 <script>
+// import { sectionService } from "../../services/SectionService.js";
 import { accountService } from "../../services/AccountService.js";
 
 /**
@@ -44,10 +60,10 @@ export default {
             type: Object,
             required: true
         },
-        rooms: {
+        sections: {
             type: Array,
             required: true
-        }
+        },
     },
 
     data() {
@@ -57,20 +73,15 @@ export default {
             date: "",
             startTime: "",
             endTime: "",
-            section: {}
+            section: {},
+            account: {},
         }
     },
 
     mounted() {
         this.findTime();
         this.findSection();
-        
-    },
-
-    computed: {
-        account() {
-            return accountService.getAccount(this.reservation.accountId);
-        }
+        this.$emit("finished-loading");
     },
 
     methods: {
@@ -83,32 +94,23 @@ export default {
             this.endTime = this.reservation.reservation.to_date.slice(11,16);
         },
 
-        async findSection() {
-            const requestOptions = {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${this.$store.getters.getJwtToken}`
+        /**
+         * findSection is a function which finds section by given id
+         */
+        findSection() {
+            for (let i = 0; i < this.sections.length; i++) {
+                if (this.sections[i].id === this.reservation.sectionId) {
+                    this.section = this.sections[i];
                 }
             }
-            await fetch(`http://localhost:8080/sections/${this.reservation.sectionId}`, requestOptions)
-                .then(response => response.json())
-                .then(data => this.section = data)
-                .catch(error => console.error(error));
         },
 
-        // async findAccount() {
-        //     const requestOptions = {
-        //         method: "GET",
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //             "Authorization": `Bearer ${this.$store.getters.getJwtToken}`
-        //         }
-        //     }
-        //     await fetch(`http://localhost:8080/accounts/${this.reservation.accountId}`, requestOptions)
-        //         .then(response => response.json())
-        //         .then
-        // }
+        /**
+         * findAccount is a function which calls getAccount function in accountService with given account ID
+         */
+        async findAccount() {
+            this.account = await accountService.getAccount(this.reservation.accountId);
+        }
     }
 }
 </script>
