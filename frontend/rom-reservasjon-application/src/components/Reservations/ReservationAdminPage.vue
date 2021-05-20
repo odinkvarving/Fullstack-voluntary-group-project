@@ -1,5 +1,5 @@
 <template>
-  <v-container fill-height>
+  <v-container fill-height pt-16>
     <v-row>
       <v-col cols="12">
         <h1>{{ roomName }}</h1>
@@ -49,15 +49,39 @@
                 </v-col>
                 <v-col cols="6" v-if="!inEditMode"> {{ date }} </v-col>
                 <v-col cols="6" v-else>
-                  <v-text-field
-                    color="green"
-                    type="number"
-                    outlined
-                    hide-details
-                    height="22px"
-                    :placeholder="section"
-                  ></v-text-field
-                ></v-col>
+                  <v-menu
+                    ref="menu"
+                    v-model="menu"
+                    :close-on-content-click="false"
+                    :return-value.sync="date"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="date"
+                        prepend-icon="mdi-calendar"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker v-model="date" no-title scrollable>
+                      <v-spacer></v-spacer>
+                      <v-btn text color="primary" @click="dateMenu = false">
+                        Cancel
+                      </v-btn>
+                      <v-btn
+                        text
+                        color="primary"
+                        @click="$refs.menu.save(date)"
+                      >
+                        OK
+                      </v-btn>
+                    </v-date-picker>
+                  </v-menu>
+                </v-col>
               </v-row>
 
               <v-row>
@@ -66,12 +90,16 @@
                 </v-col>
                 <v-col cols="6" v-if="!inEditMode"> {{ time }} </v-col>
                 <v-col cols="6" v-else
-                  ><v-dialog
-                    ref="dialog"
-                    v-model="modal"
+                  ><v-menu
+                    ref="menu"
+                    v-model="startTimeMenu"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
                     :return-value.sync="time"
-                    persistent
-                    width="290px"
+                    transition="scale-transition"
+                    offset-y
+                    max-width="290px"
+                    min-width="290px"
                   >
                     <template v-slot:activator="{ on, attrs }">
                       <v-text-field
@@ -82,21 +110,14 @@
                         v-on="on"
                       ></v-text-field>
                     </template>
-                    <v-time-picker v-if="modal" v-model="time" full-width format="24hr">
-                      <v-spacer></v-spacer>
-                      <v-btn text color="primary" @click="modal = false">
-                        Cancel
-                      </v-btn>
-                      <v-btn
-                        text
-                        color="primary"
-                        @click="$refs.dialog.save(time)"
-                      >
-                        OK
-                      </v-btn>
-                    </v-time-picker>
-                  </v-dialog></v-col
-                >
+                    <v-time-picker
+                      v-if="startTimeMenu"
+                      v-model="time"
+                      full-width
+                      @click:minute="$refs.menu.save(time)"
+                      format="24hr"
+                    ></v-time-picker> </v-menu
+                ></v-col>
               </v-row>
 
               <v-row>
@@ -200,11 +221,13 @@ export default {
     return {
       reservation: null,
       reservationId: null,
+      account: null,
+      accountId: null,
 
       roomName: "Navn",
       section: "data",
       amount: "",
-      date: "",
+      date: new Date().toISOString().substr(0, 10),
       time: null,
       description: "Lorem",
 
@@ -214,7 +237,8 @@ export default {
 
       isDataReady: false,
       inEditMode: false,
-      modal: false,
+      startTimeMenu: false,
+      dateMenu: false,
     };
   },
 
@@ -226,12 +250,15 @@ export default {
     this.reservation = await reservationService.getReservation(
       this.reservationId
     );
-    console.log(this.reservation);
 
-    this.findTime();
+    console.log(this.reservation)
+    console.log(this.reservation.accountId);
+    this.accountId = this.reservation.accountId;
+
+    //this.findTime();
     this.isDataReady = true;
 
-    //console.log(this.reservation)
+
   },
 
   methods: {
