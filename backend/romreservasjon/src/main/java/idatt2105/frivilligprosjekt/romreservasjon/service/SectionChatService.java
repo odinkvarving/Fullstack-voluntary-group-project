@@ -46,14 +46,24 @@ public class SectionChatService {
      * @param id        the id of the chat message to update
      * @param message   the new state to set to the SectionChat
      */
-    public void updateSectionChat(int id, String message) {
+    public SectionChat updateSectionChat(int id, String message) {
         try {
             SectionChat foundMessage = this.sectionChatRepository.findById(id).orElseThrow(NoSuchElementException::new);
             foundMessage.setMessage(message);
-            this.sectionChatRepository.save(foundMessage);
+            return this.sectionChatRepository.save(foundMessage);
         } catch (NoSuchElementException e) {
-            logger.error("error did not find the chat-message that is to be updated", e);
+            logger.error("ERROR: did not find the chat-message that is to be updated", e);
         }
+        return null;
+    }
+
+    public SectionChat getSectionChatById(int id) {
+        try {
+            return this.sectionChatRepository.findById(id).orElseThrow(NoSuchElementException::new);
+        }catch (NoSuchElementException e) {
+            logger.error("ERROR: did not find any messages with this id", e);
+        }
+        return null;
     }
 
     /**
