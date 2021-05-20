@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface SectionChatRepository extends CrudRepository<SectionChat, Integer> {
-    List<SectionChat> findSectionChatsBySectionIdOrderByTimeStampAsc(int sectionId);
+    List<SectionChat> findSectionChatsBySectionIdOrderByTimeStampDesc(int sectionId);
 
     List<SectionChat> findSectionChatBySectionId(int sectionId);
 
