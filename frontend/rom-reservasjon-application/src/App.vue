@@ -10,6 +10,7 @@
 <script>
 
 import Navbar from './components/Navbar/Navbar'
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
 export default {
   name: 'App',
