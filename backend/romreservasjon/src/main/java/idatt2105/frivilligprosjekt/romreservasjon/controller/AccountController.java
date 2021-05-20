@@ -120,40 +120,6 @@ public class AccountController {
     }
 
     /**
-     * PostMapping for registering a new Reservation for a specific Account
-     *
-     * @param reservation requesting the Body of a new Reservation
-     * @param account_id the ID of the Account
-     * @return true or false
-     */
-    @PostMapping("/accounts/{account_id}/reservations")
-    public boolean createAccountReservation(@RequestBody Reservation reservation, @PathVariable int account_id) {
-        logger.info("Trying to create reservation: \n" + reservation.toString());
-        boolean success = accountService.createAccountReservation(reservation, account_id);
-        if(success) {
-            logger.info("The reservation was successfully registered");
-        }
-        return success;
-    }
-
-    /**
-     * PostMapping for registering a new EquipmentReservation for a specific Account
-     *
-     * @param reservation requesting the Body of a new EquipmentReservation
-     * @param account_id the ID of the Account
-     * @return true or false
-     */
-    @PostMapping("/accounts/{account_id}/equipment-reservations")
-    public boolean createAccountEquipmentReservation(@RequestBody EquipmentReservation reservation, @PathVariable int account_id) {
-        logger.info("Trying to create equipment-reservation: \n" + reservation.toString());
-        boolean success = accountService.createAccountEquipmentReservation(reservation, account_id);
-        if(success) {
-            logger.info("The equipment-reservation was successfully registered");
-        }
-        return success;
-    }
-
-    /**
      * GetMapping for finding account with given resetsuffix.
      * Functionality is based on code from Systemutvikling 2 project.
      *
