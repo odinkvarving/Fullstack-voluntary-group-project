@@ -1,7 +1,14 @@
 <template>
   <v-container pb-6>
     <v-row>
-      <v-card width="1600" color="#222b45">
+      <v-card width="1600" color="#222b45" :loading="loading">
+        <template slot="progress">
+          <v-progress-linear
+            color="red lighten-1"
+            height="10"
+            indeterminate
+          ></v-progress-linear>
+        </template>
         <v-card-title class="headline">
           {{ name }}
           <v-icon
@@ -13,7 +20,6 @@
         </v-card-title>
         <v-card-text class="white--text">
           {{ message }}
-            
         </v-card-text>
         <v-card-subtitle align="left">
           <span>{{ time }}</span>
@@ -47,6 +53,7 @@ export default {
       name: "",
       time: null,
       message: "",
+      loading: false,
     };
   },
 
@@ -58,15 +65,14 @@ export default {
   },
 
   methods: {
-
     async deleteMessage() {
       if (confirm("Er du sikker på at du vil slette denne kommentaren?")) {
+        this.loading = true;
         await roomService.deleteMessage(this.chatMessage.id);
+
       }
     },
   },
 };
 </script>
-<style>
-
-</style>
+<style></style>
