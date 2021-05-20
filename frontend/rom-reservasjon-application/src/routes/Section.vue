@@ -1,31 +1,39 @@
 <template>
   <div class="section">
-      <div class="time-selection">
-        <div class="date-picker">
-            <v-menu
-                v-model="menu1"
-                :close-on-content-click="false"
-                max-width="290"
-                >
-            <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                :value="computedDateFormattedMomentjs"
-                clearable
-                prepend-inner-icon="mdi-calendar"
-                label="Dato"
-                v-bind="attrs"
-                v-on="on"
-                outlined
-                @click:clear="date = null"
-                ></v-text-field>
-            </template>
-            <v-date-picker
-                v-model="date"
-                @change="menu1 = false"
-            ></v-date-picker>
-            </v-menu>
+      <div class="title">
+          <h1>{{section.name}}</h1>
+          <p>{{ section.description }}</p>
+      </div>
+      <div class="row">
+        <div class="time-selection">
+            <h3 style="margin-bottom: 20px; opacity: 80%">1. Velg dato</h3>
+            <div class="date-picker">
+                <v-menu
+                    v-model="menu1"
+                    :close-on-content-click="false"
+                    max-width="290"
+                    >
+                <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                    :value="computedDateFormattedMomentjs"
+                    clearable
+                    prepend-inner-icon="mdi-calendar"
+                    label="Dato"
+                    v-bind="attrs"
+                    v-on="on"
+                    outlined
+                    @click:clear="date = null"
+                    ></v-text-field>
+                </template>
+                <v-date-picker
+                    v-model="date"
+                    @change="menu1 = false"
+                ></v-date-picker>
+                </v-menu>
+
+                <h3 v-if="date !== '' && date !== null" style="opacity: 80%; margin: 10px 0">2. Tidspunkt</h3>
                 <v-select
-                v-if="date !== ''"
+                v-if="date !== '' && date !== null"
                 :items="freeReservations"
                 label="Start"
                 outlined
@@ -34,27 +42,30 @@
 
                 <v-select
                 :items="toReservations"
-                v-if="startTimeValue"
+                v-if="date !== '' && date !== null"
                 label="Slutt"
                 outlined
+                :disabled="startTimeValue === null"
                 v-model="endTimeValue"
-            ></v-select>
-        </div>
-        <v-text-field
-            v-if="startTimeValue"
-              dense
-              hide-details
-              label="Antall personer"
-              color="green"
-              outlined
-              type="number"
-              v-model="nPersons"
-              min="0"
+                ></v-select>
+            </div>
+            <h3 v-if="endTimeValue !== null && date !== null" style="opacity: 80%; margin: 10px 0">3. Deltakere</h3>
+            <v-text-field
+            v-if="endTimeValue !== null && date !== null"
+            dense
+            hide-details
+            label="Antall personer"
+            color="green"
+            outlined
+            type="number"
+            v-model="nPersons"
+            min="0"
             ></v-text-field>
-        <v-btn v-if="nPersons" color="green" @click="registerReservation" :loading="loading"><span>Reserver</span></v-btn>
-      </div>
-      <div class="reservations-overview">
-            <ReservationsOverview :reservations="reservations" :freeReservations="freeReservations" :date="date" :timeList="timeList"/>
+            <v-btn class="reserve-button" v-if="nPersons && date !== null" color="green" @click="registerReservation" :loading="loading"><span>Reserver</span></v-btn>
+        </div>
+        <div class="reservations-overview">
+                <ReservationsOverview :reservations="reservations" :freeReservations="freeReservations" :date="date" :timeList="timeList"/>
+        </div>
       </div>
   </div>
 </template>
@@ -78,7 +89,7 @@ export default {
     },
     data(){
         return{
-            date: "",
+            date: "2021-05-20",
             menu1: false,
             isFreeList:[
                 true, true, true, true, true,
@@ -256,9 +267,9 @@ export default {
                         console.log("Something went wrong when creating reservation...");
                     }
                 }
-
-                this.startTimeValue = 0;
-                this.endTimeValue = 0;
+                
+                this.startTimeValue = null;
+                this.endTimeValue = null;
                 this.loading = false;
             }
         }
@@ -272,17 +283,41 @@ export default {
         min-height: 100vh;
         padding-top: 100px;
         display: flex;
-        flex-direction: row;
-        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
     }
 
+    .title{
+        margin: 20px 0 50px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .title p{
+        margin: 10px 0;
+        opacity: 70%;
+    }
+
+    .row{
+        width: 90%;
+        display: flex;
+        justify-content: center;
+    }
     .time-selection{
-        margin: 50px;
+        width: 30%;
+        margin: 0 50px;
     }
 
     .reservations-overview{
-        width: 50%;
+        width: 30%;
         display: flex;
         justify-content: center;
+    }
+
+    .reserve-button{
+        width: 100%;
+        margin-top: 20px;
     }
 </style>
