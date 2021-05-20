@@ -9,6 +9,7 @@ const store = new Vuex.Store({
         jwtToken: localStorage.getItem("jwt") || "",
         loggedInAccount: {},
         rooms: [],
+        sections: [],
         isBusy: false,
         error: "",
     },
@@ -32,6 +33,12 @@ const store = new Vuex.Store({
         clearRooms: (state) => {
             state.rooms = [];
         },
+        setSections: (state, sections) => {
+            state.sections = sections;
+        },
+        clearSections: (state) => {
+            state.sections = [];
+        },
         setBusy: (state) => state.isBusy = true,
         clearBusy: (state) => state.isBusy = false,
         setError: (state, error) => state.error = error,
@@ -41,7 +48,8 @@ const store = new Vuex.Store({
         isAuthenticated: (state) => state.jwtToken.length > 0,
         getJwtToken: (state) => state.jwtToken,
         getLoggedInAccount: (state) => state.loggedInAccount,
-        getRooms: (state) => state.rooms
+        getRooms: (state) => state.rooms,
+        getSections: (state) => state.sections
     },
     actions:{
         login: async({ commit, state }, authRequest) => {
@@ -117,6 +125,28 @@ const store = new Vuex.Store({
             }finally{
                 commit("clearBusy");
                 console.log("Rooms loaded in sucessfully!");
+            }
+        },
+        loadSections: async({ commit }) => {
+            try {
+                commit("setBusy");
+                commit("clearError");
+
+                const url = "http://localhost:8080/sections";
+
+                await fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Loading in sections...");
+                        console.log(data);
+                        commit("setSections", data);
+                    })
+                    .catch(error => console.error(error));
+            } catch(error) {
+                console.error(error);
+            } finally {
+                commit("clearBusy");
+                console.log("Sections loaded in successfully!") ;
             }
         }
     }
