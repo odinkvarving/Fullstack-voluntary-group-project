@@ -17,10 +17,10 @@
                 </v-row>
                 <!-- <hr class="divider"> -->
 
-                <!-- <v-row>
+                <v-row>
                     <p class="text">Bruker-email:</p>
                     <p class="param">{{ account.email }}</p>
-                </v-row> -->
+                </v-row>
 
                 <v-row>
                     <p class="text">Dato:</p>
@@ -43,9 +43,6 @@
     </div>
 </template>
 <script>
-// import { sectionService } from "../../services/SectionService.js";
-import { accountService } from "../../services/AccountService.js";
-
 /**
  * ReservationBox is a component which represents a single reservation in reservation feed.
  * 
@@ -58,6 +55,10 @@ export default {
     props: {
         reservation: {
             type: Object,
+            required: true
+        },
+        accounts: {
+            type: Array,
             required: true
         },
         sections: {
@@ -80,6 +81,7 @@ export default {
 
     mounted() {
         this.findTime();
+        this.findAccount();
         this.findSection();
         this.$emit("finished-loading");
     },
@@ -100,22 +102,26 @@ export default {
         },
 
         /**
-         * findSection is a function which finds section by given id
+         * findAccount is a function which finds account by given id
          */
-        findSection() {
-            for (let i = 0; i < this.sections.length; i++) {
-                if (this.sections[i].id === this.reservation.sectionId) {
-                    this.section = this.sections[i];
+        findAccount() {
+            this.accounts.forEach(acc => {
+                if (acc.id === this.reservation.accountId) {
+                    this.account = acc;
                 }
-            }
+            })
         },
 
         /**
-         * findAccount is a function which calls getAccount function in accountService with given account ID
+         * findSection is a function which finds section by given id
          */
-        async findAccount() {
-            this.account = await accountService.getAccount(this.reservation.accountId);
-        }
+        findSection() {
+            this.sections.forEach(sec => {
+                if (sec.id === this.reservation.sectionId) {
+                    this.section = sec;
+                }
+            })
+        },
     }
 }
 </script>
