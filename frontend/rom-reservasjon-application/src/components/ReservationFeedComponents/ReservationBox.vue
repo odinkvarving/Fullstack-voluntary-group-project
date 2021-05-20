@@ -2,7 +2,7 @@
     <div class="reservation-box">
         <v-row align="center" justify="center">
             <p class="text">ID:</p>
-            <p class="param">{{ reservation.id }}</p>
+            <p class="param">{{ reservation.reservation.id }}</p>
             <v-spacer></v-spacer>
             <p class="divider">|</p>
             <v-spacer></v-spacer>
@@ -17,7 +17,7 @@
             <p class="divider">|</p>
             <v-spacer></v-spacer>
             <p class="text">Antall personer:</p>
-            <p class="param">{{ reservation.number_of_people }}</p>
+            <p class="param">{{ reservation.reservation.number_of_people }}</p>
         </v-row>
     </div>
 </template>
@@ -61,9 +61,9 @@ export default {
          * findTime is a function which converts LocalDateTime object to date and time parts.
          */
         findTime() {
-            this.date = this.reservation.from_date.slice(0,10).replaceAll("-", "/");
-            this.startTime = this.reservation.from_date.slice(11,16);
-            this.endTime = this.reservation.to_date.slice(11,16);
+            this.date = this.reservation.reservation.from_date.slice(0,10).replaceAll("-", "/");
+            this.startTime = this.reservation.reservation.from_date.slice(11,16);
+            this.endTime = this.reservation.reservation.to_date.slice(11,16);
         }
     }
 }
