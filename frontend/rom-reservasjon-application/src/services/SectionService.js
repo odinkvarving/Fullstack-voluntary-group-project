@@ -4,7 +4,7 @@ export const sectionService = {
     getSection,
 }
 
-function getSection(sectionId){
+async function getSection(sectionId){
     let url = `http://localhost:8080/sections/${sectionId}`;
 
     const requestOptions = {
@@ -14,7 +14,7 @@ function getSection(sectionId){
         }
     }
 
-    return fetch(url, requestOptions)
+    return await fetch(url, requestOptions)
         .then(response => response.json())
         .catch(error => console.log(error));
 }

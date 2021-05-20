@@ -17,6 +17,11 @@
                 <v-btn color="green"><span>Se alle rom</span></v-btn>
               </v-col>
             </router-link>
+            <router-link class="link" to="/equipmentfeed">
+              <v-col cols="6">
+                <v-btn color="green"><span>Se alt utstyr</span></v-btn>
+              </v-col>
+            </router-link>
           </v-row>
         </v-col>
         <v-col cols="12" sm="6">
