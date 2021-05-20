@@ -316,6 +316,7 @@ export default {
     }
 
     .reservations-overview{
+        margin: 50px 0;
         width: 30%;
         display: flex;
         justify-content: center;

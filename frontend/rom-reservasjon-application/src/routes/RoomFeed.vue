@@ -133,10 +133,11 @@
                         </v-col>
                     </v-row>
               </div>
+              <h2 class="results-tag">Resultater: </h2>
               <div class="room-list-column" >
-                  <div v-for="(room) in rooms" :key="room.id" class="room-container">
+                  <div v-for="(room) in rooms" :key="room.id" class="room-container" @click="goToRoom(room.id) ">
                     <v-row align="center" justify="center">
-                        <v-col cols="5">
+                        <v-col lg="5" cols="12">
                             <h1>{{ room.name }}</h1>
                             <p>{{ room.address }}</p>
                             <v-row class="number-info-row">
@@ -145,12 +146,12 @@
                             </v-row>
                         </v-col>
                         <v-spacer></v-spacer>
-                        <v-col cols="5">
+                        <v-col lg="5" cols="12">
                             <p>{{ room.description }}</p>
                         </v-col>
                         <v-spacer></v-spacer>
-                        <v-col cols="2">
-                            <v-btn color="#01AB55" @click="goToRoomButtonClicked(room.id)"><span>Gå til rom</span></v-btn>               
+                        <v-col lg="2" cols="12">
+                            <v-btn class="room-button" color="#01AB55" @click.stop="goToRoom(room.id)"><span>Gå til rom</span></v-btn>               
                         </v-col>
                     </v-row>
                   </div>
@@ -215,7 +216,7 @@ export default {
         }
     },
     methods: {
-        goToRoomButtonClicked(roomId){
+        goToRoom(roomId){
             this.$router.push(`/rooms/${roomId}`);
         },
         searchButtonClicked(){
@@ -314,8 +315,13 @@ export default {
     padding: 40px;
     margin-left: 50px;
     border-radius: 20px;
-    width: 21%;
+    width: 24%;
     max-height: 1000px;
+}
+
+.results-tag{
+    margin: 30px auto 0 auto;
+    display: none;
 }
 
 .room-list-column {
@@ -338,5 +344,51 @@ export default {
     width: 100%;
     padding: 20px;
     margin: 20px 0;
+    border-radius: 20px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+    transition: 0.2s;
 }
+
+.room-container:hover{
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.3);
+    transition: 0.2s;
+}
+
+.room-button{
+    width: 100%;
+}
+
+@media (max-width: 1264px) {
+    .room-container{
+        text-align: center;
+        width: 80%;
+    }
+
+    .number-info-row {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .room-list-column{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+    
+    .container{
+        flex-direction: column;
+    }
+
+    .filter-column{
+        width: 80%;
+        margin: auto;
+
+    }
+    .results-tag{
+        display: block;
+    }
+}
+
 </style>
