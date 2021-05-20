@@ -16,6 +16,11 @@
         name: "AddAccount",
         components: {
             AddAccountBox
+        },
+        mounted(){
+            if(!this.$store.getters.isAuthenticated){
+                this.$router.push("/");
+            }
         }
     }
 </script>

@@ -6,10 +6,12 @@ public class ReservationDTO {
 
     private Reservation reservation;
     private int accountId;
+    private int sectionId;
 
-    public ReservationDTO(Reservation reservation, int accountId) {
+    public ReservationDTO(Reservation reservation, int accountId, int sectionId) {
         this.reservation = reservation;
         this.accountId = accountId;
+        this.sectionId = sectionId;
     }
 
     public ReservationDTO() {
@@ -29,5 +31,13 @@ public class ReservationDTO {
 
     public void setAccountId(int accountId) {
         this.accountId = accountId;
+    }
+
+    public int getSectionId() {
+        return sectionId;
+    }
+
+    public void setSectionId(int sectionId) {
+        this.sectionId = sectionId;
     }
 }

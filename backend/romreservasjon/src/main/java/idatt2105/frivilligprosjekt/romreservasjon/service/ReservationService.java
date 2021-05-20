@@ -40,7 +40,7 @@ public class ReservationService {
         List<ReservationDTO> reservations = new ArrayList<>();
 
         itReservations.forEach(reservation -> {
-            reservations.add(new ReservationDTO(reservation, reservation.getAccount().getId()));
+            reservations.add(new ReservationDTO(reservation, reservation.getAccount().getId(), reservation.getSection().getId()));
         });
         return reservations;
     }

@@ -16,7 +16,6 @@
                     <div>
                         <p>Område i kart</p>
                         <GmapAutocomplete @place_changed="setPlace" style="width: 100%; height: 30px; color: white;" placeHolder="Legg til sted..." :selectFirstOnEnter="true" />
-
                     </div>
                     <div>
                     <GmapMap
@@ -140,6 +139,10 @@
                         <v-col>
                             <h1>{{ room.name }}</h1>
                             <p>{{ room.address }}</p>
+                            <v-row class="number-info-row">
+                                <p>Plasser: {{ room.max_persons }}</p>
+                                <p>Størrelse: {{ room.size }}</p>
+                            </v-row>
                         </v-col>
                         <v-spacer></v-spacer>
                         <v-col>
@@ -189,6 +192,12 @@ export default {
             }else{
                 return this.filteredList;
             }
+        },
+        roomSize(room){
+            console.log(room);
+            let size = 0;
+
+            return size;
         },
         lat(){
             if(this.placeValue.geometry){
@@ -276,6 +285,11 @@ export default {
         toRad(Value){
             return Value * Math.PI / 180;
         }
+    },
+     mounted(){
+        if(!this.$store.getters.isAuthenticated){
+            this.$router.push("/");
+        }
     }
 }
 </script>
@@ -307,6 +321,10 @@ export default {
 .room-list-column {
     width: 71%;
     margin-right: 50px;
+}
+
+.number-info-row{
+    margin: 0;
 }
 
 </style>
