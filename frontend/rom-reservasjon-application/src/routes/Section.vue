@@ -431,10 +431,11 @@ export default {
   margin: 0 50px;
 }
 
-.reservations-overview {
-  width: 30%;
-  display: flex;
-  justify-content: center;
+.reservations-overview{
+    margin: 50px 0;
+    width: 30%;
+    display: flex;
+    justify-content: center;
 }
 
 .reserve-button {
