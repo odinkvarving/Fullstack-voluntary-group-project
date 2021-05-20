@@ -11,7 +11,7 @@
     </div>
 
     <div v-if="showRoomReservation">
-      <Section :allSections="room.sections" />
+      <Section :allSections="room.sections" style="padding-top: 0; padding-bottom: 50px"/>
     </div>
     <v-container>
       <v-row>
@@ -59,6 +59,11 @@ export default {
         this.showRoomReservation = true;
       }
     }
+  },
+  mounted(){
+      if(!this.$store.getters.isAuthenticated){
+          this.$router.push("/");
+      }
   }
 }
 </script>

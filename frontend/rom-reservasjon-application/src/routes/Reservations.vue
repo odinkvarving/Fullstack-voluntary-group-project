@@ -17,6 +17,11 @@ export default {
     name: "Reservations",
     components: {
         ReservationFeed
+    },
+    mounted(){
+        if(!this.$store.getters.isAuthenticated){
+            this.$router.push("/");
+        }
     }
 }
 </script>
