@@ -73,12 +73,7 @@ public class RoomController {
      */
     @GetMapping("/rooms/{room_id}/sections/{section_id}/messages")
     public List<SectionChat> getSectionMessagesBySectionId(@PathVariable int room_id, @PathVariable int section_id) {
-        if(sectionRepository.findSectionByRoomId(room_id) != null) {
             return sectionChatService.getMessagesInSectionSorted(section_id);
-        }else {
-            logger.info("Could not find the specified section");
-        }
-        return null;
     }
 
     /**
@@ -97,11 +92,7 @@ public class RoomController {
      * @param message the message to add to the section.
      */
     @PostMapping("/rooms/{room_id}/sections/{section_id}/messages")
-    public void addMessageToSection(@PathVariable int room_id, @PathVariable int section_id, @RequestBody SectionChat message) {
-        if(sectionRepository.findSectionByRoomId(room_id) != null) {
-            this.sectionChatService.addMessageToSection(message.getAccountId(), section_id, message.getMessage());
-        }else {
-            logger.info("Could not find the specified section");
-        }
+    public SectionChat addMessageToSection(@PathVariable int room_id, @PathVariable int section_id, @RequestBody SectionChat message) {
+            return this.sectionChatService.addMessageToSection(message.getAccountId(), section_id, message.getMessage());
     }
 }
