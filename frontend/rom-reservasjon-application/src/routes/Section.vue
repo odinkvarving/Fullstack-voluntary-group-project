@@ -344,7 +344,7 @@ export default {
     },
 
     /**
-     * 
+     * toReservations calculates available to-times on a reservation.
      */
     toReservations() {
       let list = [];

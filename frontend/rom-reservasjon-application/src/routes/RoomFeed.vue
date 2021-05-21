@@ -112,6 +112,7 @@
                             color="#01AB55"
                             outlined
                             v-model="equipmentValue"
+                            @keyup.enter="searchButtonClicked"
                         ></v-text-field>
                     </div>
                     <v-row style="margin: 20px 0">
