@@ -1,5 +1,13 @@
 <template>
   <div class="equipment-reservation">
+    <router-link to="/equipmentfeed">
+      <v-btn style="margin-left: 30px; position: absolute; top: 90px; left: 0px;" color="#01AB55">
+        <v-icon left>
+            mdi-arrow-left-bold
+        </v-icon>
+        <span>Tilbake</span>
+    </v-btn>
+    </router-link>
       <v-container>
           <v-row>
               <h1>Velg leieperiode:</h1>

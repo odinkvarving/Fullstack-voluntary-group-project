@@ -1,5 +1,13 @@
 <template>
   <div class="room">
+    <router-link to="/roomfeed">
+      <v-btn style="margin-left: 30px; position: absolute; top: 90px; left: 0px;" color="#01AB55">
+        <v-icon left>
+            mdi-arrow-left-bold
+        </v-icon>
+        <span>Tilbake</span>
+    </v-btn>
+    </router-link>
     <div class="top-header">
       <div class="title">
       <h1>{{ room.name }}</h1>
@@ -72,7 +80,7 @@ export default {
   .room{
     background-color: #192138;
     min-height: 100vh;
-    padding-top: 100px;
+    padding-top: 150px;
   }
 
   .section-container{
