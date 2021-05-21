@@ -8,8 +8,8 @@
             <span style="color: #01AB55">behov</span>
           </h1>
           <p class="white--text text--secondary text-justify">
-            Følelsen når du rygger over kompisen din med tanksen og du må putte
-            han i en jar fordi han er helt potetmos.
+            Gjennom oss kan du enkelt finne og reservere et rom til deg og dine kollegaer,
+            i tillegg til å reservere utstyr.
           </p>
           <v-row>
             <router-link class="link" to="/roomfeed">
@@ -138,6 +138,9 @@
 </template>
 
 <script>
+/**
+ * @author Mattias Agentoft Eggen
+ */
 export default {
   name: "FrontPage",
   components: {},

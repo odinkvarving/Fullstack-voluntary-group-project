@@ -40,9 +40,16 @@ export default {
     };
   },
   computed: {
+      /**
+       * equipmentList returns a list of equipment.
+       */
     equipmentList() {
       return this.$store.getters.getEquipment;
     },
+
+    /**
+     * filteredEquipmentList returnes a filtered list of equipment.
+     */
     filteredEquipmentList() {
       if (this.equipmentValue === "" || this.equipmentValue === null) {
         return this.$store.getters.getEquipment;
@@ -54,6 +61,10 @@ export default {
     },
   },
   methods: {
+
+    /**
+     * equipmentClicked routes to equipmentfeed with given equipment when clicked.
+     */
     equipmentClicked(equipmentId) {
       this.$router.push(`/equipmentfeed/${equipmentId}`);
     },

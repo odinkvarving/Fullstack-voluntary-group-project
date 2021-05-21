@@ -39,6 +39,11 @@
 </template>
 
 <script>
+/**
+ *  EquipmentReservation is a component for making reservations of a single equipment.
+ *
+ * @author Magnus Bredeli
+ */
 import moment from "moment";
 import { equipmentReservationService } from "../services/EquipmentReservationService";
 
@@ -50,11 +55,18 @@ export default {
     };
   },
   computed: {
+      /**
+       * equipment returns equipment given a specific id.
+       */
     equipment() {
       return this.$store.getters.getEquipment.filter(
         (e) => e.id === parseInt(this.$route.params.id)
       )[0];
     },
+
+    /**
+     * equipmentReservations returns the equipments reservation status if defined.
+     */
     equipmentReservations() {
       if (this.equipment === undefined) {
         return [];
@@ -64,6 +76,9 @@ export default {
     },
   },
   methods: {
+      /**
+       * allowedDates checks which dates the equipment can be reserved.
+       */
     allowedDates(val) {
       let date = moment(val, "YYYY-MM-DD");
       let isValid = true;
@@ -86,6 +101,10 @@ export default {
 
       return isValid;
     },
+
+    /**
+     * registerEquipmentReservation registers a reservation on the given equipment.
+     */
     async registerEquipmentReservation() {
       let dateFrom;
       if (this.dates[0] === "") {

@@ -192,6 +192,9 @@
 </template>
 
 <script>
+/**
+ * ReservationAdminPage is the page for administrating reservations. Only accessible by admin.
+ */
 import { reservationService } from "../../services/ReservationService";
 import { adminService } from "../../services/AdminService";
 import { accountService } from "../../services/AccountService";
@@ -238,6 +241,9 @@ export default {
   },
 
   methods: {
+    /**
+     * findTime finds and makes the reservations start- and end time into a variable.
+     */
     findTime() {
       this.date = this.reservation.reservation.from_date.slice(0, 10);
       let startTime = this.reservation.reservation.from_date.slice(11, 16);
@@ -245,18 +251,25 @@ export default {
       this.time = startTime + " - " + endTime;
     },
 
+    /**
+     * editButtonCLicked toggles editMode.
+     */
     editButtonClicked() {
       this.inEditMode = !this.inEditMode;
     },
 
-    editReservation() {},
-
+    /**
+     * deleteReservation deletes the current reservation.
+     */
     async deleteReservation() {
       if (confirm("Er du sikker på at du vil slette reservasjonen?")) {
         await reservationService.deleteReservation(this.reservationId);
       }
     },
 
+    /**
+     * updateReservation updates the current reservation.
+     */
     async updateReservation() {
       let reservation = {
         reservation: {

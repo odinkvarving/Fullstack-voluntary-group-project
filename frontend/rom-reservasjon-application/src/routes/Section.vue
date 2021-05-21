@@ -131,6 +131,11 @@
 </template>
 
 <script>
+/**
+ * Section is a component for displaying information of a given section.
+ * 
+ * @author Magnus Bredeli
+ */
 import ReservationsOverview from "../components/Reservations/ReservationsOverview";
 import moment from "moment";
 import { format, parseISO } from "date-fns";
@@ -206,6 +211,9 @@ export default {
     };
   },
   computed: {
+    /**
+     * accountID gets the logged in users account ID.
+     */
     accountId() {
       let accountId = this.$store.getters.getLoggedInAccount.id;
       if (accountId === undefined) {
@@ -214,6 +222,9 @@ export default {
       return accountId;
     },
 
+    /**
+     * section returns a section given its ID.
+     */
     section() {
       if (
         this.$store.getters.getRooms.length !== 0 &&
@@ -229,6 +240,10 @@ export default {
         return {};
       }
     },
+
+    /**
+     * reservations returns all reservations of section.
+     */
     reservations() {
       if (
         this.$route.params.sectionId === undefined &&
@@ -246,12 +261,24 @@ export default {
       }
       return this.section.inReservations;
     },
+
+    /**
+     * computedDateFormattedMomentjs formats moment.
+     */
     computedDateFormattedMomentjs() {
       return this.date ? moment(this.date).format("dddd, MMMM Do YYYY") : "";
     },
+
+    /**
+     * computedDateFormattedDatefns formats date.
+     */
     computedDateFormattedDatefns() {
       return this.date ? format(parseISO(this.date), "EEEE, MMMM do yyyy") : "";
     },
+
+    /**
+     * currentDateReservations gets all reservations on a given date.
+     */
     currentDateReservations() {
       if (this.reservations === undefined) {
         return [];
@@ -261,6 +288,10 @@ export default {
         });
       }
     },
+
+    /**
+     * List of all reservation times in a day. Returns all avaible times.
+     */
     freeReservations() {
       let list = [
         { text: "07:00", value: 7, disabled: false },
@@ -311,6 +342,10 @@ export default {
         return list;
       }
     },
+
+    /**
+     * 
+     */
     toReservations() {
       let list = [];
       if (this.startTimeValue === null) {
@@ -340,6 +375,10 @@ export default {
       }
     },
   },
+
+  /**
+   * registerReservation is a function for registering a reservation.
+   */
   methods: {
     async registerReservation() {
       if (
@@ -416,6 +455,9 @@ export default {
       }
     },
 
+    /**
+     * changeChatVisibility toggles the chat in a reservation
+     */
     changeChatVisibility() {
       this.chatButtonStatus = !this.chatButtonStatus;
       this.isChatVisible = !this.isChatVisible;
@@ -423,6 +465,9 @@ export default {
       this.isStatisticsVisible = false;
     },
 
+    /**
+     * showStatistics toggles the view of statistics on a reservation.
+     */
     showStatistics() {
       this.statisticsButtonStatus = !this.statisticsButtonStatus;
       this.isStatisticsVisible = !this.isStatisticsVisible;
