@@ -25,15 +25,8 @@
     }
 </script>
 <style scoped>
-    body {
-        background-color: #192138;
-    }
     .add-account {
         background-color: #192138;
-        position: fixed;
-        padding-top: 100px;
-        height: 100%;
-        width: 100%;
     }
     .add-account-box {
         height: 50%;

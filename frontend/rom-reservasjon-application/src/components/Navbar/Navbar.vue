@@ -5,6 +5,7 @@
       app
       left
       color="#222B45"
+      disable-resize-watcher
     >
       <v-list>
         <router-link class="link" to="/frontpage">

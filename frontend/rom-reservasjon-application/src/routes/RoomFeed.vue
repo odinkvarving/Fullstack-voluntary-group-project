@@ -329,7 +329,7 @@ export default {
 }
 
 .container{
-    padding-top: 100px;
+    padding-top: 30px;
     max-width: 100vw;
     display: flex;
     flex-direction: row;

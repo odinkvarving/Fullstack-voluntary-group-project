@@ -1,5 +1,5 @@
 <template>
-  <div style="padding-top: 100px">
+  <div>
     <v-container v-if="!isDataReady">
       <v-row align="center" justify="center">
         <v-progress-circular
