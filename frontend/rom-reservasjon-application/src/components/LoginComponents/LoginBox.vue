@@ -52,10 +52,14 @@
               @click:append="isPasswordVisible = !isPasswordVisible"
             ></v-text-field>
           </v-col>
+
+
           <!-- We wanted to implement "forgot password", even though it was not required. -->
           <!-- The mail sending was running smoothly without any problem,
            until one day, when we could not connect to the SMTP server anymore -->
-          <!-- We couldn't find a fix for it -->
+          <!-- We didn't have the time to fix it -->
+
+
           <!-- <v-col cols="6">
             <p
               @click="() => this.$router.push('/forgotpassword')"

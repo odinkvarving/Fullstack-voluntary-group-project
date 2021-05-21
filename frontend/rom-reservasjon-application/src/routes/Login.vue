@@ -4,20 +4,20 @@
     </div>
 </template>
 <script>
-    import LoginBox from "../components/LoginComponents/LoginBox.vue";
+import LoginBox from "../components/LoginComponents/LoginBox.vue";
 
-    /**
-     * Login is a router for login page.
-     * 
-     * @author Scott Rydberg Sonen
-     */
+/**
+ * Login is a router for login page.
+ * 
+ * @author Scott Rydberg Sonen
+ */
 
-    export default {
-        name: "Login",
-        components: {
-            LoginBox,
-        }
+export default {
+    name: "Login",
+    components: {
+        LoginBox,
     }
+}
 </script>
 
 <style scoped>

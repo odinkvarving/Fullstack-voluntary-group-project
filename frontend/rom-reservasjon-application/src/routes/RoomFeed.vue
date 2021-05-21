@@ -323,6 +323,11 @@ export default {
             this.placeValue = place;
             console.log(this.placeValue);
         },
+
+        /**
+         * calcCrow calculates line distance between two coordinates,
+         *  using haversine method.
+         */
         calcCrow(coords1, coords2){
             // km
             let R = 6371;
@@ -337,6 +342,9 @@ export default {
             let d = R * c;
             return d;
         },
+        /**
+         * toRad converts degrees to radians.
+         */
         toRad(Value){
             return Value * Math.PI / 180;
         }

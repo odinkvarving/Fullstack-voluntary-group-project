@@ -33,6 +33,11 @@
 import { accountService } from "../../services/AccountService.js";
 import { roomService } from "../../services/RoomService.js";
 
+/**
+ * @author Odin Kvarving
+ * @author Mattias Agentoft Eggen
+ */
+
 export default {
   name: "ChatElement",
 
@@ -66,6 +71,9 @@ export default {
   },
 
   methods: {
+    /**
+     * deleteMessage is a function which deletes message, by calling deleteMessage function in roomService.
+     */
     async deleteMessage() {
       if (confirm("Er du sikker på at du vil slette denne kommentaren?")) {
         this.loading = true;
@@ -74,6 +82,9 @@ export default {
       }
     },
 
+    /**
+     * redirect is a function which redirects the user to ProfilePage when clicking on an account name.
+     */
     redirect() {
       this.$router.push({ name: "ProfilePage", params: { id: this.account.id }});
     }

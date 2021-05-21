@@ -67,6 +67,10 @@
 <script>
 import moment from "moment";
 
+/**
+ * @author Odin Kvarving
+ */
+
 export default {
   name: "SectionStatistics",
 
@@ -149,10 +153,17 @@ export default {
     }
   },
   methods: {
+    /**
+     * datesChosen is a function which gets dates chosen in date finder.
+     */
     datesChosen() {
       this.isDatesSelected = true;
       this.getDatesBetween();
     },
+
+    /**
+     * getDatesBetween is a function which finds dates between two dates.
+     */
     getDatesBetween() {
       if (this.isDatesSelected) {
         this.datesBetween = [];
