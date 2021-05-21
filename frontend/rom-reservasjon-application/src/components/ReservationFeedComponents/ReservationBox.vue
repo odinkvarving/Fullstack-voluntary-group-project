@@ -119,7 +119,6 @@ export default {
     .reservation-box {
         background-color: #222B45;
         color: white;
-        border: 1px solid #01AB55;
         border-radius: 4px;
         margin: 30px;
         padding: 20px;
