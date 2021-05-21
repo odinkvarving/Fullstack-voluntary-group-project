@@ -6,6 +6,12 @@
 <script>
 import ProfilePageBox from "../components/ProfilePageComponents/ProfilePageBox.vue";
 
+/**
+ * ProfilePage is a routing endpoint for profile page
+ * 
+ * @author Scott Rydberg Sonen
+ */
+
 export default {
     name: "ProfilePage",
     components: {
