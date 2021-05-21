@@ -5,8 +5,8 @@ Application to reserve rooms
 ## Quick guide for login and creating users
 
 We recommend admin login when logging in for the first time.
-- Email: admin@admin.no
-- Password: admin123
+-- Email: admin@admin.no
+-- Password: admin123
 
 Check out the NavBar and you will spot "Lag bruker" menu option.
 This menu option redirects you to page for adding accounts which are NOT admin.
