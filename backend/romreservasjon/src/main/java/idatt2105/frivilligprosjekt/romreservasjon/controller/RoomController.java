@@ -2,7 +2,6 @@ package idatt2105.frivilligprosjekt.romreservasjon.controller;
 
 import idatt2105.frivilligprosjekt.romreservasjon.model.Room;
 import idatt2105.frivilligprosjekt.romreservasjon.model.SectionChat;
-import idatt2105.frivilligprosjekt.romreservasjon.repository.SectionRepository;
 import idatt2105.frivilligprosjekt.romreservasjon.service.RoomService;
 import idatt2105.frivilligprosjekt.romreservasjon.service.SectionChatService;
 import org.slf4j.Logger;
