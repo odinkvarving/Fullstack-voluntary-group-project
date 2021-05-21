@@ -21,6 +21,9 @@ public class EquipmentReservationService {
     @Autowired
     private EquipmentReservationRepository equipmentReservationRepository;
 
+    @Autowired
+    private AccountService accountService;
+
     /**
      * Method for finding all EquipmentReservations registered in the database
      *
@@ -41,17 +44,23 @@ public class EquipmentReservationService {
      * @param reservation the new EquipmentReservation to be registered
      * @return true or false
      */
-    public boolean saveEquipmentReservation(EquipmentReservation reservation) {
-        try {
-            reservation.setEquipment(reservation.getEquipment());
-            reservation.setAccount(reservation.getAccount());
-            equipmentReservationRepository.save(reservation);
-            return true;
-        }catch (DataAccessException e) {
-            e.printStackTrace();
-            logger.info("Could not fetch either the Account or Equipment for this reservation.");
+    public boolean saveEquipmentReservation(EquipmentReservation reservation, String jwt) {
+
+        if(accountService.findById(reservation.getAccount().getId(), jwt) == null){
+            logger.info("Can't create equipmentreservation for another user unless you are admin...");
+            return false;
+        }else {
+            try {
+                reservation.setEquipment(reservation.getEquipment());
+                reservation.setAccount(reservation.getAccount());
+                equipmentReservationRepository.save(reservation);
+                return true;
+            } catch (DataAccessException e) {
+                e.printStackTrace();
+                logger.info("Could not fetch either the Account or Equipment for this reservation.");
+                return false;
+            }
         }
-        return false;
     }
 
     /**
@@ -61,15 +70,20 @@ public class EquipmentReservationService {
      * @param reservation the updated version of the EquipmentReservation with the specified ID
      * @return the EquipmentReservation that was updated
      */
-    public EquipmentReservation updateEquipmentReservation(int id, EquipmentReservation reservation) {
-        try {
-            logger.info("Reservation updated");
-            reservation.setId(id);
-            return equipmentReservationRepository.save(reservation);
-        } catch (DataAccessException e) {
-            logger.info("Could not update reservation");
+    public EquipmentReservation updateEquipmentReservation(int id, EquipmentReservation reservation, String jwt) {
+        if(!accountService.isAdmin(jwt)){
+            logger.info("Only admin can update equipmentreservations...");
+            return null;
+        }else {
+            try {
+                logger.info("Reservation updated");
+                reservation.setId(id);
+                return equipmentReservationRepository.save(reservation);
+            } catch (DataAccessException e) {
+                logger.info("Could not update reservation");
+            }
+            return null;
         }
-        return null;
     }
 
     /**
@@ -93,16 +107,21 @@ public class EquipmentReservationService {
      *
      * @param id the ID of the EquipmentReservation to be deleted
      */
-    public boolean deleteEquipmentReservation(int id) {
-        try {
-            equipmentReservationRepository.deleteById(id);
-            return true;
-        }catch (DataAccessException e) {
-            e.printStackTrace();
-            logger.info("Could not delete this reservation. ID does not exist");
-        }
+    public boolean deleteEquipmentReservation(int id, String jwt) {
+        if(accountService.isAdmin(jwt)){
+            logger.info("Only admin can delete reservations...");
+            return false;
+        }else{
+            try {
+                equipmentReservationRepository.deleteById(id);
+                return true;
+            }catch (DataAccessException e) {
+                e.printStackTrace();
+                logger.info("Could not delete this reservation. ID does not exist");
+            }
 
-        return false;
+            return false;
+        }
     }
 
     /**

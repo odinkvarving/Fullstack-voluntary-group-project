@@ -36,9 +36,9 @@ public class EquipmentReservationController {
      * @return true or false whether the EquipmentReservation was created successfully or not
      */
     @PostMapping("/equipment-reservations")
-    public boolean saveEquipmentReservation(@RequestBody EquipmentReservation reservation) {
+    public boolean saveEquipmentReservation(@RequestBody EquipmentReservation reservation, @RequestHeader("authorization") String jwt) {
         logger.info("Trying to save reservation...");
-        boolean success = equipmentReservationService.saveEquipmentReservation(reservation);
+        boolean success = equipmentReservationService.saveEquipmentReservation(reservation, jwt);
         if (success) {
             logger.info("Reservation has been registered.");
         }
@@ -53,9 +53,9 @@ public class EquipmentReservationController {
      * @return the EquipmentReservation that was updated
      */
     @PutMapping("/equipment-reservations/{equipment_reservation_id}")
-    public EquipmentReservation updateEquipmentReservation(@PathVariable("equipment_reservation_id") int reservation_id, @RequestBody EquipmentReservation newReservation) {
+    public EquipmentReservation updateEquipmentReservation(@PathVariable("equipment_reservation_id") int reservation_id, @RequestBody EquipmentReservation newReservation, @RequestHeader("authorization") String jwt) {
         logger.info("Trying to update reservation to: \n" + newReservation.toString());
-        return equipmentReservationService.updateEquipmentReservation(reservation_id, newReservation);
+        return equipmentReservationService.updateEquipmentReservation(reservation_id, newReservation, jwt);
     }
 
     /**
@@ -75,8 +75,8 @@ public class EquipmentReservationController {
      * @param equipment_reservation_id the PathVariable of the ID for the EquipmentReservation
      */
     @DeleteMapping("/equipment-reservations/{equipment_reservation_id}")
-    public boolean deleteEquipmentReservation(@PathVariable int equipment_reservation_id) {
-        return equipmentReservationService.deleteEquipmentReservation(equipment_reservation_id);
+    public boolean deleteEquipmentReservation(@PathVariable int equipment_reservation_id, @RequestHeader("authorization") String jwt) {
+        return equipmentReservationService.deleteEquipmentReservation(equipment_reservation_id, jwt);
     }
 
     /**
