@@ -35,21 +35,7 @@
               <option>{{ dates[0] }} - {{ dates[1] }}</option>
             </div>
           </div>
-          <trend-chart
-            v-if="dataset"
-            :datasets="[{ data: dataset }]"
-            :labels="{
-              xLabels: xLabels,
-              yLabels: 3,
-            }"
-            :min="0"
-            :grid="{
-              verticalLines: true,
-              verticalLinesNumber: 1,
-              horizontalLines: true,
-              horizontalLinesNumber: 1,
-            }"
-          />
+          
         </v-col>
       </v-row>
     </v-container>
@@ -57,7 +43,7 @@
 </template>
 
 <script>
-import { reservationService } from "../../services/ReservationService.js"
+import { reservationService } from "../../services/ReservationService.js";
 
 export default {
   name: "SectionStatistics",
@@ -72,24 +58,67 @@ export default {
   data() {
     return {
       dates: [],
+      datesBetween: [],
       menu2: false,
       isDatesSelected: false,
       nReservations: null,
     };
   },
 
+  computed: {
+
+  },
+
   methods: {
 
     datesChosen() {
       this.isDatesSelected = true;
+      this.fetchData();
+      this.getDatesBetween();
     },
 
     async fetchData() {
-        let result = await reservationService.getSectionsReservations(this.$route.params.roomId, this.$route.params.sectionId);
+      if (this.isDatesSelected) {
+        let result = await reservationService.findReservationsBySectionId(
+          this.$route.params.sectionId
+        );
 
+        this.nReservations = result.filter((res) => {
+          return (
+            new Date(res.reservation.from_date).getTime() >=
+              new Date(this.dates[0]).getTime() &&
+            new Date(this.dates[1]).getTime() >=
+              new Date(res.reservation.to_date).getTime()
+          );
+        }).length;
 
-        this.nReservations = result.filter
-    }
+        console.log(
+          "\nNumber of reservations in this range: " + this.nReservations
+        );
+      } else {
+        console.log("No dates have been chosen yet");
+      }
+    },
+
+    getDatesBetween() {
+      if (this.isDatesSelected) {
+        var start = Date.parse(this.dates[0]);
+        var end = Date.parse(this.dates[1]);
+        for (
+          var arr = [], dt = new Date(start);
+          dt <= end;
+          dt.setDate(dt.getDate() + 1)
+        ) {
+          arr.push(new Date(dt));
+        }
+        arr.forEach(e => {
+            this.datesBetween.push(e);
+        });
+        this.datesBetween.forEach(e => {
+            console.log(e);
+        })
+      }
+    },
   },
 };
 </script>
