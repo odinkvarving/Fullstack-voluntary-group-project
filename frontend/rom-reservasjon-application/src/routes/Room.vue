@@ -39,6 +39,9 @@
 </template>
 
 <script>
+/**
+ * @author Magnus Bredeli
+ */
 import Section from "./Section"
 
 export default {
@@ -52,14 +55,23 @@ export default {
     }
   },
   computed: {
+    /**
+     * room returns a room given its id.
+     */
     room(){
       return this.$store.getters.getRooms.filter((room) => room.id === parseInt(this.$route.params.id))[0] || [];
     }
   },
   methods: {
+    /**
+     * sectionClicked routes the user to the given room
+     */
     sectionClicked(sectionId){
       this.$router.push(`/rooms/${this.$route.params.id}/sections/${sectionId}`)
     },
+    /**
+     * roomReservationClicked toggles showRoomReservation.
+     */
     roomReservationClicked(){
       if(this.showRoomReservation){
         this.showRoomReservation = false;
@@ -84,7 +96,8 @@ export default {
   }
 
   .section-container{
-        border: 1px solid #01AB55;
+        background-color: #222B45;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
         height: 100%;
         width: 100%;
         border-radius: 5px;
@@ -92,11 +105,14 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between;
+        transition: 0.2s;
   }
 
   .section-container:hover{
     cursor: pointer;
+    background-color: #1e2741;
+    transition: 0.2s;
   }
 
   .section-container p{

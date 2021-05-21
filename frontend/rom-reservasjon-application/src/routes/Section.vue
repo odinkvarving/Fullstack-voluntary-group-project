@@ -131,6 +131,11 @@
 </template>
 
 <script>
+/**
+ * Section is a component for displaying information of a given section.
+ * 
+ * @author Magnus Bredeli
+ */
 import ReservationsOverview from "../components/Reservations/ReservationsOverview";
 import moment from "moment";
 import { format, parseISO } from "date-fns";
@@ -155,25 +160,6 @@ export default {
     return {
       date: "2021-05-20",
       menu1: false,
-      isFreeList: [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-      ],
       timeList: [
         "07:00",
         "08:00",
@@ -206,6 +192,9 @@ export default {
     };
   },
   computed: {
+    /**
+     * accountID gets the logged in users account ID.
+     */
     accountId() {
       let accountId = this.$store.getters.getLoggedInAccount.id;
       if (accountId === undefined) {
@@ -214,6 +203,9 @@ export default {
       return accountId;
     },
 
+    /**
+     * section returns a section given its ID.
+     */
     section() {
       if (
         this.$store.getters.getRooms.length !== 0 &&
@@ -229,6 +221,10 @@ export default {
         return {};
       }
     },
+
+    /**
+     * reservations returns all reservations of section.
+     */
     reservations() {
       if (
         this.$route.params.sectionId === undefined &&
@@ -246,12 +242,24 @@ export default {
       }
       return this.section.inReservations;
     },
+
+    /**
+     * computedDateFormattedMomentjs formats moment.
+     */
     computedDateFormattedMomentjs() {
       return this.date ? moment(this.date).format("dddd, MMMM Do YYYY") : "";
     },
+
+    /**
+     * computedDateFormattedDatefns formats date.
+     */
     computedDateFormattedDatefns() {
       return this.date ? format(parseISO(this.date), "EEEE, MMMM do yyyy") : "";
     },
+
+    /**
+     * currentDateReservations gets all reservations on a given date.
+     */
     currentDateReservations() {
       if (this.reservations === undefined) {
         return [];
@@ -261,6 +269,10 @@ export default {
         });
       }
     },
+
+    /**
+     * List of all reservation times in a day. Returns all avaible times.
+     */
     freeReservations() {
       let list = [
         { text: "07:00", value: 7, disabled: false },
@@ -311,35 +323,42 @@ export default {
         return list;
       }
     },
+
+    /**
+     * toReservations calculates available to-times on a reservation.
+     */
     toReservations() {
       let list = [];
       if (this.startTimeValue === null) {
         return [];
       } else {
+        console.log(this.startTimeValue);
+        let temp = [...this.freeReservations];
+        temp.push({ text: "00:00", value: 0, disabled: false })
+        console.log(temp);
         for (
           let i = this.startTimeValue - 6;
-          i < this.freeReservations.length;
+          i < temp.length;
           i++
         ) {
+          console.log(i);
           list.push({
-            text: this.freeReservations[i].text,
-            value: this.freeReservations[i].value,
-            disabled: this.freeReservations[i].disabled,
+            text: temp[i].text,
+            value: temp[i].value,
+            disabled: temp[i].disabled,
           });
-          if (this.freeReservations[i].disabled === true) {
+          if (temp[i].disabled === true) {
             break;
           }
         }
-        if (list[list.length - 1].value === 23) {
-          list.push({ text: "00:00", value: 24, disabled: false });
-        }
-
-        list[list.length - 1].disabled = false;
-
         return list;
       }
     },
   },
+
+  /**
+   * registerReservation is a function for registering a reservation.
+   */
   methods: {
     async registerReservation() {
       if (
@@ -416,6 +435,9 @@ export default {
       }
     },
 
+    /**
+     * changeChatVisibility toggles the chat in a reservation
+     */
     changeChatVisibility() {
       this.chatButtonStatus = !this.chatButtonStatus;
       this.isChatVisible = !this.isChatVisible;
@@ -423,6 +445,9 @@ export default {
       this.isStatisticsVisible = false;
     },
 
+    /**
+     * showStatistics toggles the view of statistics on a reservation.
+     */
     showStatistics() {
       this.statisticsButtonStatus = !this.statisticsButtonStatus;
       this.isStatisticsVisible = !this.isStatisticsVisible;

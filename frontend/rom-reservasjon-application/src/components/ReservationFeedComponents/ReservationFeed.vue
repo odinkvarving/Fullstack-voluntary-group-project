@@ -93,7 +93,7 @@
                         outlined
                         label="Dato"
                         persistent-hint
-                        prepend-icon="mdi-calendar"
+                        prepend-inner-icon="mdi-calendar"
                         v-bind="attrs"
                         v-on="on"
                         v-on:keyup.enter="filter()"

@@ -130,6 +130,12 @@
 </template>
 
 <script>
+/**
+ * Navbar is the apps navigation bar, and contains routing to all other components.
+ * 
+ * @author Mattias Agentoft Eggend
+ */
+
 export default {
   name: "Navbar",
   components: {},
@@ -146,16 +152,25 @@ export default {
   },
 
   computed: {
+    /**
+     * IsLoggedIn checks if the user is logged in.
+     */
     isLoggedIn() {
       return this.$store.getters.isAuthenticated;
     },
 
+    /**
+     * isAdmin checks if the logged in user has admin rights.
+     */
     isAdmin() {
       return this.$store.getters.getLoggedInAccount.is_admin;
     },
   },
 
   methods: {
+    /**
+     * handleListClick contains routing information on the dropdown component on the navbar.
+     */
     handleListClick(id) {
       switch (id) {
         case 1: {
@@ -169,6 +184,9 @@ export default {
       }
     },
 
+    /**
+     * toProfilePage routes the user to the users own profile page, based on the user that is logged in.
+     */
     toProfilePage() {
       const account = this.$store.getters.getLoggedInAccount;
       //if (!this.$router.currentRoute.path === `/profilepage/${account.id}`) {
@@ -176,6 +194,9 @@ export default {
       //}
     },
 
+    /**
+     * logout signs out the user, and routes to the login site.
+     */
     logout() {
       this.$store.dispatch("logout");
       if (this.$router.currentRoute.path !== "/") {

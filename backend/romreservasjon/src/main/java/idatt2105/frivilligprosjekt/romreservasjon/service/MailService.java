@@ -51,6 +51,34 @@ public class MailService {
         }
     }
 
+    public void sendUpdatedReservationMail(String email, String subject, String jwt){
+        try{
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(MAIL_ADDRESS);
+            message.setTo(email);
+            message.setSubject(subject);
+            message.setText("One of your reservations has been updated!");
+            logger.info("From: " + message.getFrom() + " - To: " + message.getTo().toString() + " - Subject: " + message.getSubject() + " - Text: " + message.getText());
+            mailSender.send(message);
+        }catch (MailException e){
+            logger.error(e.toString());
+        }
+    }
+
+    public void sendDeletedReservationMail(String email, String subject, String jwt){
+        try{
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(MAIL_ADDRESS);
+            message.setTo(email);
+            message.setSubject(subject);
+            message.setText("One of your reservations has been deleted!");
+            logger.info("From: " + message.getFrom() + " - To: " + message.getTo().toString() + " - Subject: " + message.getSubject() + " - Text: " + message.getText());
+            mailSender.send(message);
+        }catch (MailException e){
+            logger.error(e.toString());
+        }
+    }
+
     /**
      * Method which generates email with a static format.
      *

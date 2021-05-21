@@ -1,5 +1,6 @@
 package idatt2105.frivilligprosjekt.romreservasjon.service;
 
+import idatt2105.frivilligprosjekt.romreservasjon.model.Account;
 import idatt2105.frivilligprosjekt.romreservasjon.model.DTO.ReservationDTO;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Reservation;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Section;
@@ -29,6 +30,9 @@ public class ReservationService {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private MailService mailService;
 
     /**
      * Method for finding all Reservations registered in the database
@@ -148,14 +152,23 @@ public class ReservationService {
             return null;
         }else {
             try {
-                logger.info("Reservation updated");
+                Section section = reservationRepository.findById(id).get().getSection();
                 reservation.setId(id);
+                reservation.setAccount(reservation.getAccount());
+                reservation.setSection(section);
+                logger.info("Reservation updated");
+                notifyUpdateAccount(reservation.getAccount().getId(), jwt);
                 return reservationRepository.save(reservation);
             } catch (DataAccessException e) {
                 logger.info("Could not update reservation");
                 return null;
             }
         }
+    }
+
+    public void notifyUpdateAccount(int accountId, String jwt){
+        Account account = accountService.findById(accountId, jwt);
+        mailService.sendUpdatedReservationMail(account.getEmail(), "Room reservation updated!", jwt);
     }
 
     /**
@@ -181,20 +194,34 @@ public class ReservationService {
      * @param id the id of the Reservation to be deleted
      */
     public boolean deleteReservation(int id, String jwt) {
-        if(accountService.isAdmin(jwt)){
+        if(!accountService.isAdmin(jwt)){
             logger.info("Only admin can delete reservations");
             return false;
         }else {
             try {
+                Reservation reservation = reservationRepository.findById(id).orElse(null);
+                if(reservation != null){
+                    notifyDeleteReservation(reservation.getAccount().getId(), jwt);
+                }
                 reservationRepository.deleteById(id);
                 return true;
             } catch (DataAccessException e) {
                 e.printStackTrace();
                 logger.info("Could not delete this reservation. ID does not exist");
                 return false;
-
             }
         }
+    }
+
+    /**
+     * Method for sending an email to an Account if Reservation is deleted
+     *
+     * @param accountId the id of the Account to send email to
+     * @param jwt the session token
+     */
+    public void notifyDeleteReservation(int accountId, String jwt){
+        Account account = accountService.findById(accountId, jwt);
+        mailService.sendDeletedReservationMail(account.getEmail(), "Room reservation updated!", jwt);
     }
 
     /**
