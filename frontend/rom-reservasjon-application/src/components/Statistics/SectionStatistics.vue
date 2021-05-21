@@ -2,7 +2,7 @@
   <div class="statistics">
     <v-container>
       <v-row align="center">
-        <v-col cols="10">
+        <v-col cols="4">
           <v-menu
             v-model="menu2"
             :close-on-content-click="false"
@@ -13,13 +13,13 @@
           >
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
-                v-model="dates"
                 label="Velg periode"
                 prepend-icon="mdi-calendar"
                 readonly
                 v-bind="attrs"
                 v-on="on"
                 outlined
+                hide-details
               ></v-text-field>
             </template>
             <v-date-picker
@@ -28,22 +28,24 @@
               @change="datesChosen()"
             ></v-date-picker>
           </v-menu>
-          <div id="section-reservations">
-            <div class="section-reservations-control" v-if="isDatesSelected">
-              <strong>Date range:</strong>
-
+        </v-col>
+        <v-col cols="8" v-if="isDatesSelected">
               <option>{{ dates[0] }} - {{ dates[1] }}</option>
-            </div>
-          </div>
+          
         </v-col>
       </v-row>
     </v-container>
 
     <v-row>
       <v-col cols="12">
-        <v-card>
-          <v-card-text>
-            Antall ulike reservasjoner denne perioden: {{ nReservations }}
+        <v-card color="#222b45">
+          <v-card-text v-if="isDatesSelected">
+            <span>
+            Antall ulike reservasjoner perioden denne perioden:
+
+            </span>
+
+            <span class="text-h5" style="padding-left: 10px">{{ nReservations }}</span>
           </v-card-text>
         </v-card>
       </v-col>
@@ -59,7 +61,6 @@
             label-size="4"
             auto-draw
           ></v-sparkline>
-          {{value}}
           <v-divider></v-divider>
         </v-container>
       </v-col>

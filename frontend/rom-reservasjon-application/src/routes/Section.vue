@@ -100,7 +100,6 @@
           :timeList="timeList"
         />
       </div>
-    </div>
     <v-container pt-12>
       <v-row class="mx-auto">
           <v-col align="center">
@@ -130,6 +129,7 @@
         </v-col>
       </v-row>
     </v-container>
+    </div>
   </div>
 </template>
 
