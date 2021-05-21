@@ -54,12 +54,12 @@
             :line-width="width"
             :padding="padding"
             :smooth="radius || false"
-            :labels="datesBetween"
+            :labels="datesBetweenLabels"
             :value="value"
             label-size="4"
             auto-draw
           ></v-sparkline>
-
+          {{value}}
           <v-divider></v-divider>
         </v-container>
       </v-col>
@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { reservationService } from "../../services/ReservationService.js";
+import moment from "moment";
 
 export default {
   name: "SectionStatistics",
@@ -83,55 +83,83 @@ export default {
   data() {
     return {
       dates: [],
+      datesBetweenLabels: [],
       datesBetween: [],
       menu2: false,
       isDatesSelected: false,
-      nReservations: null,
 
       fill: true,
       padding: 10,
       radius: 5,
-      value: [8, 4, 6, 12, 3, 12],
       width: 2,
     };
   },
+  computed: {
+    nReservations(){
+      if(this.isDatesSelected){
+        let dateFrom;
+        if(this.dates[0] === ""){
+            dateFrom = moment(new Date().toISOString().substr(0, 10), "YYYY-MM-DD")
+        }else{
+            dateFrom = moment(this.dates[0], "YYYY-MM-DD");
+        }
+        let dateTo = moment(this.dates[1], "YYYY-MM-DD");
 
+        if(dateFrom.isAfter(dateTo)){
+            dateFrom = moment(this.dates[1], "YYYY-MM-DD");
+            dateTo = moment(this.dates[0], "YYYY-MM-DD");
+        }
+
+        return this.section.inReservations.filter(reservation => {
+          let reservationFromMoment = moment(reservation.from_date.split("T")[0], "YYYY-MM-DD");
+
+          if((reservationFromMoment.isAfter(dateFrom) && reservationFromMoment.isBefore(dateTo)) || reservationFromMoment.isSame(dateFrom) || reservationFromMoment.isSame(dateTo)){
+            return true;
+          }else{
+            return false;
+          }
+        }).length;
+      }else{
+        return 0;
+      }
+    },
+    value(){
+      let valueList = [];
+      this.datesBetween.forEach(date => {
+        let currentDateReservations = this.section.inReservations.filter(res => {
+          let date1 = res.from_date.split("T")[0];
+          let month = `${date.getMonth()+1}`;
+          if(parseInt(month) < 10){
+            month = `0${date.getMonth()+1}`
+          }
+          let day = `${date.getDate()}`;
+          if(parseInt(day) < 10){
+            day = `0${date.getDate()}`
+          }
+          let date2 = `${date.getFullYear()}-${month}-${day}`;
+          return date1 === date2;
+        })
+        let hours = 0;
+        currentDateReservations.forEach(res => {
+          let toHours = parseInt(res.to_date.split("T")[1].split(":")[0]);
+          let fromHours = parseInt(res.from_date.split("T")[1].split(":")[0]);
+
+          hours += (toHours - fromHours)
+        });
+        valueList.push(hours);
+      })
+      return valueList;
+    }
+  },
   methods: {
     datesChosen() {
       this.isDatesSelected = true;
-      this.fetchData();
       this.getDatesBetween();
     },
-
-    async fetchData() {
-      if (this.isDatesSelected) {
-        let result = await reservationService.findReservationsBySectionId(
-          this.$route.params.sectionId
-        );
-
-        this.nReservations = result.filter((res) => {
-          return (
-            new Date(res.reservation.from_date).getTime() >=
-              new Date(this.dates[0]).getTime() &&
-            new Date(this.dates[1]).getTime() >=
-              new Date(res.reservation.to_date).getTime()
-          );
-        }).length;
-
-        console.log(
-          "\nNumber of reservations in this range: " + this.nReservations
-        );
-      } else {
-        console.log("No dates selected");
-      }
-    },
-
-    getValueForEachDay() {
-
-    },
-
     getDatesBetween() {
       if (this.isDatesSelected) {
+        this.datesBetween = [];
+        this.datesBetweenLabels = [];
         var start = Date.parse(this.dates[0]);
         var end = Date.parse(this.dates[1]);
         for (
@@ -142,8 +170,9 @@ export default {
           arr.push(new Date(dt));
         }
         arr.forEach((e) => {
-          console.log(e);
-          this.datesBetween.push(e.toString().substring(4, 15));
+          console.log(e.toString().substring(4, 15));
+          this.datesBetweenLabels.push(e.toString().substring(4, 15));
+          this.datesBetween.push(e);
         });
       }
     },
