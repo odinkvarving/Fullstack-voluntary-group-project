@@ -20,6 +20,12 @@
         </v-list-item>
           </router-link>
 
+          <router-link v-if="isLoggedIn" class="link" to="/equipmentfeed">
+        <v-list-item link>
+            <v-list-item-title class="white--text text-overline">Se alt utstyr</v-list-item-title>
+        </v-list-item>
+          </router-link>
+
           <router-link v-if="isAdmin" class="link" to="/addaccount">
         <v-list-item link>
             <v-list-item-title class="white--text text-overline">Lag bruker</v-list-item-title>
@@ -56,11 +62,11 @@
 
       <v-spacer></v-spacer>
       <v-app-bar-nav-icon
-        class="hidden-sm-and-up"
+        class="hidden-md-and-up"
         @click.stop="sideNav = !sideNav"
       ></v-app-bar-nav-icon>
 
-      <div class="nav-elements hidden-xs-only">
+      <div class="nav-elements hidden-sm-and-down">
         <router-link class="link" to="/frontpage">
           <v-btn text>
             <span>Hjem</span>
@@ -69,6 +75,11 @@
         <router-link v-if="isLoggedIn" class="link" to="/roomfeed">
           <v-btn text>
             <span>Se alle rom</span>
+          </v-btn>
+        </router-link>
+        <router-link v-if="isLoggedIn" class="link" to="/equipmentfeed">
+          <v-btn text>
+            <span>Se alt utstyr</span>
           </v-btn>
         </router-link>
         <router-link v-if="isAdmin" class="link" to="/addaccount">
