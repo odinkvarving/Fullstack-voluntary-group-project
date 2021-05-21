@@ -29,7 +29,7 @@ public class EquipmentController {
     }
 
     /**
-     * GetMapping for finding Equipment by ID
+     * GetMapping for finding a specific Equipment by id
      *
      * @param id the id of the Equipment to be found
      * @return the Equipment that was found
@@ -68,7 +68,7 @@ public class EquipmentController {
     }
 
     /**
-     * DeleteMapping for deleting an Equipment
+     * DeleteMapping for deleting a specific Equipment by id
      *
      * @param equipment_id the PathVariable for the id of the Equipment
      */

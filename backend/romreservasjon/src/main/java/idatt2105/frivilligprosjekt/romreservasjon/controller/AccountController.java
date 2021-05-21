@@ -35,10 +35,10 @@ public class AccountController {
     }
 
     /**
-     * Find account by email
+     * GetMapping for finding a specific Account by email
      *
-     * @param email
-     * @return
+     * @param email the email of the Account
+     * @return the Account that was found
      */
     @GetMapping("accounts/email={email}")
     public Account findAccountByEmail(@PathVariable String email, @RequestHeader("authorization") String jwt){
@@ -47,10 +47,10 @@ public class AccountController {
 
 
     /**
-     * Find account by ID
+     * GetMapping for finding a specific Account by id
      *
-     * @param id
-     * @return
+     * @param id the id of the Account to be found
+     * @return the Account that was found
      */
     @GetMapping("/accounts/{id}")
     public Account findById(@PathVariable int id, @RequestHeader("authorization") String jwt){

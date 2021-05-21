@@ -97,9 +97,8 @@ export default {
     async loadMessages() {
       if (this.stillOnPage()) {
         this.messages = await roomService.getSectionMessages(
-          this.roomId,
           this.sectionId
-        ); //await necessary?
+        ); 
       } else {
         clearInterval(this.timerId);
       }
@@ -116,7 +115,6 @@ export default {
         };
         this.message = "";
         await roomService.sendMessage(
-          this.$route.params.roomId,
           this.$route.params.sectionId,
           data
         );

@@ -24,8 +24,8 @@ async function getRooms(){
         .catch(error => console.log(error));
 }
 
-async function getSectionMessages(roomId, sectionId) {
-    let url = `http://localhost:8080/rooms/${roomId}/sections/${sectionId}/messages`;
+async function getSectionMessages(sectionId) {
+    let url = `http://localhost:8080/messages/sections/${sectionId}`;
 
     const requestOptions = {
         headers: {
@@ -54,8 +54,8 @@ async function getMessageById(messageId) {
         .catch(error => console.log(error));
 }
 
-async function sendMessage(roomId, sectionId, message) {
-    let url = `http://localhost:8080/rooms/${roomId}/sections/${sectionId}/messages`;
+async function sendMessage(sectionId, message) {
+    let url = `http://localhost:8080/messages/sections/${sectionId}`;
 
     const requestOptions = {
         method: "POST",
