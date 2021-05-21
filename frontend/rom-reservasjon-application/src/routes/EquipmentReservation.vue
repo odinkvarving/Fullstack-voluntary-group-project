@@ -127,6 +127,7 @@ export default {
 
             if(isOverlapping){
                 console.log("ERROR RESERVATION IS OVERLAPPING");
+                alert("Kan ikke reservere utstyret denne datoen da den overlapper en annen reservasjon!");
             }else{
                 let equipmentReservation = {
                     from_date: dateFrom.add(1, "day"),
