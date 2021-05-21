@@ -84,7 +84,8 @@ export default {
   }
 
   .section-container{
-        border: 1px solid #01AB55;
+        background-color: #222B45;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
         height: 100%;
         width: 100%;
         border-radius: 5px;
@@ -92,11 +93,14 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between;
+        transition: 0.2s;
   }
 
   .section-container:hover{
     cursor: pointer;
+    background-color: #1e2741;
+    transition: 0.2s;
   }
 
   .section-container p{

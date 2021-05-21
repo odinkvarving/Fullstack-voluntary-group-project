@@ -92,7 +92,24 @@
                     ><span class="font-weight-bold"> {{ time }} </span></v-col
                   >
                 </v-row>
+                <v-row>
+                  <v-select
+                  v-if="inEditMode"
+                    :items="freeReservations"
+                    label="Start"
+                    outlined
+                    v-model="startTimeValue"
+                  ></v-select>
 
+                  <v-select
+                    v-if="inEditMode"
+                    :items="toReservations"
+                    label="Slutt"
+                    outlined
+                    :disabled="startTimeValue === null"
+                    v-model="endTimeValue"
+                  ></v-select>
+                </v-row>
                 <v-row>
                   <v-col cols="6">
                     Beskrivelse
@@ -214,9 +231,125 @@ export default {
       isDataReady: false,
       inEditMode: false,
       dateMenu: false,
+      timeList: [
+        "07:00",
+        "08:00",
+        "09:00",
+        "10:00",
+        "11:00",
+        "12:00",
+        "13:00",
+        "14:00",
+        "15:00",
+        "16:00",
+        "17:00",
+        "18:00",
+        "19:00",
+        "20:00",
+        "21:00",
+        "22:00",
+        "23:00",
+      ],
+      startTimeValue: null,
+      endTimeValue: null
     };
   },
+  computed:{
+    allReservations(){
+      if(this.section === null){
+        return [];
+      }else{
+        return this.section.inReservations;
+      }
+    },
+    currentDateReservations(){
+      if (this.section === null) {
+        return [];
+      } else {
+        return this.allReservations.filter((reservation) => {
+          return reservation.from_date.split("T")[0] === this.date;
+        });
+      }
+    },
+    freeReservations(){
+      let list = [
+        { text: "07:00", value: 7, disabled: false },
+        { text: "08:00", value: 8, disabled: false },
+        { text: "09:00", value: 9, disabled: false },
+        { text: "10:00", value: 10, disabled: false },
+        { text: "11:00", value: 11, disabled: false },
+        { text: "12:00", value: 12, disabled: false },
+        { text: "13:00", value: 13, disabled: false },
+        { text: "14:00", value: 14, disabled: false },
+        { text: "15:00", value: 15, disabled: false },
+        { text: "16:00", value: 16, disabled: false },
+        { text: "17:00", value: 17, disabled: false },
+        { text: "18:00", value: 18, disabled: false },
+        { text: "19:00", value: 19, disabled: false },
+        { text: "20:00", value: 20, disabled: false },
+        { text: "21:00", value: 21, disabled: false },
+        { text: "22:00", value: 22, disabled: false },
+        { text: "23:00", value: 23, disabled: false },
+      ];
 
+      if (this.section === undefined) {
+        return list;
+      } else {
+        for (let i = 0; i < this.currentDateReservations.length; i++) {
+          let from_time = this.currentDateReservations[i].from_date
+            .split("T")[1]
+            .split(":")[0];
+          let from_time_hours = parseInt(from_time.split(":")[0]);
+
+          let to_time = this.currentDateReservations[i].to_date
+            .split("T")[1]
+            .split(":")[0];
+          let to_time_hours =
+            to_time.split(":")[0] === "00"
+              ? 24
+              : parseInt(to_time.split(":")[0]);
+
+          let totalHours = to_time_hours - from_time_hours;
+          for (let j = 0; j < this.timeList.length; j++) {
+            if (from_time === this.timeList[j].split(":")[0]) {
+              for (let k = j; k < j + totalHours; k++) {
+                list[k].disabled = true;
+              }
+            }
+          }
+        }
+        return list;
+      }
+    },
+    toReservations() {
+      let list = [];
+      if (this.startTimeValue === null) {
+        return [];
+      } else {
+        for (
+          let i = this.startTimeValue - 6;
+          i < this.freeReservations.length;
+          i++
+        ) {
+          list.push({
+            text: this.freeReservations[i].text,
+            value: this.freeReservations[i].value,
+            disabled: this.freeReservations[i].disabled,
+          });
+          if (this.freeReservations[i].disabled === true) {
+            break;
+          }
+        }
+        if (list[list.length - 1].value === 23) {
+          list.push({ text: "00:00", value: 24, disabled: false });
+        }
+
+        list[list.length - 1].disabled = false;
+
+        return list;
+      }
+    },
+  },
   async mounted() {
     adminService.isLoggedIn();
     await adminService.isAdmin();
