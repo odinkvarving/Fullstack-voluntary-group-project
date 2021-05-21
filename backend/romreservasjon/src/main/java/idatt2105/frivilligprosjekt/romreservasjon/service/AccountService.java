@@ -210,7 +210,7 @@ public class AccountService {
      * Sends a password reset link to the provided mail address if it exists in the database.
      * Functionality is based on code from Systemutvikling 2 project.
      *
-     * @param mailToReset the mail to reset the password to.
+     * @param mailToReset: the mail to reset the password to.
      */
     public void generatePasswordReset(String mailToReset) {
         try {
@@ -240,8 +240,8 @@ public class AccountService {
      * Method for creating a random reset suffix.
      * Functionality is based on code from Systemutvikling 2 project.
      *
-     * @param length
-     * @return
+     * @param length: length of the requested random String.
+     * @return random generated String.
      */
     private String generateRandomAlphanumericString(int length) {
         int leftLimit = 48; // numeral '0'
@@ -255,6 +255,12 @@ public class AccountService {
             .toString();
     }
 
+    /**
+     * Method for checking if jwt token is connected to an admin Account.
+     *
+     * @param jwt: jwt token of Account.
+     * @return true if Account is admin and false if Account is not.
+     */
     public boolean isAdmin(String jwt){
         String email = jwtUtil.extractUsername(jwt.split(" ")[1]);
         Account account = accountRepository.findByEmail(email).orElse(null);
@@ -265,6 +271,13 @@ public class AccountService {
         }
     }
 
+    /**
+     * Method for checking if the current jwt token and Account username is connected.
+     *
+     * @param jwt: jwt token of current Account.
+     * @param username: email of current Account.
+     * @return true or false, if Account is the same or not.
+     */
     public boolean isSameUser(String jwt, String username){
         String email = jwtUtil.extractUsername(jwt.split(" ")[1]);
         return username.equalsIgnoreCase(email);
