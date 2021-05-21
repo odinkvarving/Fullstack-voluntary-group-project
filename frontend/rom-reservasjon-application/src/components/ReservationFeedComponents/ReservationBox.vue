@@ -122,6 +122,8 @@ export default {
         border-radius: 4px;
         margin: 30px;
         padding: 20px;
+        width: 320px;
+        height: 320px;
     }
     .text {
         opacity: 50%;
