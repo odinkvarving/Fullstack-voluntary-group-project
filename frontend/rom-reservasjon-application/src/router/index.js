@@ -2,14 +2,15 @@ import FrontPage from "../routes/FrontPage.vue";
 import RoomFeed from "../routes/RoomFeed.vue";
 import Room from "../routes/Room.vue";
 import Section from "../routes/Section.vue";
-import EquipmentFeed from "../routes/EquipmentFeed.vue"
-import EquipmentReservation from "../routes/EquipmentReservation.vue"
+import EquipmentFeed from "../routes/EquipmentFeed.vue";
+import EquipmentReservation from "../routes/EquipmentReservation.vue";
 import Login from "../routes/Login.vue";
 import ForgotPassword from "../routes/ForgotPassword.vue";
 import ResetPassword from "../routes/ResetPassword.vue";
 import AddAccount from "../routes/AddAccount.vue";
 import Reservations from "../routes/Reservations.vue";
 import Reservation from "../routes/Reservation.vue";
+import ProfilePage from "../routes/ProfilePage.vue";
 
 const routes = [
   {
@@ -72,5 +73,10 @@ const routes = [
     name: "Reservation",
     component: Reservation,
   },
+  {
+    path: "/profilepage/:id",
+    name: "ProfilePage",
+    component: ProfilePage,
+  }
 ];
 export default routes;
