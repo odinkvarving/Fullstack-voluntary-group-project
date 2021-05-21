@@ -80,8 +80,8 @@ public class ReservationService {
     /**
      * Helper method that checks whether a reservation is overlapping with existing ones
      *
-     * @param reservation
-     * @return
+     * @param reservation the Reservation to be validated
+     * @return true or false
      */
     private boolean validateReservation(Reservation reservation){
         Section section = sectionRepository.findById(reservation.getSection().getId()).orElse(null);
@@ -110,8 +110,8 @@ public class ReservationService {
     /**
      * Save a new reservation in all sections when user books the whole room
      *
-     * @param reservations
-     * @return
+     * @param reservations the list of Reservations to be saved
+     * @return true or false
      */
     public boolean saveRoomReservation(List<Reservation> reservations, String jwt){
         if(accountService.findById(reservations.get(0).getAccount().getId(), jwt) == null){
@@ -172,7 +172,7 @@ public class ReservationService {
     }
 
     /**
-     * Method for finding a Reservation with a specific ID
+     * Method for finding a specific Reservation by id
      *
      * @param id the id of the Reservation
      * @return the Reservation that was found
@@ -189,9 +189,9 @@ public class ReservationService {
     }
 
     /**
-     * Method for deleting a specific Reservation
+     * Method for deleting a specific Reservation by id
      *
-     * @param id the ID of the Reservation to be deleted
+     * @param id the id of the Reservation to be deleted
      */
     public boolean deleteReservation(int id, String jwt) {
         if(!accountService.isAdmin(jwt)){
@@ -213,11 +213,23 @@ public class ReservationService {
         }
     }
 
+    /**
+     * Method for sending an email to an Account if Reservation is deleted
+     *
+     * @param accountId the id of the Account to send email to
+     * @param jwt the session token
+     */
     public void notifyDeleteReservation(int accountId, String jwt){
         Account account = accountService.findById(accountId, jwt);
         mailService.sendDeletedReservationMail(account.getEmail(), "Room reservation updated!", jwt);
     }
 
+    /**
+     * Method for finding all Reservations for a specific Section by id
+     *
+     * @param id the id of the Section
+     * @return a List of ReservationDTO's that was found
+     */
     public List<ReservationDTO> findReservationsBySectionId(int id) {
         try {
             List<Reservation> res = reservationRepository.findReservationsBySectionId(id);

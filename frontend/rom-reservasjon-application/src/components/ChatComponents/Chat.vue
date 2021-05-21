@@ -114,7 +114,6 @@ export default {
     async loadMessages() {
       if (this.stillOnPage()) {
         this.messages = await roomService.getSectionMessages(
-          this.roomId,
           this.sectionId
         );
       } else {
@@ -136,7 +135,6 @@ export default {
         };
         this.message = "";
         await roomService.sendMessage(
-          this.$route.params.roomId,
           this.$route.params.sectionId,
           data
         );

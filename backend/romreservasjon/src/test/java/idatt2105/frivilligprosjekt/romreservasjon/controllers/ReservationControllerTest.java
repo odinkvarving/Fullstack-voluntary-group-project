@@ -1,13 +1,11 @@
 package idatt2105.frivilligprosjekt.romreservasjon.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import idatt2105.frivilligprosjekt.romreservasjon.model.Account;
-import idatt2105.frivilligprosjekt.romreservasjon.model.Reservation;
-import idatt2105.frivilligprosjekt.romreservasjon.model.Room;
-import idatt2105.frivilligprosjekt.romreservasjon.model.Section;
+import idatt2105.frivilligprosjekt.romreservasjon.model.*;
 import idatt2105.frivilligprosjekt.romreservasjon.repository.AccountRepository;
 import idatt2105.frivilligprosjekt.romreservasjon.repository.ReservationRepository;
 import idatt2105.frivilligprosjekt.romreservasjon.repository.RoomRepository;
+import idatt2105.frivilligprosjekt.romreservasjon.service.AuthenticationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -91,9 +90,11 @@ public class ReservationControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
     }
 
+    @Autowired
+    private AuthenticationService authenticationService;
+
     @Test
     public void testGetAllReservations() throws Exception {
-
         this.mockMvc.perform(get("/reservations")
                 .with(SecurityMockMvcRequestPostProcessor.admin())
                 .contentType(MediaType.APPLICATION_JSON))

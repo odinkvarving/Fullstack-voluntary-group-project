@@ -9,5 +9,11 @@ import java.util.List;
 @Repository
 public interface ReservationRepository extends CrudRepository<Reservation, Integer> {
 
+    /**
+     * Custom method for finding all Reservations in a specific Section by id
+     *
+     * @param sectionId the if of the Section
+     * @return a List of Reservations that was found in the Section
+     */
     List<Reservation> findReservationsBySectionId(int sectionId);
 }

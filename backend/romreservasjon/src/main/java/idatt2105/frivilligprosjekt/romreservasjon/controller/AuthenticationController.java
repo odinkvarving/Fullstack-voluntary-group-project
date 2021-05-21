@@ -3,7 +3,6 @@ package idatt2105.frivilligprosjekt.romreservasjon.controller;
 
 import idatt2105.frivilligprosjekt.romreservasjon.model.AuthenticationRequest;
 import idatt2105.frivilligprosjekt.romreservasjon.service.AuthenticationService;
-import idatt2105.frivilligprosjekt.romreservasjon.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +15,12 @@ public class AuthenticationController {
     private AuthenticationService authenticationService;
 
     /**
-     * Authenticates a user that tries to login and returns a token if it is valid
+     * PostMapping for sending an AuthenticationRequest
+     * Authenticates a user that tries to log in
      *
-     * @param authenticationRequest
-     * @return
-     * @throws Exception
+     * @param authenticationRequest requests the body of an AuthenticationRequest
+     * @return an AuthenticationToken if the request is valid
+     * @throws Exception the exception that is thrown
      */
     @PostMapping("/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception{

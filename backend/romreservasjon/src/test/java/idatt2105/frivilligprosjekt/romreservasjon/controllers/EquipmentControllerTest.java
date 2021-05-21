@@ -82,7 +82,7 @@ public class EquipmentControllerTest {
 
     @Test
     public void testGetAllEquipment() throws Exception {
-        this.mockMvc.perform(get("/equipments")
+        this.mockMvc.perform(get("/equipment")
                 .with(SecurityMockMvcRequestPostProcessor.admin())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -94,7 +94,7 @@ public class EquipmentControllerTest {
 
     @Test
     public void testFindEquipmentById() throws Exception {
-        this.mockMvc.perform(get("/equipments/1")
+        this.mockMvc.perform(get("/equipment/1")
                 .with(SecurityMockMvcRequestPostProcessor.admin())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -108,7 +108,7 @@ public class EquipmentControllerTest {
         Equipment equipment = new Equipment("HDMI-cable");
         String jsonString = objectMapper.writeValueAsString(equipment);
 
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/equipments")
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/equipment")
                 .with(SecurityMockMvcRequestPostProcessor.admin())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonString))
@@ -125,7 +125,7 @@ public class EquipmentControllerTest {
 
         String jsonString = objectMapper.writeValueAsString(this.equipment1);
 
-        this.mockMvc.perform(MockMvcRequestBuilders.put("/equipments/1")
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/equipment/1")
                 .with(SecurityMockMvcRequestPostProcessor.admin())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonString))
@@ -139,7 +139,7 @@ public class EquipmentControllerTest {
     @Test
     public void testDeleteEquipment() throws Exception {
 
-        this.mockMvc.perform(MockMvcRequestBuilders.delete("/equipments/1")
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/equipment/1")
                 .with(SecurityMockMvcRequestPostProcessor.admin())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());

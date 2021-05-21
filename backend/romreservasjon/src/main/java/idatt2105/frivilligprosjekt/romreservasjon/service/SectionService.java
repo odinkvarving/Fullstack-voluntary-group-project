@@ -14,19 +14,19 @@ public class SectionService {
     private SectionRepository sectionRepository;
 
     /**
-     * Method for finding a list of all Sections.
+     * Method for finding all Sections from database
      *
-     * @return list of Sections.
+     * @return a List of all Sections that was found
      */
     public List<Section> findAll() {
         return (List<Section>) sectionRepository.findAll();
     }
 
     /**
-     * Method for finding a specific Section based on given id.
+     * Method for finding a specific Section by id
      *
-     * @param id: id of requested Section.
-     * @return a specific Section.
+     * @param id the if of the Section to be found
+     * @return the Section that was found
      */
     public Section findById(int id){
         return sectionRepository.findById(id).orElse(null);

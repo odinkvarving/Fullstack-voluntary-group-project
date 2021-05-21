@@ -332,16 +332,13 @@ export default {
       if (this.startTimeValue === null) {
         return [];
       } else {
-        console.log(this.startTimeValue);
         let temp = [...this.freeReservations];
         temp.push({ text: "00:00", value: 0, disabled: false })
-        console.log(temp);
         for (
           let i = this.startTimeValue - 6;
           i < temp.length;
           i++
         ) {
-          console.log(i);
           list.push({
             text: temp[i].text,
             value: temp[i].value,

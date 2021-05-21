@@ -224,14 +224,14 @@ export default {
             if(this.placeValue.geometry){
                 return this.placeValue.geometry.location.lat();
             }else{
-                return 59.911491;
+                return 63.446827;
             }
         },
         lng(){
             if(this.placeValue.geometry){
                 return this.placeValue.geometry.location.lng();
             }else{
-                return 10.757933;
+                return 10.421906;
             }
         }
     },

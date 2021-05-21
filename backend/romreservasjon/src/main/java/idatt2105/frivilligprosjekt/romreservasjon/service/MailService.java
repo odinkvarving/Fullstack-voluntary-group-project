@@ -15,6 +15,9 @@ import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 import java.util.Random;
 
+/**
+ * Service-class that was intended to use for sending mail - did not have time to implement it
+ */
 @Service
 public class MailService {
     @Autowired

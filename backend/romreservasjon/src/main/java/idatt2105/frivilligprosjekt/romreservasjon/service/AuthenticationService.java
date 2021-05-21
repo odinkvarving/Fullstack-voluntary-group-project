@@ -23,7 +23,13 @@ public class AuthenticationService {
     @Autowired
     private JwtUtil jwtUtil;
 
-
+    /**
+     * Method for creating a new AuthenticationToken for a AuthenticationRequest
+     *
+     * @param authenticationRequest the AuthenticationRequest
+     * @return the ResponseEntity
+     * @throws Exception the Exception that is thrown
+     */
     public ResponseEntity<?> createAuthenticationToken(AuthenticationRequest authenticationRequest) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
