@@ -3,10 +3,10 @@
     <router-link :to="previousPath">
       <v-btn style="margin-left: 30px; position: absolute; top: 30px; left: 0px;" color="#01AB55">
         <v-icon left>
-            mdi-arrow-left-bold
+          mdi-arrow-left-bold
         </v-icon>
         <span>Tilbake</span>
-    </v-btn>
+      </v-btn>
     </router-link>
     <div class="title">
       <h1>{{ section.name }}</h1>
@@ -36,7 +36,6 @@
             <v-date-picker
               v-model="date"
               @change="menu1 = false"
-              :min="new Date().toISOString().substr(0, 10)"
             ></v-date-picker>
           </v-menu>
 
@@ -67,7 +66,7 @@
           v-if="endTimeValue !== null && date !== null"
           style="opacity: 80%; margin: 10px 0"
         >
-          3. Deltakere (Max antall: {{this.section.max_persons}})
+          3. Deltakere (Max antall: {{ this.section.max_persons }})
         </h3>
         <v-text-field
           v-if="endTimeValue !== null && date !== null"
@@ -98,14 +97,18 @@
           :timeList="timeList"
         />
       </div>
-    </div>
     <v-container pt-12>
       <v-row class="mx-auto">
-        <v-col cols="12" align="center">
-          <v-btn @click="changeChatVisibility" color="green">
-            {{ chatButtonStatus ? "Vis" : "Skjul" }} kommentarfelt
-          </v-btn>
-        </v-col>
+          <v-col align="center">
+            <v-btn-toggle v-model="toggle_exclusive" mandatory>
+              <v-btn @click="changeChatVisibility" color="green">
+                kommentarfelt
+              </v-btn>
+              <v-btn @click="showStatistics" color="green">
+                statistikk
+              </v-btn>
+            </v-btn-toggle>
+          </v-col>
         <v-col cols="12" align="center">
           <div>
             <Chat
@@ -114,24 +117,38 @@
               :accountId="accountId"
             />
           </div>
+          <div>
+            <SectionStatistics
+              :section="section"
+              v-show="isStatisticsVisible"
+            />
+          </div>
         </v-col>
       </v-row>
     </v-container>
+    </div>
   </div>
 </template>
 
 <script>
+/**
+ * Section is a component for displaying information of a given section.
+ * 
+ * @author Magnus Bredeli
+ */
 import ReservationsOverview from "../components/Reservations/ReservationsOverview";
 import moment from "moment";
 import { format, parseISO } from "date-fns";
 import { reservationService } from "../services/ReservationService";
 import Chat from "../components/ChatComponents/Chat.vue";
+import SectionStatistics from "../components/Statistics/SectionStatistics.vue";
 
 export default {
   name: "Section",
   components: {
     ReservationsOverview,
     Chat,
+    SectionStatistics,
   },
   props: {
     allSections: {
@@ -141,7 +158,7 @@ export default {
   },
   data() {
     return {
-      date: new Date().toISOString().substr(0, 10),
+      date: "2021-05-20",
       menu1: false,
       timeList: [
         "07:00",
@@ -166,12 +183,18 @@ export default {
       endTimeValue: null,
       nPersons: null,
       loading: false,
+      toggle_exclusive: undefined,
       isChatVisible: false,
       chatButtonStatus: true,
+      isStatisticsVisible: false,
+      statisticsButtonStatus: true,
       previousPath: `/rooms/${this.$route.params.roomId}`,
     };
   },
   computed: {
+    /**
+     * accountID gets the logged in users account ID.
+     */
     accountId() {
       let accountId = this.$store.getters.getLoggedInAccount.id;
       if (accountId === undefined) {
@@ -180,6 +203,9 @@ export default {
       return accountId;
     },
 
+    /**
+     * section returns a section given its ID.
+     */
     section() {
       if (
         this.$store.getters.getRooms.length !== 0 &&
@@ -195,6 +221,10 @@ export default {
         return {};
       }
     },
+
+    /**
+     * reservations returns all reservations of section.
+     */
     reservations() {
       if (
         this.$route.params.sectionId === undefined &&
@@ -212,12 +242,24 @@ export default {
       }
       return this.section.inReservations;
     },
+
+    /**
+     * computedDateFormattedMomentjs formats moment.
+     */
     computedDateFormattedMomentjs() {
       return this.date ? moment(this.date).format("dddd, MMMM Do YYYY") : "";
     },
+
+    /**
+     * computedDateFormattedDatefns formats date.
+     */
     computedDateFormattedDatefns() {
       return this.date ? format(parseISO(this.date), "EEEE, MMMM do yyyy") : "";
     },
+
+    /**
+     * currentDateReservations gets all reservations on a given date.
+     */
     currentDateReservations() {
       if (this.reservations === undefined) {
         return [];
@@ -227,6 +269,10 @@ export default {
         });
       }
     },
+
+    /**
+     * List of all reservation times in a day. Returns all avaible times.
+     */
     freeReservations() {
       let list = [
         { text: "07:00", value: 7, disabled: false },
@@ -277,6 +323,10 @@ export default {
         return list;
       }
     },
+
+    /**
+     * toReservations calculates available to-times on a reservation.
+     */
     toReservations() {
       let list = [];
       if (this.startTimeValue === null) {
@@ -305,6 +355,10 @@ export default {
       }
     },
   },
+
+  /**
+   * registerReservation is a function for registering a reservation.
+   */
   methods: {
     async registerReservation() {
       if (
@@ -381,9 +435,24 @@ export default {
       }
     },
 
+    /**
+     * changeChatVisibility toggles the chat in a reservation
+     */
     changeChatVisibility() {
       this.chatButtonStatus = !this.chatButtonStatus;
       this.isChatVisible = !this.isChatVisible;
+      this.statisticsButtonStatus = false;
+      this.isStatisticsVisible = false;
+    },
+
+    /**
+     * showStatistics toggles the view of statistics on a reservation.
+     */
+    showStatistics() {
+      this.statisticsButtonStatus = !this.statisticsButtonStatus;
+      this.isStatisticsVisible = !this.isStatisticsVisible;
+      this.chatButtonStatus = false;
+      this.isChatVisible = false;
     },
   },
 };
@@ -421,11 +490,10 @@ export default {
   margin: 0 50px;
 }
 
-.reservations-overview{
-    margin: 50px 0;
-    width: 30%;
-    display: flex;
-    justify-content: center;
+.reservations-overview {
+  width: 30%;
+  display: flex;
+  justify-content: center;
 }
 
 .reserve-button {

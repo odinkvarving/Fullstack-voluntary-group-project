@@ -112,6 +112,7 @@
                             color="#01AB55"
                             outlined
                             v-model="equipmentValue"
+                            @keyup.enter="searchButtonClicked"
                         ></v-text-field>
                     </div>
                     <v-row style="margin: 20px 0">
@@ -162,6 +163,11 @@
 </template>
 
 <script>
+/**
+ * RoomFeed gives an overview of all rooms.
+ * 
+ * @author Magnus Bredeli
+ */
 import moment from "moment";
 
 export default {
@@ -188,6 +194,9 @@ export default {
         }
     },
     computed: {
+        /**
+         * rooms returns a list of rooms (filtered or not).
+         */
         rooms(){
             if(this.isNoFilters){
                 return this.$store.getters.getRooms;
@@ -195,12 +204,17 @@ export default {
                 return this.filteredList;
             }
         },
+
+        /**
+         * roomSize returns size of room.
+         */
         roomSize(room){
             console.log(room);
             let size = 0;
 
             return size;
         },
+
         endTimeList(){
             return this.timeValues.filter(time => {
                 return parseInt(time.split(":")[0]) > this.startTimeValue.split(":")[0];
@@ -222,9 +236,15 @@ export default {
         }
     },
     methods: {
+        /**
+         * goToRoom routes the user to given room by id.
+         */
         goToRoom(roomId){
             this.$router.push(`/rooms/${roomId}`);
         },
+        /**
+         * searchButtonClicked handles the search after button is clicked.
+         */
         searchButtonClicked(){
             if(this.searchValue !== "" || this.placeValue !== "" || this.startTimeValue !== ""
                 || this.endTimeValue !== "" || this.dateValue !== "" || this.equipmentValue !== ""){
@@ -282,6 +302,10 @@ export default {
                 this.isNoFilters = true;
             }
         },
+
+        /**
+         * resetButtonClicked handles reset of filtering.
+         */
         resetButtonClicked(){
             this.searchValue = "";
             this.placeValue = "";
@@ -291,6 +315,10 @@ export default {
             this.equipmentValue = "";
             this.isNoFilters = true;
         },
+
+        /**
+         * setPlace sets place.
+         */
         setPlace(place){
             this.placeValue = place;
             console.log(this.placeValue);

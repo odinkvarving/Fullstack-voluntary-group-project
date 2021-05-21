@@ -5,6 +5,9 @@
 </template>
 
 <script>
+/**
+ * @author Magnus Bredeli
+ */
 import ReservationAdminPage from "../components/Reservations/ReservationAdminPage.vue";
 
 export default {

@@ -20,6 +20,12 @@
         </v-list-item>
           </router-link>
 
+          <router-link v-if="isLoggedIn" class="link" to="/equipmentfeed">
+        <v-list-item link>
+            <v-list-item-title class="white--text text-overline">Se alt utstyr</v-list-item-title>
+        </v-list-item>
+          </router-link>
+
           <router-link v-if="isAdmin" class="link" to="/addaccount">
         <v-list-item link>
             <v-list-item-title class="white--text text-overline">Lag bruker</v-list-item-title>
@@ -56,11 +62,11 @@
 
       <v-spacer></v-spacer>
       <v-app-bar-nav-icon
-        class="hidden-sm-and-up"
+        class="hidden-md-and-up"
         @click.stop="sideNav = !sideNav"
       ></v-app-bar-nav-icon>
 
-      <div class="nav-elements hidden-xs-only">
+      <div class="nav-elements hidden-sm-and-down">
         <router-link class="link" to="/frontpage">
           <v-btn text>
             <span>Hjem</span>
@@ -69,6 +75,11 @@
         <router-link v-if="isLoggedIn" class="link" to="/roomfeed">
           <v-btn text>
             <span>Se alle rom</span>
+          </v-btn>
+        </router-link>
+        <router-link v-if="isLoggedIn" class="link" to="/equipmentfeed">
+          <v-btn text>
+            <span>Se alt utstyr</span>
           </v-btn>
         </router-link>
         <router-link v-if="isAdmin" class="link" to="/addaccount">
@@ -119,6 +130,12 @@
 </template>
 
 <script>
+/**
+ * Navbar is the apps navigation bar, and contains routing to all other components.
+ * 
+ * @author Mattias Agentoft Eggend
+ */
+
 export default {
   name: "Navbar",
   components: {},
@@ -135,16 +152,25 @@ export default {
   },
 
   computed: {
+    /**
+     * IsLoggedIn checks if the user is logged in.
+     */
     isLoggedIn() {
       return this.$store.getters.isAuthenticated;
     },
 
+    /**
+     * isAdmin checks if the logged in user has admin rights.
+     */
     isAdmin() {
       return this.$store.getters.getLoggedInAccount.is_admin;
     },
   },
 
   methods: {
+    /**
+     * handleListClick contains routing information on the dropdown component on the navbar.
+     */
     handleListClick(id) {
       switch (id) {
         case 1: {
@@ -158,6 +184,9 @@ export default {
       }
     },
 
+    /**
+     * toProfilePage routes the user to the users own profile page, based on the user that is logged in.
+     */
     toProfilePage() {
       const account = this.$store.getters.getLoggedInAccount;
       //if (!this.$router.currentRoute.path === `/profilepage/${account.id}`) {
@@ -165,6 +194,9 @@ export default {
       //}
     },
 
+    /**
+     * logout signs out the user, and routes to the login site.
+     */
     logout() {
       this.$store.dispatch("logout");
       if (this.$router.currentRoute.path !== "/") {

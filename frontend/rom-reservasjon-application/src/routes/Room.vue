@@ -39,6 +39,9 @@
 </template>
 
 <script>
+/**
+ * @author Magnus Bredeli
+ */
 import Section from "./Section"
 
 export default {
@@ -52,14 +55,23 @@ export default {
     }
   },
   computed: {
+    /**
+     * room returns a room given its id.
+     */
     room(){
       return this.$store.getters.getRooms.filter((room) => room.id === parseInt(this.$route.params.id))[0] || [];
     }
   },
   methods: {
+    /**
+     * sectionClicked routes the user to the given room
+     */
     sectionClicked(sectionId){
       this.$router.push(`/rooms/${this.$route.params.id}/sections/${sectionId}`)
     },
+    /**
+     * roomReservationClicked toggles showRoomReservation.
+     */
     roomReservationClicked(){
       if(this.showRoomReservation){
         this.showRoomReservation = false;

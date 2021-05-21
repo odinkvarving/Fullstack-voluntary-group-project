@@ -1,65 +1,84 @@
 <template>
   <div class="equipment-reservation">
     <router-link to="/equipmentfeed">
-      <v-btn style="margin-left: 30px; position: absolute; top: 90px; left: 0px;" color="#01AB55">
+      <v-btn
+        style="margin-left: 30px; position: absolute; top: 30px; left: 0px;"
+        color="#01AB55"
+      >
         <v-icon left>
-            mdi-arrow-left-bold
+          mdi-arrow-left-bold
         </v-icon>
         <span>Tilbake</span>
-    </v-btn>
+      </v-btn>
     </router-link>
-      <v-container>
-          <v-row>
-              <h1>Velg leieperiode:</h1>
-          </v-row>
-          <v-row>
-              <v-date-picker
-                v-model="dates"
-                :min="new Date().toISOString().substr(0, 10)"
-                range
-                :allowed-dates="allowedDates"
-                color="green lighten-1"
-                no-title
-            ></v-date-picker>
-          </v-row>
-        <v-row style="margin-top: 200px">
-            <v-btn
-            color="green"
-            @click="registerEquipmentReservation"
-            ><span>Reserver</span></v-btn
-            >
+    <v-container>
+      <v-row align="center" justify="center">
+        <h1>Velg leieperiode</h1>
+      </v-row>
+
+
+      <v-row justify="center" class="pt-6">
+          <v-date-picker
+            v-model="dates"
+            :min="new Date().toISOString().substr(0, 10)"
+            range
+            :allowed-dates="allowedDates"
+            color="green lighten-1"
+            no-title
+          ></v-date-picker>
+      </v-row>
+        <v-row justify="center" class="pt-8">
+            <v-btn color="green" @click="registerEquipmentReservation"
+              ><span>Reserver</span></v-btn>
         </v-row>
-        <div style="margin:20px">
-            {{dates}}
-        </div>
-      </v-container>
+
+
+
+    </v-container>
   </div>
 </template>
 
 <script>
+/**
+ *  EquipmentReservation is a component for making reservations of a single equipment.
+ *
+ * @author Magnus Bredeli
+ */
 import moment from "moment";
-import { equipmentReservationService } from "../services/EquipmentReservationService"
+import { equipmentReservationService } from "../services/EquipmentReservationService";
 
 export default {
-    name: "EquipmentReservation",
-    data(){
-        return {
-            dates: [],
-        }
+  name: "EquipmentReservation",
+  data() {
+    return {
+      dates: [],
+    };
+  },
+  computed: {
+      /**
+       * equipment returns equipment given a specific id.
+       */
+    equipment() {
+      return this.$store.getters.getEquipment.filter(
+        (e) => e.id === parseInt(this.$route.params.id)
+      )[0];
     },
-    computed: {
-        equipment(){
-            return this.$store.getters.getEquipment.filter(e => e.id === parseInt(this.$route.params.id))[0];
-        },
-        equipmentReservations(){
-            if(this.equipment === undefined){
-                return [];
-            }else{
-                return this.equipment.inReservations;
-            }
-        },
-    },
+
+    /**
+     * equipmentReservations returns the equipments reservation status if defined.
+     */
+    equipmentReservations() {
+      if (this.equipment === undefined) {
+        return [];
+      } else {
+        return this.equipment.inReservations;
+      }
+    }
+  },
     methods: {
+        /**
+         * allowedDates tells us which dates the equipment isn't occupied
+         */
         allowedDates(val){
             let date = moment(val, "YYYY-MM-DD");
             let isValid = true;
@@ -73,6 +92,9 @@ export default {
 
             return isValid;
         },
+        /**
+         * registerEquipmentReservation registers a reservation on the given equipment.
+         */
         async registerEquipmentReservation(){
             
             let dateFrom;
@@ -132,9 +154,9 @@ export default {
 </script>
 
 <style scoped>
-.equipment-reservation{
-    min-height: 100vh;
-    padding-top: 100px;
-    background-color: #192138;
+.equipment-reservation {
+  min-height: 100vh;
+  padding-top: 100px;
+  background-color: #192138;
 }
 </style>
