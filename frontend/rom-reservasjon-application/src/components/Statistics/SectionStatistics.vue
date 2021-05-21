@@ -14,7 +14,7 @@
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
                 v-model="dates"
-                label="Picker without buttons"
+                label="Velg periode"
                 prepend-icon="mdi-calendar"
                 readonly
                 v-bind="attrs"
@@ -35,10 +35,35 @@
               <option>{{ dates[0] }} - {{ dates[1] }}</option>
             </div>
           </div>
-          
         </v-col>
       </v-row>
     </v-container>
+
+    <v-row>
+      <v-col cols="12">
+        <v-card>
+          <v-card-text>
+            Antall ulike reservasjoner denne perioden: {{ nReservations }}
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col>
+        <v-container fluid>
+          <v-sparkline
+            :fill="fill"
+            :line-width="width"
+            :padding="padding"
+            :smooth="radius || false"
+            :labels="datesBetween"
+            :value="value"
+            label-size="4"
+            auto-draw
+          ></v-sparkline>
+
+          <v-divider></v-divider>
+        </v-container>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
@@ -62,15 +87,16 @@ export default {
       menu2: false,
       isDatesSelected: false,
       nReservations: null,
+
+      fill: true,
+      padding: 10,
+      radius: 5,
+      value: [8, 4, 6, 12, 3, 12],
+      width: 2,
     };
   },
 
-  computed: {
-
-  },
-
   methods: {
-
     datesChosen() {
       this.isDatesSelected = true;
       this.fetchData();
@@ -96,8 +122,12 @@ export default {
           "\nNumber of reservations in this range: " + this.nReservations
         );
       } else {
-        console.log("No dates have been chosen yet");
+        console.log("No dates selected");
       }
+    },
+
+    getValueForEachDay() {
+
     },
 
     getDatesBetween() {
@@ -111,12 +141,10 @@ export default {
         ) {
           arr.push(new Date(dt));
         }
-        arr.forEach(e => {
-            this.datesBetween.push(e);
+        arr.forEach((e) => {
+          console.log(e);
+          this.datesBetween.push(e.toString().substring(4, 15));
         });
-        this.datesBetween.forEach(e => {
-            console.log(e);
-        })
       }
     },
   },

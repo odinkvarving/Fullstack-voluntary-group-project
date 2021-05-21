@@ -1,12 +1,15 @@
 <template>
   <div class="section">
     <router-link :to="previousPath">
-      <v-btn style="margin-left: 30px; position: absolute; top: 90px; left: 0px;" color="#01AB55">
+      <v-btn
+        style="margin-left: 30px; position: absolute; top: 90px; left: 0px;"
+        color="#01AB55"
+      >
         <v-icon left>
-            mdi-arrow-left-bold
+          mdi-arrow-left-bold
         </v-icon>
         <span>Tilbake</span>
-    </v-btn>
+      </v-btn>
     </router-link>
     <div class="title">
       <h1>{{ section.name }}</h1>
@@ -66,7 +69,7 @@
           v-if="endTimeValue !== null && date !== null"
           style="opacity: 80%; margin: 10px 0"
         >
-          3. Deltakere (Max antall: {{this.section.max_persons}})
+          3. Deltakere (Max antall: {{ this.section.max_persons }})
         </h3>
         <v-text-field
           v-if="endTimeValue !== null && date !== null"
@@ -100,16 +103,16 @@
     </div>
     <v-container pt-12>
       <v-row class="mx-auto">
-        <v-col cols="12" align="center">
-          <v-btn-toggle v-model="toggle_exclusive" mandatory>
-            <v-btn @click="changeChatVisibility" color="green">
-              kommentarfelt
-            </v-btn>
-            <v-btn @click="showStatistics" color="green">
-              statistikk
-            </v-btn>
-          </v-btn-toggle>
-        </v-col>
+          <v-col align="center">
+            <v-btn-toggle v-model="toggle_exclusive" mandatory>
+              <v-btn @click="changeChatVisibility" color="green">
+                kommentarfelt
+              </v-btn>
+              <v-btn @click="showStatistics" color="green">
+                statistikk
+              </v-btn>
+            </v-btn-toggle>
+          </v-col>
         <v-col cols="12" align="center">
           <div>
             <Chat
@@ -428,7 +431,7 @@ export default {
       this.isStatisticsVisible = !this.isStatisticsVisible;
       this.chatButtonStatus = false;
       this.isChatVisible = false;
-    }
+    },
   },
 };
 </script>
