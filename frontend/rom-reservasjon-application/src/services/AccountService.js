@@ -5,6 +5,11 @@ export const accountService = {
     getAccount
 }
 
+/**
+ * getAccounts is a function which returns all accounts
+ * 
+ * @returns all registered accounts
+ */
 async function getAccounts(){
     let url = "http://localhost:8080/accounts";
 
@@ -20,6 +25,12 @@ async function getAccounts(){
         .catch(error => console.log(error));
 }
 
+/**
+ * getAccount is a function which returns an account based on given id
+ * 
+ * @param {Number} accountId: id of requested account
+ * @returns account with given id
+ */
 async function getAccount(accountId){
     let url = `http://localhost:8080/accounts/${accountId}`;
 
