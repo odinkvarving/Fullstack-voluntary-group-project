@@ -33,7 +33,7 @@
         <v-card color="#222b45">
           <v-card-text v-if="isDatesSelected">
             <span>
-            Antall ulike reservasjoner perioden denne perioden:
+            Antall ulike reservasjoner denne perioden:
 
             </span>
 

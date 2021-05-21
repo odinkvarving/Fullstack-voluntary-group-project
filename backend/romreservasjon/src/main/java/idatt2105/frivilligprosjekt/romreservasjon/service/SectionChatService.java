@@ -18,11 +18,11 @@ public class SectionChatService {
     private SectionChatRepository sectionChatRepository;
 
     /**
-     * Adds a message to the chatfield in a Section.
+     * Adds a message to a specific Section by id
      *
-     * @param accountId  the id of the Account that made the message.
-     * @param sectionId the id of the Section the message belongs to.
-     * @param message the message.
+     * @param accountId  the id of the Account that made the message
+     * @param sectionId the id of the Section the message belongs to
+     * @param message the message to add
      */
     public SectionChat addMessageToSection(int accountId, int sectionId, String message) {
         logger.info("adding message from account: " + accountId + ", to section: " + sectionId + ", with message: \n" + message);
@@ -41,10 +41,10 @@ public class SectionChatService {
     }
 
     /**
-     * Updates the message with the given id.
+     * Method for updating a specific message by id
      *
-     * @param id        the id of the chat message to update
-     * @param message   the new state to set to the SectionChat
+     * @param id the id of the chat message to update
+     * @param message the new message to set to the SectionChat
      */
     public SectionChat updateSectionChat(int id, String message) {
         try {
@@ -57,6 +57,12 @@ public class SectionChatService {
         return null;
     }
 
+    /**
+     * Method for finding a specific message by id
+     *
+     * @param id the id of the message
+     * @return the message that was found
+     */
     public SectionChat getSectionChatById(int id) {
         try {
             return this.sectionChatRepository.findById(id).orElseThrow(NoSuchElementException::new);
@@ -67,32 +73,11 @@ public class SectionChatService {
     }
 
     /**
-     * Deletes the chat message with the given id.
+     * Method for deleting a specific message by id
      *
-     * @param id the chat message to delete
+     * @param id the id of the message to be deleted
      */
     public void deleteSectionChat(int id) {
         this.sectionChatRepository.deleteById(id);
     }
-
-    /**
-     * Deletes all chat messages on the section with the given id
-     *
-     * @param sectionId the id of the section
-     */
-    public void deleteAllMessagesBySection(int sectionId) {
-        List<SectionChat> messages = this.sectionChatRepository.findSectionChatBySectionId(sectionId);
-        this.sectionChatRepository.deleteAll(messages);
-    }
-
-    /**
-     * Deletes all chat messages written by the account with the given id
-     *
-     * @param accountId the id of the account
-     */
-    public void deleteAllMessagesByAccount(int accountId) {
-        List<SectionChat> messages = this.sectionChatRepository.findSectionChatByAccountId(accountId);
-        this.sectionChatRepository.deleteAll(messages);
-    }
-
 }

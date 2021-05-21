@@ -1,11 +1,11 @@
 package idatt2105.frivilligprosjekt.romreservasjon.service;
 
-import idatt2105.frivilligprosjekt.romreservasjon.model.Reservation;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Room;
-import idatt2105.frivilligprosjekt.romreservasjon.model.Section;
-import idatt2105.frivilligprosjekt.romreservasjon.repository.ReservationRepository;
 import idatt2105.frivilligprosjekt.romreservasjon.repository.RoomRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,13 +14,15 @@ import java.util.List;
 @Service
 public class RoomService {
 
+    Logger logger = LoggerFactory.getLogger(RoomService.class);
+
     @Autowired
     private RoomRepository roomRepository;
 
     /**
-     * Retrieve all rooms
+     * Method for finding all rooms from database
      *
-     * @return rooms
+     * @return a list of all rooms that were found
      */
     public List<Room> findAll(){
         Iterable<Room> roomsIt = roomRepository.findAll();
@@ -32,25 +34,34 @@ public class RoomService {
     }
 
     /**
-     * Find room by id
+     * Method for finding a specific Room by id
      *
-     * @param id
-     * @return room
+     * @param id the id of the Room to be found
+     * @return the Room that was found
      */
     public Room findById(int id){
-        return roomRepository.findById(id).orElse(null);
+        try {
+            return roomRepository.findById(id).orElse(null);
+        }catch (DataAccessException e) {
+            logger.error("Could not find room with this id", e);
+        }
+        return null;
     }
 
-
     /**
-     * Create new room
+     * Method for creating a new Room
      *
-     * @param room
-     * @return room that was created
+     * @param room the Room to be saved
+     * @return the Room that was saved
      */
     public Room saveRoom(Room room){
-        room.getSections().forEach(section -> section.setRoom(room));
-
-        return roomRepository.save(room);
+        try {
+            logger.info("Room was saved successfully");
+            room.getSections().forEach(section -> section.setRoom(room));
+            return roomRepository.save(room);
+        }catch (DataAccessException e) {
+            logger.error("Could not save room", e);
+        }
+        return null;
     }
 }

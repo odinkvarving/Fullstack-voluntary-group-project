@@ -32,12 +32,12 @@ async function getRooms(){
 /**
  * getSectionMessages is a function which returns messages of a section.
  * 
- * @param {Number} roomId: id of room.
  * @param {Number} sectionId: id of section.
  * @returns list of all messages for given section.
  */
-async function getSectionMessages(roomId, sectionId) {
-    let url = `http://localhost:8080/rooms/${roomId}/sections/${sectionId}/messages`;
+
+async function getSectionMessages(sectionId) {
+    let url = `http://localhost:8080/messages/sections/${sectionId}`;
 
     const requestOptions = {
         headers: {
@@ -75,13 +75,13 @@ async function getMessageById(messageId) {
 /**
  * sendMessage is a function which saves a message for a specific section.
  * 
- * @param {Number} roomId: id of room. 
  * @param {Number} sectionId: id of section.
  * @param {Object} message: message object which will be saved and displayed.
  * @returns the message object.
  */
-async function sendMessage(roomId, sectionId, message) {
-    let url = `http://localhost:8080/rooms/${roomId}/sections/${sectionId}/messages`;
+
+async function sendMessage(sectionId, message) {
+    let url = `http://localhost:8080/messages/sections/${sectionId}`;
 
     const requestOptions = {
         method: "POST",
