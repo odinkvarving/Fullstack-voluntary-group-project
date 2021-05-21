@@ -220,24 +220,24 @@ export default {
          * filter is a function which filters reservations list based on filter input
          */
         filter() {
-            let list = this.reservations;
-            let chosenFilter = false;
+            let list = this.filteredReservations;
+            let chosenFilter = 0;
             if (this.sectionFilter !== "") {
                 list = this.filterBySection(list);
-                chosenFilter = true;
+                chosenFilter++;
                 console.log("Section filtered: " + list);
             }
             if (this.accountFilter !== "") {
                 list = this.filterByAccount(list);
-                chosenFilter = true;
+                chosenFilter++;
                 console.log("Account filtered: " + list);
             }
             if (this.dateFilter !== "") {
                 list = this.filterByDate(list);
-                chosenFilter = true;
+                chosenFilter++;
                 console.log("Date filtered: " + list);
             }
-            if (chosenFilter && (list === this.reservations)) this.match = false;
+            if ((chosenFilter !== 0) && (list.length === 0)) this.match = false;
             this.filteredReservations = list;
             this.sectionFilter = this.accountFilter = this.dateFilter = "";
             this.drawer = false;
@@ -253,7 +253,7 @@ export default {
                     section = sec;
                 }
             });
-            if (!section) return list;
+            if (!section) return [];
 
             console.log("Section: " + section.name);
             return list.filter(res => {
@@ -271,7 +271,7 @@ export default {
                     account = acc;
                 }
             });
-            if (!account) return list;
+            if (!account) return [];
 
             console.log("Account: " + account.email);
             return list.filter(res => {
