@@ -24,6 +24,7 @@ export default {
     }
     await this.$store.dispatch("loadRooms");
     await this.$store.dispatch("loadSections");
+    await this.$store.dispatch("loadEquipment");
   }
 }
 </script>

@@ -16,7 +16,12 @@
 
         <v-col cols="2">
           <v-btn rounded color="green" @click="sendMessage">
-            <span>Send</span>
+            <span v-if="!sendButtonLoading">Send</span>
+            <v-progress-circular
+              v-else
+              indeterminate
+              color="white"
+            ></v-progress-circular>
           </v-btn>
         </v-col>
         <v-col>
@@ -63,6 +68,7 @@ export default {
       pageRoute: "",
       roomId: null,
       sectionId: null,
+      sendButtonLoading: false,
     };
   },
 
@@ -101,15 +107,14 @@ export default {
 
     async sendMessage() {
       if (this.message.length > 0) {
+        this.sendButtonLoading = true;
+        setTimeout(() => (this.sendButtonLoading = false), 2000);
         const data = {
           accountId: this.accountId,
           message: this.message,
           sectionId: this.sectionId,
         };
         this.message = "";
-        console.log("ROOM ID: " + this.$route.params.roomId);
-        console.log("SECTION ID" + this.$route.params.sectionId);
-        console.log("ACCOUNT ID" + this.accountId);
         await roomService.sendMessage(
           this.$route.params.roomId,
           this.$route.params.sectionId,

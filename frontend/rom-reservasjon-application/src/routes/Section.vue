@@ -28,6 +28,7 @@
             <v-date-picker
               v-model="date"
               @change="menu1 = false"
+              :min="new Date().toISOString().substr(0, 10)"
             ></v-date-picker>
           </v-menu>
 
@@ -131,7 +132,7 @@ export default {
   },
   data() {
     return {
-      date: "2021-05-20",
+      date: new Date().toISOString().substr(0, 10),
       menu1: false,
       isFreeList: [
         true,

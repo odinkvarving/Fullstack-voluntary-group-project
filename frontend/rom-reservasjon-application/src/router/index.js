@@ -2,6 +2,8 @@ import FrontPage from "../routes/FrontPage.vue";
 import RoomFeed from "../routes/RoomFeed.vue";
 import Room from "../routes/Room.vue";
 import Section from "../routes/Section.vue";
+import EquipmentFeed from "../routes/EquipmentFeed.vue"
+import EquipmentReservation from "../routes/EquipmentReservation.vue"
 import Login from "../routes/Login.vue";
 import ForgotPassword from "../routes/ForgotPassword.vue";
 import ResetPassword from "../routes/ResetPassword.vue";
@@ -29,6 +31,16 @@ const routes = [
     path: "/rooms/:roomId/sections/:sectionId",
     name: "Section",
     component: Section,
+  },
+  {
+    path: "/equipmentfeed",
+    name: "Equipment feed",
+    component: EquipmentFeed
+  },
+  {
+    path: "/equipmentfeed/:id",
+    name: "Equipment feed",
+    component: EquipmentReservation
   },
   {
     path: "/",
