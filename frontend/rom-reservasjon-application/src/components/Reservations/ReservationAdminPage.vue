@@ -207,7 +207,7 @@ export default {
       section: null,
       sectionId: null,
 
-      roomName: "Navn",
+      roomName: null,
       date: null,
       time: null,
 
