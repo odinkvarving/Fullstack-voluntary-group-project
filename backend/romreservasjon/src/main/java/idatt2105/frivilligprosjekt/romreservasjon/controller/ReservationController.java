@@ -89,6 +89,12 @@ public class ReservationController {
         return reservationService.deleteReservation(reservation_id, jwt);
     }
 
+    /**
+     * GetMapping for finding all reservations registered with a given section id.
+     *
+     * @param section_id: id of section.
+     * @return list of reservations with given section id.
+     */
     @GetMapping("/reservations/sections/{section_id}")
     public List<ReservationDTO> findReservationsBySectionId(@PathVariable int section_id) {
         return reservationService.findReservationsBySectionId(section_id);

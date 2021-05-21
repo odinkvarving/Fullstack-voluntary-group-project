@@ -96,11 +96,24 @@ public class RoomController {
             return this.sectionChatService.addMessageToSection(message.getAccountId(), section_id, message.getMessage());
     }
 
+    /**
+     * Endpoint for updating message.
+     *
+     * @param message_id: id of message.
+     * @param message: message object.
+     * @return SectionChat.
+     */
     @PutMapping("/messages/{message_id}")
     public SectionChat updateMessage(@PathVariable int message_id, @RequestBody SectionChat message) {
         return this.sectionChatService.updateSectionChat(message_id, message.getMessage());
     }
 
+    /**
+     * Endpoint for finding message with id.
+     *
+     * @param message_id: id of message.
+     * @return SectionChat.
+     */
     @GetMapping("/messages/{message_id}")
     public SectionChat getMessageById(@PathVariable int message_id) {
         return this.sectionChatService.getSectionChatById(message_id);
