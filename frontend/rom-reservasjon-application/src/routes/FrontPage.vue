@@ -14,12 +14,22 @@
           <v-row>
             <router-link class="link" to="/roomfeed">
               <v-col cols="6">
-                <v-btn color="green"><span>Se alle rom</span></v-btn>
+                <v-btn color="green" >
+                  <v-icon left>
+                    mdi-magnify
+                  </v-icon>
+                  <span>Se alle rom</span>
+                </v-btn>
               </v-col>
             </router-link>
             <router-link class="link" to="/equipmentfeed">
               <v-col cols="6">
-                <v-btn color="green"><span>Se alt utstyr</span></v-btn>
+                <v-btn color="green">
+                  <v-icon left>
+                    mdi-magnify
+                  </v-icon>
+                  <span>Se alt utstyr</span>
+                </v-btn>
               </v-col>
             </router-link>
           </v-row>

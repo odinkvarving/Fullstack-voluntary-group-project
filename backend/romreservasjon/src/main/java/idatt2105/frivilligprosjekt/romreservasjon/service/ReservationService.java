@@ -51,20 +51,24 @@ public class ReservationService {
      * @param reservation the new Reservation to be registered
      * @return true or false
      */
-    public boolean saveReservation(Reservation reservation) {
-
-        if(!validateReservation(reservation)){
+    public boolean saveReservation(Reservation reservation, String jwt) {
+        if(accountService.findById(reservation.getAccount().getId(), jwt) == null){
+            logger.info("Can't create reservation for another user unless you are admin...");
             return false;
-        }else {
-            try {
-                reservation.setSection(reservation.getSection());
-                reservation.setAccount(reservation.getAccount());
-                reservationRepository.save(reservation);
-                return true;
-            } catch (DataAccessException e) {
-                e.printStackTrace();
-                logger.info("Could not fetch either the Account or Section for this reservation.");
+        }else{
+            if(!validateReservation(reservation)){
                 return false;
+            }else {
+                try {
+                    reservation.setSection(reservation.getSection());
+                    reservation.setAccount(reservation.getAccount());
+                    reservationRepository.save(reservation);
+                    return true;
+                } catch (DataAccessException e) {
+                    e.printStackTrace();
+                    logger.info("Could not fetch either the Account or Section for this reservation.");
+                    return false;
+                }
             }
         }
     }
@@ -88,7 +92,8 @@ public class ReservationService {
             }).collect(Collectors.toList());
             for (Reservation res : relevantDateReservations) {
                 if ((res.getFrom_date().isBefore(reservation.getTo_date()) && reservation.getFrom_date().isBefore(res.getFrom_date())) || (res.getTo_date().isAfter(reservation.getFrom_date())
-                        && res.getFrom_date().isBefore(reservation.getFrom_date())) || res.getTo_date().isEqual(reservation.getTo_date()) || res.getFrom_date().isEqual(reservation.getFrom_date())) {
+                        && res.getFrom_date().isBefore(reservation.getFrom_date())) || (reservation.getFrom_date().isBefore(res.getFrom_date()) && reservation.getTo_date().isAfter(res.getTo_date()))
+                        ||res.getTo_date().isEqual(reservation.getTo_date()) || res.getFrom_date().isEqual(reservation.getFrom_date())) {
                     logger.info("Reservation is overlapping with another reservation...");
                     return false;
                 }
@@ -104,24 +109,29 @@ public class ReservationService {
      * @param reservations
      * @return
      */
-    public boolean saveRoomReservation(List<Reservation> reservations){
-        for(Reservation reservation : reservations){
-            if(!validateReservation(reservation)){
+    public boolean saveRoomReservation(List<Reservation> reservations, String jwt){
+        if(accountService.findById(reservations.get(0).getAccount().getId(), jwt) == null){
+            logger.info("Can't create reservation for another user unless you are admin...");
+            return false;
+        }else{
+            for(Reservation reservation : reservations){
+                if(!validateReservation(reservation)){
+                    return false;
+                }
+            }
+
+            try {
+                for(Reservation reservation : reservations){
+                    reservation.setSection(reservation.getSection());
+                    reservation.setAccount(reservation.getAccount());
+                    reservationRepository.save(reservation);
+                }
+                return true;
+            } catch (DataAccessException e) {
+                e.printStackTrace();
+                logger.info("Could not fetch either the Account or Section for this reservation.");
                 return false;
             }
-        }
-
-        try {
-            for(Reservation reservation : reservations){
-                reservation.setSection(reservation.getSection());
-                reservation.setAccount(reservation.getAccount());
-                reservationRepository.save(reservation);
-            }
-            return true;
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-            logger.info("Could not fetch either the Account or Section for this reservation.");
-            return false;
         }
     }
 
@@ -132,15 +142,20 @@ public class ReservationService {
      * @param reservation the updated version of the Reservation with the specified ID
      * @return the Reservation that was updated
      */
-    public Reservation updateReservation(int id, Reservation reservation) {
-        try {
-            logger.info("Reservation updated");
-            reservation.setId(id);
-            return reservationRepository.save(reservation);
-        } catch (DataAccessException e) {
-            logger.info("Could not update reservation");
+    public Reservation updateReservation(int id, Reservation reservation, String jwt) {
+        if(!accountService.isAdmin(jwt)){
+            logger.info("Only admin can update reservations");
+            return null;
+        }else {
+            try {
+                logger.info("Reservation updated");
+                reservation.setId(id);
+                return reservationRepository.save(reservation);
+            } catch (DataAccessException e) {
+                logger.info("Could not update reservation");
+                return null;
+            }
         }
-        return null;
     }
 
     /**
@@ -165,16 +180,21 @@ public class ReservationService {
      *
      * @param id the ID of the Reservation to be deleted
      */
-    public boolean deleteReservation(int id) {
-        try {
-            reservationRepository.deleteById(id);
-            return true;
-        }catch (DataAccessException e) {
-            e.printStackTrace();
-            logger.info("Could not delete this reservation. ID does not exist");
-        }
+    public boolean deleteReservation(int id, String jwt) {
+        if(accountService.isAdmin(jwt)){
+            logger.info("Only admin can delete reservations");
+            return false;
+        }else {
+            try {
+                reservationRepository.deleteById(id);
+                return true;
+            } catch (DataAccessException e) {
+                e.printStackTrace();
+                logger.info("Could not delete this reservation. ID does not exist");
+                return false;
 
-        return false;
+            }
+        }
     }
 
     public List<ReservationDTO> findReservationsBySectionId(int id) {

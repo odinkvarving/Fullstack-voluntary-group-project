@@ -90,6 +90,7 @@
                     <template v-slot:activator="{ on, attrs }">
                     <v-text-field
                         v-model="dateFilter"
+                        outlined
                         label="Dato"
                         persistent-hint
                         prepend-icon="mdi-calendar"
@@ -376,7 +377,6 @@ export default {
 <style scoped>
     .reservation-feed {
         background-color: #192138;
-        padding-top: 60px;
         height: 100vh;
     }
     h1 {

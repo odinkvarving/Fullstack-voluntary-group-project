@@ -10,7 +10,7 @@
           ></v-progress-linear>
         </template>
         <v-card-title class="headline">
-          {{ name }}
+          <p @click="redirect()" style="cursor: pointer;">{{ name }}</p>
           <v-icon
             v-if="chatMessage.accountId === loggedInAccountId"
             @click="deleteMessage()"
@@ -50,6 +50,7 @@ export default {
 
   data() {
     return {
+      account: {},
       name: "",
       time: null,
       message: "",
@@ -58,10 +59,10 @@ export default {
   },
 
   async mounted() {
-    let account = await accountService.getAccount(this.chatMessage.accountId);
+    this.account = await accountService.getAccount(this.chatMessage.accountId);
     this.time = this.chatMessage.timeStamp;
     this.message = this.chatMessage.message;
-    this.name = account.name;
+    this.name = this.account.name;
   },
 
   methods: {
@@ -72,6 +73,10 @@ export default {
 
       }
     },
+
+    redirect() {
+      this.$router.push({ name: "ProfilePage", params: { id: this.account.id }});
+    }
   },
 };
 </script>

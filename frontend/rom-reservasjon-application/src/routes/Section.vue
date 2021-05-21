@@ -1,5 +1,13 @@
 <template>
   <div class="section">
+    <router-link :to="previousPath">
+      <v-btn style="margin-left: 30px; position: absolute; top: 90px; left: 0px;" color="#01AB55">
+        <v-icon left>
+            mdi-arrow-left-bold
+        </v-icon>
+        <span>Tilbake</span>
+    </v-btn>
+    </router-link>
     <div class="title">
       <h1>{{ section.name }}</h1>
       <p>{{ section.description }}</p>
@@ -58,7 +66,7 @@
           v-if="endTimeValue !== null && date !== null"
           style="opacity: 80%; margin: 10px 0"
         >
-          3. Deltakere
+          3. Deltakere (Max antall: {{this.section.max_persons}})
         </h3>
         <v-text-field
           v-if="endTimeValue !== null && date !== null"
@@ -70,6 +78,7 @@
           type="number"
           v-model="nPersons"
           min="0"
+          :max="this.section.max_persons"
         ></v-text-field>
         <v-btn
           class="reserve-button"
@@ -193,6 +202,7 @@ export default {
       chatButtonStatus: true,
       isStatisticsVisible: false,
       statisticsButtonStatus: true,
+      previousPath: `/rooms/${this.$route.params.roomId}`,
     };
   },
   computed: {
@@ -427,7 +437,7 @@ export default {
 .section {
   background-color: #192138;
   min-height: 100vh;
-  padding-top: 100px;
+  padding-top: 150px;
   display: flex;
   flex-direction: column;
   align-items: center;

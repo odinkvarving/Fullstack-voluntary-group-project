@@ -11,11 +11,14 @@
                         color="#01AB55"
                         outlined
                         v-model="searchValue"
+                        @keyup.enter="searchButtonClicked"
                     ></v-text-field>
                    </div>
                     <div>
-                        <p>Område i kart</p>
-                        <GmapAutocomplete @place_changed="setPlace" style="width: 100%; height: 30px; color: white;" placeHolder="Legg til sted..." :selectFirstOnEnter="true" />
+                        <p style="margin: 30px 0 0 0">Område i kart</p>
+                        <div>
+                            <GmapAutocomplete @keyup.enter="searchButtonClicked" @place_changed="setPlace" class="place-auto-input" placeHolder="Legg til sted..." :selectFirstOnEnter="true" />
+                        </div>
                     </div>
                     <div>
                     <GmapMap
@@ -54,7 +57,7 @@
                     <v-menu
                         ref="menu"
                         v-model="menu"
-                        :close-on-content-click="false"
+                        :close-on-content-click="true"
                         :return-value.sync="dateValue"
                         transition="scale-transition"
                         offset-y
@@ -75,22 +78,9 @@
                         v-model="dateValue"
                         no-title
                         scrollable
+                        :min="new Date().toISOString().substr(0, 10)"
+                        @change="$refs.menu.save(dateValue)"
                         >
-                        <v-spacer></v-spacer>
-                        <v-btn
-                            text
-                            color="primary"
-                            @click="menu = false"
-                        >
-                            Cancel
-                        </v-btn>
-                        <v-btn
-                            text
-                            color="primary"
-                            @click="$refs.menu.save(dateValue)"
-                        >
-                            OK
-                        </v-btn>
                         </v-date-picker>
                     </v-menu>
                     <v-row>
@@ -104,7 +94,7 @@
                         </v-col>
                         <v-col cols="6">
                                 <v-select
-                                :items="timeValues"
+                                :items="endTimeList"
                                 label="Slutt"
                                 outlined
                                 v-model="endTimeValue"
@@ -124,12 +114,23 @@
                             v-model="equipmentValue"
                         ></v-text-field>
                     </div>
-                    <v-row>
-                        <v-col>
-                            <v-btn color="#01AB55" block @click="searchButtonClicked"><span>Søk</span></v-btn>                    
+                    <v-row style="margin: 20px 0">
+                        <v-col style="padding: 10px 0" cols="5">
+                            <v-btn color="#01AB55" block @click="searchButtonClicked">
+                                <v-icon left>
+                                    mdi-magnify
+                                </v-icon>
+                                <span>Søk</span>
+                            </v-btn>                    
                         </v-col>
-                        <v-col>
-                            <v-btn v-if="!isNoFilters" class="ma-1" color="error" plain block @click="resetButtonClicked"><span>Reset</span></v-btn>                    
+                        <v-spacer></v-spacer>
+                        <v-col style="padding: 10px 0" cols="5">
+                            <v-btn v-if="!isNoFilters" color="error" plain block @click="resetButtonClicked">
+                                <v-icon left>
+                                    mdi-close
+                                </v-icon>
+                                <span>Reset</span>
+                            </v-btn>                    
                         </v-col>
                     </v-row>
               </div>
@@ -161,6 +162,7 @@
 </template>
 
 <script>
+import moment from "moment";
 
 export default {
     name: "RoomFeed",
@@ -174,7 +176,6 @@ export default {
             dateValue: "",
             menu: false,
             modal: false,
-            menu2: false,
             equipmentValue: "",
             isNoFilters: true,
             filteredList: [],
@@ -199,6 +200,11 @@ export default {
             let size = 0;
 
             return size;
+        },
+        endTimeList(){
+            return this.timeValues.filter(time => {
+                return parseInt(time.split(":")[0]) > this.startTimeValue.split(":")[0];
+            });
         },
         lat(){
             if(this.placeValue.geometry){
@@ -241,7 +247,28 @@ export default {
                 }
 
                 if(this.dateValue !== "" && this.startTimeValue !== "" && this.endTimeValue !== ""){
-                    return this.filteredList; //TODO: ADD IMPLEMENTATION FOR CHECKING IF THIS TIMEPERIOD IS FREE
+                    let dateFrom = moment(`${this.dateValue} ${this.startTimeValue}:00`, "YYYY-MM-DD HH:mm:ss");
+                    let dateTo = moment(`${this.dateValue} ${this.endTimeValue}:00`, "YYYY-MM-DD HH:mm:ss");
+
+                    this.filteredList = this.filteredList.filter(room => {
+                        return room.sections.filter(section => {
+                            let containsValidTime = true;
+                            section.inReservations.forEach(reservation => {
+                                let resFromArr = reservation.from_date.split("T");
+                                let resToArr = reservation.to_date.split("T");
+                                let reservationFromMoment = moment(`${resFromArr[0]} ${resFromArr[1]}`, "YYYY-MM-DD HH:mm:ss");
+                                let reservationToMoment = moment(`${resToArr[0]} ${resToArr[1]}`, "YYYY-MM-DD HH:mm:ss");  
+                                
+                                if((reservationFromMoment.isBefore(dateTo) && reservationFromMoment.isAfter(dateFrom)) || 
+                                    reservationToMoment.isAfter(dateFrom) && reservationToMoment.isBefore(dateTo) ||
+                                    (reservationFromMoment.isBefore(dateFrom) && reservationToMoment.isAfter(dateTo)) ||
+                                    reservationFromMoment.isSame(dateFrom) || reservationToMoment.isSame(dateTo)){
+                                        containsValidTime = false;
+                                }
+                            });
+                            return containsValidTime;
+                        }).length > 0;
+                    });
                 }
                 
                 if(this.equipmentValue !== ""){
@@ -251,7 +278,6 @@ export default {
                 }
 
                 this.isNoFilters = false;
-                console.log(this.filteredList);
             }else{
                 this.isNoFilters = true;
             }
@@ -303,7 +329,7 @@ export default {
 }
 
 .container{
-    padding-top: 100px;
+    padding-top: 30px;
     max-width: 100vw;
     display: flex;
     flex-direction: row;
@@ -316,7 +342,21 @@ export default {
     margin-left: 50px;
     border-radius: 20px;
     width: 24%;
-    max-height: 1000px;
+}
+
+.place-auto-input{
+    margin: 20px 0;
+    border: 1px solid #4B505E;
+    border-radius: 5px;
+    color: white;
+    width: 100%;
+    padding: 8px 0 8px 12px;
+    transition: 0.2s;
+}
+
+.place-auto-input:hover {
+    transition: 0.2s;
+    border-color: white;
 }
 
 .results-tag{
@@ -358,6 +398,11 @@ export default {
 .room-button{
     width: 100%;
 }
+
+.search-button{
+    margin: 20px 0;
+}
+
 
 @media (max-width: 1264px) {
     .room-container{
