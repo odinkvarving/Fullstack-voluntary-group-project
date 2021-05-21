@@ -10,6 +10,22 @@
       </v-row>
     </v-container>
     <v-container v-else fill-height>
+      <v-alert
+        :value="isErrorVisible"
+        type="error"
+        transition="scale-transition"
+        style="width: 100%; margin-top: 40px"
+      >
+        {{ message }}
+      </v-alert>
+      <v-alert
+        :value="isPopUpVisible"
+        type="success"
+        transition="scale-transition"
+        style="width: 100%; margin-top: 20px"
+      >
+        {{ message }}
+      </v-alert>
       <v-row>
         <v-col cols="12">
           <span class="text-h4">{{ roomName }}</span>
@@ -61,10 +77,11 @@
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
                           v-model="date"
-                          prepend-icon="mdi-calendar"
+                          prepend-inner-icon="mdi-calendar"
                           readonly
                           v-bind="attrs"
                           v-on="on"
+                          outlined
                         ></v-text-field>
                       </template>
                       <v-date-picker v-model="date" no-title scrollable>
@@ -93,14 +110,16 @@
                   >
                 </v-row>
                 <v-row>
+                  <v-col cols="5">
                   <v-select
-                  v-if="inEditMode"
-                    :items="freeReservations"
-                    label="Start"
-                    outlined
-                    v-model="startTimeValue"
-                  ></v-select>
-
+                    v-if="inEditMode"
+                      :items="freeReservations"
+                      label="Start"
+                      outlined
+                      v-model="startTimeValue"
+                    ></v-select>
+                  </v-col>
+                  <v-col cols="5">
                   <v-select
                     v-if="inEditMode"
                     :items="toReservations"
@@ -109,6 +128,7 @@
                     :disabled="startTimeValue === null"
                     v-model="endTimeValue"
                   ></v-select>
+                  </v-col>
                 </v-row>
                 <v-row>
                   <v-col cols="6">
@@ -126,7 +146,7 @@
                 </v-row>
                 <v-row>
                   <v-col align="center">
-                    <v-btn color="green" v-if="inEditMode">
+                    <v-btn color="green" v-if="inEditMode" @click="updateReservation">
                       Fullfør
                     </v-btn>
                   </v-col>
@@ -251,7 +271,10 @@ export default {
         "23:00",
       ],
       startTimeValue: null,
-      endTimeValue: null
+      endTimeValue: null,
+      isErrorVisible: false,
+      isPopUpVisible: false,
+      message: ""
     };
   },
   computed:{
@@ -291,7 +314,7 @@ export default {
         { text: "22:00", value: 22, disabled: false },
         { text: "23:00", value: 23, disabled: false },
       ];
-
+      
       if (this.section === undefined) {
         return list;
       } else {
@@ -312,8 +335,12 @@ export default {
           let totalHours = to_time_hours - from_time_hours;
           for (let j = 0; j < this.timeList.length; j++) {
             if (from_time === this.timeList[j].split(":")[0]) {
+              let text = "Oppdatt";
               for (let k = j; k < j + totalHours; k++) {
-                list[k].disabled = true;
+                if(list[k].value === parseInt(this.reservation.reservation.from_date.split("T")[1].split(":")[0])){
+                  text = "Nåværende booking"
+                }
+                list[k].text = `${list[k].text}: ${text}`
               }
             }
           }
@@ -323,31 +350,13 @@ export default {
     },
     toReservations() {
       let list = [];
-      if (this.startTimeValue === null) {
-        return [];
-      } else {
-        for (
-          let i = this.startTimeValue - 6;
-          i < this.freeReservations.length;
-          i++
-        ) {
-          list.push({
-            text: this.freeReservations[i].text,
-            value: this.freeReservations[i].value,
-            disabled: this.freeReservations[i].disabled,
-          });
-          if (this.freeReservations[i].disabled === true) {
-            break;
-          }
+      this.freeReservations.forEach(time => {
+        if(time.value > this.startTimeValue){
+           list.push({text: time.text, value: time.value, disabled: false});
         }
-        if (list[list.length - 1].value === 23) {
-          list.push({ text: "00:00", value: 24, disabled: false });
-        }
-
-        list[list.length - 1].disabled = false;
-
-        return list;
-      }
+      })
+      list.push({ text: "00:00", value: 0, disabled: false });
+      return list;
     },
   },
   async mounted() {
@@ -386,36 +395,101 @@ export default {
 
     async deleteReservation() {
       if (confirm("Er du sikker på at du vil slette reservasjonen?")) {
-        await reservationService.deleteReservation(this.reservationId);
+        this.isErrorVisible = false;
+        this.isPopUpVisible = false;
+
+        let result = await reservationService.deleteReservation(this.reservationId);
+        if(result === true){
+            console.log("Reservation successfully deleted!");
+            this.message = "Sletting av reservasjon vellykket!";
+            this.isPopUpVisible = true;
+            this.section.inReservations = this.section.inReservations.filter(res => {
+              return res.id = this.reservationId
+            })
+            this.$router.push("/reservations");
+        }else{
+            console.log("Something went wrong when deleting reservation...");
+            this.message = "Upsi! Noe gikk galt når vi prøvde å slette reservasjonen"
+            this.isErrorVisible = true;
+        }
       }
     },
-
+    findOverlappingReservations(){
+      let overlappingList = [];
+      this.currentDateReservations.forEach(res => {
+        let resFromHour = parseInt(res.from_date.split("T")[1].split(":")[0]);
+        let resToHour = parseInt(res.to_date.split("T")[1].split(":")[0]);
+        if((this.startTimeValue < resToHour && this.endTimeValue > resToHour) || (this.startTimeValue < resFromHour && this.endTimeValue > resFromHour)
+          || (this.startTimeValue < resFromHour && this.endTimeValue > resToHour) || this.startTimeValue === resFromHour || this.endTimeValue === resToHour){
+            if(this.reservationId !== res.id){
+              overlappingList.push(res);
+            }
+        }
+      })
+      return overlappingList;
+    },
     async updateReservation() {
-      let reservation = {
-        reservation: {
-          id: this.reservationId,
-          from_date: this.from_date,
-          to_date: this.to_date,
-          number_of_people: this.number_of_people,
-        },
-        accountId: this.accountId,
-        sectionId: this.sectionId,
-      };
+      this.isPopUpVisible = false;
+      this.isErrorVisible = false;
 
-      await reservationService.updateReservation(
-        this.reservationId,
-        reservation
-      );
-      //TODO: Legg til onClick
+      let overLappingReservations = this.findOverlappingReservations();
+      console.log(overLappingReservations);
+
+      let isOk = true;
+      if(overLappingReservations.length > 0){
+        isOk = false;
+        if(confirm("Denne bookingen overlapper med eksisterende bookinger.\nEr du sikker du vil overkjøre dette?")){
+          isOk = true;
+        }
+      }
+
+      if(isOk){
+        let startTimeValueString =
+                this.startTimeValue < 10
+                  ? `0${this.startTimeValue}`
+                  : `${this.startTimeValue}`;
+              let endTimeValueString =
+                this.endTimeValue < 10
+                  ? `0${this.endTimeValue}`
+                  : `${this.endTimeValue}`;
+  
+            let reservation = {
+                id: this.reservationId,
+                from_date: `${this.date}T${startTimeValueString}:00`,
+                to_date: `${this.date}T${endTimeValueString}:00`,
+                number_of_people: this.reservation.reservation.number_of_people,
+                account: {
+                id: this.accountId
+                }
+            };
+  
+            if(overLappingReservations.length > 0){
+              overLappingReservations.forEach(overlappingReservation => {
+                reservationService.deleteReservation(overlappingReservation.id)
+              })
+            }
+  
+            let result = await reservationService.updateReservation(
+              this.reservationId,
+              reservation
+            );
+  
+            if(result !== null){
+              console.log("Reservation successfully updated!");
+              this.message = "Endring av reservasjon vellykket! Overlappende reservasjoner er slettet og brukerne er varslet."
+              this.isPopUpVisible = true;
+              this.$store.dispatch("loadRooms");
+            }else{
+              console.log("Something went wrong when updating reservation...");
+              this.message = "Upsi! Noe gikk galt når vi prøvde å oppdatere reservasjonen"
+              this.isErrorVisible = true;
+            }
+      }
     },
   },
 };
 </script>
 
 <style scoped>
->>> .v-text-field .v-input__control .v-input__slot {
-  min-height: auto !important;
-  display: flex !important;
-  align-items: center !important;
-}
+
 </style>

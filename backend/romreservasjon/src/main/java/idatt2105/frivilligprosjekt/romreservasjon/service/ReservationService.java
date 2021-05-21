@@ -148,8 +148,11 @@ public class ReservationService {
             return null;
         }else {
             try {
-                logger.info("Reservation updated");
+                Section section = reservationRepository.findById(id).get().getSection();
                 reservation.setId(id);
+                reservation.setAccount(reservation.getAccount());
+                reservation.setSection(section);
+                logger.info("Reservation updated");
                 return reservationRepository.save(reservation);
             } catch (DataAccessException e) {
                 logger.info("Could not update reservation");
@@ -181,7 +184,7 @@ public class ReservationService {
      * @param id the ID of the Reservation to be deleted
      */
     public boolean deleteReservation(int id, String jwt) {
-        if(accountService.isAdmin(jwt)){
+        if(!accountService.isAdmin(jwt)){
             logger.info("Only admin can delete reservations");
             return false;
         }else {

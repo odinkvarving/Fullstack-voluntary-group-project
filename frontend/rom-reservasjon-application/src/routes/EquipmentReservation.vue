@@ -76,6 +76,9 @@ export default {
         async registerEquipmentReservation(){
             
             let dateFrom;
+            if(this.dates.length === 1){
+                this.dates = ["", this.dates[0]];
+            }
             if(this.dates[0] === ""){
                 dateFrom = moment(new Date().toISOString().substr(0, 10), "YYYY-MM-DD")
             }else{
