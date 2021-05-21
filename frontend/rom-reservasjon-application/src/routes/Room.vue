@@ -1,7 +1,7 @@
 <template>
   <div class="room">
     <router-link to="/roomfeed">
-      <v-btn style="margin-left: 30px; position: absolute; top: 90px; left: 0px;" color="#01AB55">
+      <v-btn style="margin-left: 30px; position: absolute; top: 30px; left: 0px;" color="#01AB55">
         <v-icon left>
             mdi-arrow-left-bold
         </v-icon>
@@ -80,7 +80,7 @@ export default {
   .room{
     background-color: #192138;
     min-height: 100vh;
-    padding-top: 150px;
+    padding-top: 20px;
   }
 
   .section-container{

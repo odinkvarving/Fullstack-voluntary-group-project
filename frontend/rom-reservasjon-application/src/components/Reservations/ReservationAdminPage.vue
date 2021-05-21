@@ -1,5 +1,5 @@
 <template>
-  <div style="padding-top: 100px">
+  <div>
     <v-container v-if="!isDataReady">
       <v-row align="center" justify="center">
         <v-progress-circular
@@ -224,7 +224,7 @@ export default {
       section: null,
       sectionId: null,
 
-      roomName: "Navn",
+      roomName: null,
       date: null,
       time: null,
 

@@ -33,6 +33,12 @@
 <script>
 import { accountService } from "../../services/AccountService.js";
 
+/**
+ * ProfilePageBox is a component which represents the account info display of an account
+ * 
+ * @author Scott Rydberg Sonen
+ */
+
 export default {
     name: "ProfilePageBox",
 
@@ -49,6 +55,10 @@ export default {
     },
 
     methods: {
+        /**
+         * getAccount is a function which calls getAccount function in accountService,
+         *  and uses and id as parameter.
+         */
         async getAccount(id) {
             this.account = await accountService.getAccount(id);
         }
@@ -61,7 +71,6 @@ export default {
         width: 50%;
         margin-top: 20px;
         padding: 20px;
-        border: 1px solid #01AB55;
         border-radius: 4px;
     }
     @media (max-width: 1000px) {
