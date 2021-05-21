@@ -1,5 +1,5 @@
 <template>
-  <div class="add-account-box">
+  <div>
     <v-container>
       <v-row>
         <v-col class="col" cols="12">
@@ -263,4 +263,8 @@ export default {
   },
 };
 </script>
-<style scoped></style>
+<style scoped>
+.container {
+    height: 100vh;
+}
+</style>

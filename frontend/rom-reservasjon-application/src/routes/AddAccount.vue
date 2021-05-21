@@ -28,9 +28,4 @@
     .add-account {
         background-color: #192138;
     }
-    .add-account-box {
-        height: 50%;
-        width: 70%;
-        margin: auto;
-    }
 </style>
