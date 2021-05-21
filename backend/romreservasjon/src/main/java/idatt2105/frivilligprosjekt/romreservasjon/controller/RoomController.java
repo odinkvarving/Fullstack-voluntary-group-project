@@ -1,11 +1,7 @@
 package idatt2105.frivilligprosjekt.romreservasjon.controller;
 
-
-import idatt2105.frivilligprosjekt.romreservasjon.model.Reservation;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Room;
 import idatt2105.frivilligprosjekt.romreservasjon.model.SectionChat;
-import idatt2105.frivilligprosjekt.romreservasjon.repository.SectionChatRepository;
-import idatt2105.frivilligprosjekt.romreservasjon.repository.SectionRepository;
 import idatt2105.frivilligprosjekt.romreservasjon.service.RoomService;
 import idatt2105.frivilligprosjekt.romreservasjon.service.SectionChatService;
 import org.slf4j.Logger;
@@ -29,13 +25,10 @@ public class RoomController {
     @Autowired
     private SectionChatService sectionChatService;
 
-    @Autowired
-    private SectionRepository sectionRepository;
-
     /**
-     * Retrieve all rooms
+     * GetMapping for finding all rooms in database
      *
-     * @return rooms
+     * @return a List of the rooms that was found
      */
     @GetMapping("/rooms")
     public List<Room> findAll(){
@@ -43,10 +36,10 @@ public class RoomController {
     }
 
     /**
-     * Find room by id
+     * GetMapping for finding a specific Room by id
      *
-     * @param id
-     * @return room
+     * @param id the PathVariable for the id of the Room
+     * @return the Room that was found
      */
     @GetMapping("/rooms/{id}")
     public Room findById(@PathVariable int id){
@@ -54,32 +47,32 @@ public class RoomController {
     }
 
     /**
-     * Save a room
+     * PostMapping for saving a new Room
      *
-     * @param room
-     * @return room that is saved
+     * @param room requesting the body of a new Room
+     * @return the Room that was saved
      */
     @PostMapping("/rooms")
     public Room saveRoom(@RequestBody Room room) {
+        logger.info("Trying to save Room:\n" + room.toString());
         return roomService.saveRoom(room);
     }
 
     /**
-     * Endpoint for getting all messages in a specific Section
+     * GetMapping for getting all messages in a specific Section in a Room
      *
-     * @param room_id the id of the Room
      * @param section_id the id of the Section
      * @return a list of messages in this Section
      */
-    @GetMapping("/rooms/{room_id}/sections/{section_id}/messages")
-    public List<SectionChat> getSectionMessagesBySectionId(@PathVariable int room_id, @PathVariable int section_id) {
+    @GetMapping("/messages/sections/{section_id}")
+    public List<SectionChat> getSectionMessagesBySectionId(@PathVariable int section_id) {
             return sectionChatService.getMessagesInSectionSorted(section_id);
     }
 
     /**
-     * Endpoint for deleting a message.
+     * DeleteMapping for deleting a message specific message by id
      *
-     * @param id the id of the message to delete.
+     * @param id the id of the message to delete
      */
     @DeleteMapping("messages/{id}")
     public void deleteMessage(@PathVariable int id) {
@@ -87,20 +80,35 @@ public class RoomController {
     }
 
     /**
-     * Endpoint for adding a message to a specific section.
+     * PostMapping for adding a new message to a specific Section by id
      *
-     * @param message the message to add to the section.
+     * @param section_id PathVariable for the id of the Section
+     * @param message requesting the body of a message
+     * @return the message that was added
      */
-    @PostMapping("/rooms/{room_id}/sections/{section_id}/messages")
-    public SectionChat addMessageToSection(@PathVariable int room_id, @PathVariable int section_id, @RequestBody SectionChat message) {
+    @PostMapping("/messages/sections/{section_id}")
+    public SectionChat addMessageToSection(@PathVariable int section_id, @RequestBody SectionChat message) {
             return this.sectionChatService.addMessageToSection(message.getAccountId(), section_id, message.getMessage());
     }
 
+    /**
+     * PutMapping for updating a specific message by id
+     *
+     * @param message_id the PathVariable for the id of the message
+     * @param message requesting the body of a new message (updated version)
+     * @return the message that was updated
+     */
     @PutMapping("/messages/{message_id}")
     public SectionChat updateMessage(@PathVariable int message_id, @RequestBody SectionChat message) {
         return this.sectionChatService.updateSectionChat(message_id, message.getMessage());
     }
 
+    /**
+     * GetMapping for finding a specific message by id
+     *
+     * @param message_id the PathVariable for the id of the message
+     * @return the message that was found
+     */
     @GetMapping("/messages/{message_id}")
     public SectionChat getMessageById(@PathVariable int message_id) {
         return this.sectionChatService.getSectionChatById(message_id);

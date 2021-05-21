@@ -20,7 +20,7 @@ public class EquipmentReservationController {
     private EquipmentReservationService equipmentReservationService;
 
     /**
-     * GetMapping for getting all registered EquipmentReservations
+     * GetMapping for getting all registered EquipmentReservations from database
      *
      * @return a list of all registered EquipmentReservations
      */
@@ -46,7 +46,7 @@ public class EquipmentReservationController {
     }
 
     /**
-     * PutMapping for updating a specific EquipmentReservation
+     * PutMapping for updating a specific EquipmentReservation by id
      *
      * @param newReservation requesting the body of a new EquipmentReservation (updated version)
      * @param reservation_id the PathVariable of the id for the EquipmentReservation
@@ -59,7 +59,7 @@ public class EquipmentReservationController {
     }
 
     /**
-     * GetMapping for finding a specific EquipmentReservation
+     * GetMapping for finding a specific EquipmentReservation by id
      *
      * @param equipment_reservation_id the PathVariable for the id of the EquipmentReservation
      * @return the EquipmentReservation that was found
@@ -70,9 +70,9 @@ public class EquipmentReservationController {
     }
 
     /**
-     * DeleteMapping for deleting a specific EquipmentReservation
+     * DeleteMapping for deleting a specific EquipmentReservation by id
      *
-     * @param equipment_reservation_id the PathVariable of the ID for the EquipmentReservation
+     * @param equipment_reservation_id the PathVariable for the id of the EquipmentReservation
      */
     @DeleteMapping("/equipment-reservations/{equipment_reservation_id}")
     public boolean deleteEquipmentReservation(@PathVariable int equipment_reservation_id, @RequestHeader("authorization") String jwt) {
@@ -80,8 +80,9 @@ public class EquipmentReservationController {
     }
 
     /**
-     * GetMapping for finding Equipment in a specific EquipmentReservation
-     * @param equipment_reservation_id the id of the EquipmentReservation
+     * GetMapping for finding Equipment in a specific EquipmentReservation by id
+     *
+     *  @param equipment_reservation_id the id of the EquipmentReservation
      * @return the Equipment that was found
      */
     @GetMapping("equipment-reservations/{equipment_reservation_id}/equipments")

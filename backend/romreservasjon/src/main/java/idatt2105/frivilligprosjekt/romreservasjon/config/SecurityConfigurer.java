@@ -15,7 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -58,7 +57,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.cors();
 
         http.csrf().disable()
-                .authorizeRequests().antMatchers("/authenticate", "/reset/{email}", "/sections", "/equipment", "/reservations/sections/{section_id}").permitAll()
+                .authorizeRequests().antMatchers("/authenticate", "/reset/{email}", "/sections", "/equipment", "messages/sections/{section_id}", "/reservations/sections/{section_id}").permitAll()
                 .antMatchers(HttpMethod.GET, "/rooms").permitAll()
                 .anyRequest().authenticated()
                 .and().sessionManagement()

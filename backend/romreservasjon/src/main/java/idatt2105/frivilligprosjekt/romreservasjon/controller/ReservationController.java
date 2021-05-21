@@ -20,7 +20,7 @@ public class ReservationController {
     private ReservationService reservationService;
 
     /**
-     * GetMapping for getting all registered Reservations
+     * GetMapping for getting all registered Reservations from database
      *
      * @return a list of all registered Reservations
      */
@@ -45,6 +45,13 @@ public class ReservationController {
         return success;
     }
 
+    /**
+     * PostMapping for saving a RoomReservation to the database
+     *
+     * @param reservations requesting the body of a List of Reservations
+     * @param jwt requesting the header of a jwt-token
+     * @return true or false whether the RoomReservation was saved successfully or not
+     */
     @PostMapping("/reservations/room")
     public boolean saveRoomReservation(@RequestBody List<Reservation> reservations, @RequestHeader("authorization") String jwt){
         logger.info("Trying to save room reservation...");
@@ -56,7 +63,7 @@ public class ReservationController {
     }
 
     /**
-     * PutMapping for updating a specific Reservation
+     * PutMapping for updating a specific Reservation by id
      *
      * @param newReservation requesting the body of a new Reservation (updated version)
      * @param reservation_id the PathVariable of the id for the Reservation
@@ -69,7 +76,7 @@ public class ReservationController {
     }
 
     /**
-     * GetMapping for finding a specific Reservation
+     * GetMapping for finding a specific Reservation by id
      *
      * @param reservation_id the PathVariable of the ID for the Reservation
      * @return the Reservation that was found
@@ -80,15 +87,21 @@ public class ReservationController {
     }
 
     /**
-     * DeleteMapping for deleting a specific Reservation
+     * DeleteMapping for deleting a specific Reservation by id
      *
-     * @param reservation_id the PathVariable of the ID for the Reservation
+     * @param reservation_id the PathVariable for the id of the Reservation
      */
     @DeleteMapping("/reservations/{reservation_id}")
     public boolean deleteReservation(@PathVariable int reservation_id, @RequestHeader("authorization") String jwt) {
         return reservationService.deleteReservation(reservation_id, jwt);
     }
 
+    /**
+     * GetMapping for finding all Reservations for a specific Section by id
+     *
+     * @param section_id the id of the Section
+     * @return a list of ReservationDTO's
+     */
     @GetMapping("/reservations/sections/{section_id}")
     public List<ReservationDTO> findReservationsBySectionId(@PathVariable int section_id) {
         return reservationService.findReservationsBySectionId(section_id);

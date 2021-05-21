@@ -7,11 +7,8 @@ import idatt2105.frivilligprosjekt.romreservasjon.service.AccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
 import java.util.List;
 import java.util.Set;
 
@@ -35,10 +32,10 @@ public class AccountController {
     }
 
     /**
-     * Find account by email
+     * GetMapping for finding a specific Account by email
      *
-     * @param email
-     * @return
+     * @param email the email of the Account
+     * @return the Account that was found
      */
     @GetMapping("accounts/email={email}")
     public Account findAccountByEmail(@PathVariable String email, @RequestHeader("authorization") String jwt){
@@ -47,10 +44,10 @@ public class AccountController {
 
 
     /**
-     * Find account by ID
+     * GetMapping for finding a specific Account by id
      *
-     * @param id
-     * @return
+     * @param id the id of the Account to be found
+     * @return the Account that was found
      */
     @GetMapping("/accounts/{id}")
     public Account findById(@PathVariable int id, @RequestHeader("authorization") String jwt){

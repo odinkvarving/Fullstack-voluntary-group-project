@@ -15,9 +15,9 @@ public class SectionController {
     private SectionService sectionService;
 
     /**
-     * GetMapping returning all Sections.
+     * GetMapping for fetching all Sections from database
      *
-     * @return a list of all Sections.
+     * @return a list of all Sections found in database
      */
     @GetMapping("/sections")
     public List<Section> getAllSections() {
@@ -25,10 +25,10 @@ public class SectionController {
     }
 
     /**
-     * GetMapping returning a specific Sections based on id.
+     * GetMapping returning a specific Section by id
      *
-     * @param id: id of requested Section.
-     * @return a specific Section.
+     * @param id: the id of the Section
+     * @return the Section that was found
      */
     @GetMapping("/sections/{id}")
     public Section findById(@PathVariable int id){
