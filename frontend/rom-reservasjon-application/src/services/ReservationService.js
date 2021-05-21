@@ -7,7 +7,8 @@ export const reservationService = {
     addReservation,
     addRoomReservation,
     deleteReservation,
-    updateReservation
+    updateReservation,
+    findReservationsBySectionId,
 }
 
 async function getReservations(){
@@ -113,6 +114,21 @@ async function updateReservation(reservationId, reservation){
             'Authorization': `Bearer ${store.getters.getJwtToken}`
         },
         body: JSON.stringify(reservation)
+    }
+
+    return fetch(url, requestOptions)
+        .then(response => response.json())
+        .catch(error => console.log(error));
+}
+
+async function findReservationsBySectionId(sectionId) {
+    let url = `http://localhost:8080/reservations/sections/${sectionId}`;
+
+    const requestOptions = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${store.getters.getJwtToken}`
+        }
     }
 
     return fetch(url, requestOptions)

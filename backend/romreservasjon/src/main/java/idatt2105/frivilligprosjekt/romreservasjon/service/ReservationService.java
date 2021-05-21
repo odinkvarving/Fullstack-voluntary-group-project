@@ -196,4 +196,16 @@ public class ReservationService {
             }
         }
     }
+
+    public List<ReservationDTO> findReservationsBySectionId(int id) {
+        try {
+            List<Reservation> res = reservationRepository.findReservationsBySectionId(id);
+            List<ReservationDTO> dto = new ArrayList<>();
+            res.forEach(reservation -> dto.add(new ReservationDTO(reservation, reservation.getAccount().getId(), reservation.getSection().getId())));
+            return dto;
+        }catch (DataAccessException e) {
+            logger.error("Could not find any reservations for this section", e);
+        }
+        return null;
+    }
 }

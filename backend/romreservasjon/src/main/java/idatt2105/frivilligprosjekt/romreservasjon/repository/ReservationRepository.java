@@ -8,4 +8,6 @@ import java.util.List;
 
 @Repository
 public interface ReservationRepository extends CrudRepository<Reservation, Integer> {
+
+    List<Reservation> findReservationsBySectionId(int sectionId);
 }

@@ -3,10 +3,10 @@
     <router-link :to="previousPath">
       <v-btn style="margin-left: 30px; position: absolute; top: 30px; left: 0px;" color="#01AB55">
         <v-icon left>
-            mdi-arrow-left-bold
+          mdi-arrow-left-bold
         </v-icon>
         <span>Tilbake</span>
-    </v-btn>
+      </v-btn>
     </router-link>
     <div class="title">
       <h1>{{ section.name }}</h1>
@@ -36,7 +36,6 @@
             <v-date-picker
               v-model="date"
               @change="menu1 = false"
-              :min="new Date().toISOString().substr(0, 10)"
             ></v-date-picker>
           </v-menu>
 
@@ -67,7 +66,7 @@
           v-if="endTimeValue !== null && date !== null"
           style="opacity: 80%; margin: 10px 0"
         >
-          3. Deltakere (Max antall: {{this.section.max_persons}})
+          3. Deltakere (Max antall: {{ this.section.max_persons }})
         </h3>
         <v-text-field
           v-if="endTimeValue !== null && date !== null"
@@ -98,14 +97,18 @@
           :timeList="timeList"
         />
       </div>
-    </div>
     <v-container pt-12>
       <v-row class="mx-auto">
-        <v-col cols="12" align="center">
-          <v-btn @click="changeChatVisibility" color="green">
-            {{ chatButtonStatus ? "Vis" : "Skjul" }} kommentarfelt
-          </v-btn>
-        </v-col>
+          <v-col align="center">
+            <v-btn-toggle v-model="toggle_exclusive" mandatory>
+              <v-btn @click="changeChatVisibility" color="green">
+                kommentarfelt
+              </v-btn>
+              <v-btn @click="showStatistics" color="green">
+                statistikk
+              </v-btn>
+            </v-btn-toggle>
+          </v-col>
         <v-col cols="12" align="center">
           <div>
             <Chat
@@ -114,9 +117,16 @@
               :accountId="accountId"
             />
           </div>
+          <div>
+            <SectionStatistics
+              :section="section"
+              v-show="isStatisticsVisible"
+            />
+          </div>
         </v-col>
       </v-row>
     </v-container>
+    </div>
   </div>
 </template>
 
@@ -126,12 +136,14 @@ import moment from "moment";
 import { format, parseISO } from "date-fns";
 import { reservationService } from "../services/ReservationService";
 import Chat from "../components/ChatComponents/Chat.vue";
+import SectionStatistics from "../components/Statistics/SectionStatistics.vue";
 
 export default {
   name: "Section",
   components: {
     ReservationsOverview,
     Chat,
+    SectionStatistics,
   },
   props: {
     allSections: {
@@ -141,7 +153,7 @@ export default {
   },
   data() {
     return {
-      date: new Date().toISOString().substr(0, 10),
+      date: "2021-05-20",
       menu1: false,
       isFreeList: [
         true,
@@ -185,8 +197,11 @@ export default {
       endTimeValue: null,
       nPersons: null,
       loading: false,
+      toggle_exclusive: undefined,
       isChatVisible: false,
       chatButtonStatus: true,
+      isStatisticsVisible: false,
+      statisticsButtonStatus: true,
       previousPath: `/rooms/${this.$route.params.roomId}`,
     };
   },
@@ -404,6 +419,15 @@ export default {
     changeChatVisibility() {
       this.chatButtonStatus = !this.chatButtonStatus;
       this.isChatVisible = !this.isChatVisible;
+      this.statisticsButtonStatus = false;
+      this.isStatisticsVisible = false;
+    },
+
+    showStatistics() {
+      this.statisticsButtonStatus = !this.statisticsButtonStatus;
+      this.isStatisticsVisible = !this.isStatisticsVisible;
+      this.chatButtonStatus = false;
+      this.isChatVisible = false;
     },
   },
 };
@@ -441,11 +465,10 @@ export default {
   margin: 0 50px;
 }
 
-.reservations-overview{
-    margin: 50px 0;
-    width: 30%;
-    display: flex;
-    justify-content: center;
+.reservations-overview {
+  width: 30%;
+  display: flex;
+  justify-content: center;
 }
 
 .reserve-button {

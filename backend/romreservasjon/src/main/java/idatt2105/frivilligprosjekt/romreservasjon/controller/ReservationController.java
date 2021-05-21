@@ -89,4 +89,9 @@ public class ReservationController {
         return reservationService.deleteReservation(reservation_id, jwt);
     }
 
+    @GetMapping("/reservations/sections/{section_id}")
+    public List<ReservationDTO> findReservationsBySectionId(@PathVariable int section_id) {
+        return reservationService.findReservationsBySectionId(section_id);
+    }
+
 }
