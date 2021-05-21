@@ -189,9 +189,7 @@ export default {
      */
     toProfilePage() {
       const account = this.$store.getters.getLoggedInAccount;
-      //if (!this.$router.currentRoute.path === `/profilepage/${account.id}`) {
-        this.$router.push({ name: "ProfilePage", params: { id: account.id } });
-      //}
+      this.$router.push({ name: "ProfilePage", params: { id: account.id } });
     },
 
     /**

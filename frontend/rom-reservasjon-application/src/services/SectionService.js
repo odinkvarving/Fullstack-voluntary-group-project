@@ -5,6 +5,11 @@ export const sectionService = {
     getSection
 }
 
+/**
+ * getSections is a function which returns all sections.
+ * 
+ * @returns list of sections.
+ */
 async function getSections(){
     let url = 'http://localhost:8080/sections/';
 
@@ -20,6 +25,12 @@ async function getSections(){
         .catch(error => console.log(error));
 }
 
+/**
+ * getSection is a function which returns specific section with given id.
+ * 
+ * @param {Number} sectionId: id of requested section.
+ * @returns section object.
+ */
 async function getSection(sectionId){
     let url = `http://localhost:8080/sections/${sectionId}`;
 

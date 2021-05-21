@@ -4,6 +4,13 @@ export const equipmentReservationService = {
     addEquipmentReservation
 }
 
+/**
+ * addEquipmentReservation is a function which adds equipment reservation,
+ *  by sending a POST request containing the equipment reservation.
+ * 
+ * @param {Object} equipmentReservation: the equipment reservation.
+ * @returns true if equipment reservation was added, or false if it was not added.
+ */
 async function addEquipmentReservation(equipmentReservation){
     let url = `http://localhost:8080/equipment-reservations`;
 
