@@ -1,5 +1,6 @@
 package idatt2105.frivilligprosjekt.romreservasjon.service;
 
+import idatt2105.frivilligprosjekt.romreservasjon.model.Account;
 import idatt2105.frivilligprosjekt.romreservasjon.model.DTO.ReservationDTO;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Reservation;
 import idatt2105.frivilligprosjekt.romreservasjon.model.Section;
@@ -29,6 +30,9 @@ public class ReservationService {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private MailService mailService;
 
     /**
      * Method for finding all Reservations registered in the database
@@ -153,12 +157,18 @@ public class ReservationService {
                 reservation.setAccount(reservation.getAccount());
                 reservation.setSection(section);
                 logger.info("Reservation updated");
+                notifyUpdateAccount(reservation.getAccount().getId(), jwt);
                 return reservationRepository.save(reservation);
             } catch (DataAccessException e) {
                 logger.info("Could not update reservation");
                 return null;
             }
         }
+    }
+
+    public void notifyUpdateAccount(int accountId, String jwt){
+        Account account = accountService.findById(accountId, jwt);
+        mailService.sendUpdatedReservationMail(account.getEmail(), "Room reservation updated!", jwt);
     }
 
     /**
@@ -189,15 +199,23 @@ public class ReservationService {
             return false;
         }else {
             try {
+                Reservation reservation = reservationRepository.findById(id).orElse(null);
+                if(reservation != null){
+                    notifyDeleteReservation(reservation.getAccount().getId(), jwt);
+                }
                 reservationRepository.deleteById(id);
                 return true;
             } catch (DataAccessException e) {
                 e.printStackTrace();
                 logger.info("Could not delete this reservation. ID does not exist");
                 return false;
-
             }
         }
+    }
+
+    public void notifyDeleteReservation(int accountId, String jwt){
+        Account account = accountService.findById(accountId, jwt);
+        mailService.sendDeletedReservationMail(account.getEmail(), "Room reservation updated!", jwt);
     }
 
     public List<ReservationDTO> findReservationsBySectionId(int id) {
