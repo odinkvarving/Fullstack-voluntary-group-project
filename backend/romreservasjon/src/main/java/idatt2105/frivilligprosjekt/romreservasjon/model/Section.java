@@ -1,6 +1,9 @@
 package idatt2105.frivilligprosjekt.romreservasjon.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,34 +13,40 @@ import java.util.Set;
 public class Section {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int section_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     private String name;
+    private String description;
     private double size;
     private int max_persons;
+    private String equipmentDescription;
 
     @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "section-reservation")
     private Set<Reservation> inReservations = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     private Room room;
 
     public Section() {
     }
 
-    public Section(String name, double size, int max_persons) {
+    public Section(String name, String description, double size, int max_persons, String equipmentDescription) {
         this.name = name;
+        this.description = description;
         this.size = size;
         this.max_persons = max_persons;
+        this.equipmentDescription = equipmentDescription;
     }
 
-    public int getSection_id() {
-        return section_id;
+    public int getId() {
+        return id;
     }
 
-    public void setSection_id(int section_id) {
-        this.section_id = section_id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -46,6 +55,14 @@ public class Section {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public double getSize() {
@@ -62,6 +79,14 @@ public class Section {
 
     public void setMax_persons(int max_persons) {
         this.max_persons = max_persons;
+    }
+
+    public String getEquipmentDescription() {
+        return equipmentDescription;
+    }
+
+    public void setEquipmentDescription(String equipmentDescription) {
+        this.equipmentDescription = equipmentDescription;
     }
 
     public Set<Reservation> getInReservations() {

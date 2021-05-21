@@ -1,5 +1,9 @@
 package idatt2105.frivilligprosjekt.romreservasjon.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -10,8 +14,8 @@ import java.util.Set;
 public class Account {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int account_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     private String name;
     private String email;
@@ -23,25 +27,28 @@ public class Account {
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Reservation> reservations = new HashSet<>();
 
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<EquipmentReservation> equipmentReservations = new HashSet<>();
+
     public Account(String name, String email, String password, String phone, boolean is_admin, LocalDateTime expiration_date) {
-        setName(name);
-        setEmail(email);
-        setPassword(password);
-        setPhone(phone);
-        setIs_admin(is_admin);
-        setExpiration_date(expiration_date);
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.is_admin = is_admin;
+        this.expiration_date = expiration_date;
     }
 
     public Account() {
 
     }
 
-    public int getAccount_id() {
-        return account_id;
+    public int getId() {
+        return id;
     }
 
-    public void setAccount_id(int id) {
-        this.account_id = id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -103,10 +110,18 @@ public class Account {
         this.reservations = reservations;
     }
 
+    public Set<EquipmentReservation> getEquipmentReservations() {
+        return equipmentReservations;
+    }
+
+    public void setEquipmentReservations(Set<EquipmentReservation> equipmentReservations) {
+        this.equipmentReservations = equipmentReservations;
+    }
+
     @Override
     public String toString() {
         return "Account{" +
-                "id=" + account_id +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
@@ -114,6 +129,7 @@ public class Account {
                 ", is_admin=" + is_admin +
                 ", expiration_date=" + expiration_date +
                 ", reservations=" + reservations +
+                ", equipment_reservations=" + equipmentReservations +
                 '}';
     }
 }

@@ -1,30 +1,40 @@
 <template>
-  <div id="app">
-    <p style="color: black">asdasdasd</p>
-  </div>
+  <v-app>
+    <Navbar />
+    <v-main>
+      <router-view />
+    </v-main>
+  </v-app>
 </template>
 
 <script>
 
+import Navbar from './components/Navbar/Navbar'
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
+
 export default {
   name: 'App',
+
   components: {
+    Navbar,
   },
-  data(){
-    return {
-      welcomeText: this.$store.state.welcomeText
+  async mounted(){
+    if(this.$store.getters.isAuthenticated){
+      await this.$store.dispatch("getAccountInfo");
     }
+    await this.$store.dispatch("loadRooms");
+    await this.$store.dispatch("loadSections");
+    await this.$store.dispatch("loadEquipment");
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  body {
+    background-color: #192138;
+  }
+
+.link {
+  text-decoration: none;
 }
 </style>
